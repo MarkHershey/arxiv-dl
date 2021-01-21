@@ -1,8 +1,8 @@
-from setuptools import setup, find_packages, find_namespace_packages
+from setuptools import find_namespace_packages, find_packages, setup
 
 MAJOR = 0
 MINOR = 0
-MICRO = 4
+MICRO = 5
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -17,7 +17,6 @@ setup(
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/MarkHershey/arxiv-dl",
-    # package_dir=({"": "src"}),
     packages=find_namespace_packages(include=["arxiv_dl"]),
     scripts=["arxiv_dl/bin/add-paper", "arxiv_dl/bin/dl-paper"],
     install_requires=[
@@ -36,6 +35,7 @@ setup(
         "Programming Language :: Python :: 3.6",
         "Programming Language :: Python :: 3.7",
         "Programming Language :: Python :: 3.8",
+        "Programming Language :: Python :: 3.9",
         "Operating System :: OS Independent",
     ],
     python_requires=">=3.6",

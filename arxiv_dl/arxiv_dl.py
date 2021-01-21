@@ -1,11 +1,11 @@
 # https://arxiv.org/help/api/user-manual
 
 # built-in modules
-import os
 import json
 import logging
+import os
 from pathlib import Path
-from typing import List, Dict, Tuple
+from typing import Dict, List, Tuple
 
 # external modules
 import requests
@@ -13,6 +13,9 @@ import colorlog
 from bs4 import BeautifulSoup
 
 DEFAULT_DOWNLOAD_PATH = Path.home() / "Downloads/ArXiv_Papers"
+
+###########################################################################
+# Set up logger
 
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
@@ -37,6 +40,8 @@ color_formatter = colorlog.ColoredFormatter(
 
 sh.setFormatter(color_formatter)
 logger.addHandler(sh)
+
+###########################################################################
 
 
 def get_local_paper_folder_path() -> Path:
@@ -168,7 +173,7 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
     tmp_paper_dict["official_code_urls"] = official_code_urls
     tmp_paper_dict["pwc_page_url"] = pwc_page_url.strip()
 
-    # get BIBTEX 
+    # get BIBTEX
     bibtex_url = f"https://arxiv.org/bibtex/{paper_id}"
     bibtex_response = requests.get(bibtex_url)
     if bibtex_response.status_code == 200:
@@ -180,7 +185,7 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
     return tmp_paper_dict
 
 
-def download_pdf(paper_dict: dict) -> None:
+def download_pdf(paper_dict: Dict[str, str]) -> None:
     filepath = Path(paper_dict.get("filepath"))
     if filepath.is_file():
         logger.debug(f"Paper PDF already exists at: {filepath}")
@@ -191,11 +196,11 @@ def download_pdf(paper_dict: dict) -> None:
         with filepath.open(mode="wb") as f:
             f.write(response.content)
         logger.setLevel(logging.DEBUG)
-        logger.debug(f"Done! Paper saved to '{filepath}'")
+        logger.debug(f"Done! Paper saved to {filepath}")
     return
 
 
-def add_to_paper_list(download_dir: Path, paper_dict: dict) -> None:
+def add_to_paper_list(download_dir: Path, paper_dict: Dict[str, str]) -> None:
     paper_list_path = Path(download_dir) / "000_Paper_List.json"
     paper_id = paper_dict.get("paper_id")
     if not paper_list_path.is_file():
@@ -213,7 +218,7 @@ def add_to_paper_list(download_dir: Path, paper_dict: dict) -> None:
     return
 
 
-def create_paper_note(download_dir: Path, paper_dict: dict) -> None:
+def create_paper_note(download_dir: Path, paper_dict: Dict[str, str]) -> None:
     paper_id = paper_dict.get("paper_id", "").strip()
     note_path = Path(download_dir) / f"{paper_id}_Notes.md"
     paper_url = paper_dict.get("paper_url", "")
@@ -225,9 +230,9 @@ def create_paper_note(download_dir: Path, paper_dict: dict) -> None:
     abstract = paper_dict.get("abstract", "")
     comments = paper_dict.get("comments", "")
     bibtex = paper_dict.get("bibtex", "")
-    
+    # code
     official_code_urls: list = paper_dict.get("official_code_urls", [])
-    official_code_urls : list = [f"- [{url}]({url})" for url in official_code_urls]
+    official_code_urls: list = [f"- [{url}]({url})" for url in official_code_urls]
     official_code_urls: str = "\n".join(official_code_urls)
     pwc_page_url = paper_dict.get("pwc_page_url", "")
     if pwc_page_url:

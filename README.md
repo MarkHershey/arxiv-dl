@@ -1,7 +1,8 @@
 # arXiv-dl 
 
-Command-line [arXiv.org](https://arxiv.org/) Papers Downloader
+Command-line [arXiv.org](https://arxiv.org/) Papers Downloader 
 
+- Powered by [arXiv API](https://arxiv.org/help/api/user-manual) and [Papers with code](https://paperswithcode.com/)
 - [Source Code](https://github.com/MarkHershey/arxiv-dl)
 - [Python Package Index (PyPI)](https://pypi.org/project/arxiv-dl/)
 
@@ -53,7 +54,7 @@ $ add-paper https://arxiv.org/abs/1512.03385
 
 - Download paper named `[id]_[title].pdf` into destination folder.
 - Maintain a papers list named `000_Paper_List.json` in the destination folder.
-- Extract paper metadata, like `title`, `authors`, `abstract`, `bibtex`, and write them into a new MarkDown document named `[id]_Notes.md` in the destination folder.
+- Extract paper metadata, like `title`, `authors`, `abstract`, `bibtex`, `code`, and write them into a new MarkDown document named `[id]_Notes.md` in the destination folder.
 
 **`dl-paper` will do**
 
