@@ -1,8 +1,13 @@
 # arXiv-dl 
 
-Download paper from arXiv
+Command-line [arXiv.org](https://arxiv.org/) Papers Downloader
+
+- [Source Code](https://github.com/MarkHershey/arxiv-dl)
+- [Python Package Index (PyPI)](https://pypi.org/project/arxiv-dl/)
 
 ## Installation 
+
+- Require `Python 3.x`
 
 ```bash
 pip install --upgrade arxiv-dl
@@ -48,7 +53,7 @@ add-paper https://arxiv.org/abs/1512.03385
 
 - Download paper named `[id]_[title].pdf` into destination folder.
 - Maintain a papers list named `000_Paper_List.json` in the destination folder.
-- Create a new MarkDown document named `[id]_Notes.md` in the destination folder. (for adding personal reading notes)
+- Create a new MarkDown document named `[id]_Notes.md` in the destination folder. (for adding your personal paper reading notes)
 
 **`dl-paper` will do**
 
@@ -62,4 +67,4 @@ add-paper https://arxiv.org/abs/1512.03385
 
 ## License
 
-[MIT License](LICENSE) Copyright (c) 2021 Mark Huang
+[MIT License](LICENSE) - Copyright (c) 2021 Mark Huang
