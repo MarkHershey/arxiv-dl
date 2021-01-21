@@ -1,0 +1,22 @@
+#!/usr/bin/env python3
+
+import sys
+from arxiv_dl.arxiv_dl import dl_paper, logger
+
+if len(sys.argv) == 1:
+    logger.error(
+        """Missing argument.
+         Usage:
+            add-paper 'URL'
+            dl-paper 'URL'"""
+    )
+elif len(sys.argv) == 2:
+    URL = sys.argv[1]
+    dl_paper(URL)
+else:
+    logger.error(f"Unexpected arguments: {sys.argv[1:]}")
+    logger.error(
+        """Usage:
+            add-paper 'URL'
+            dl-paper 'URL'"""
+    )
