@@ -2,7 +2,7 @@ from setuptools import setup, find_packages, find_namespace_packages
 
 MAJOR = 0
 MINOR = 0
-MICRO = 3
+MICRO = 4
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -16,7 +16,7 @@ setup(
     description="Download paper from arXiv",
     long_description=long_description,
     long_description_content_type="text/markdown",
-    url="",
+    url="https://github.com/MarkHershey/arxiv-dl",
     # package_dir=({"": "src"}),
     packages=find_namespace_packages(include=["arxiv_dl"]),
     scripts=["arxiv_dl/bin/add-paper", "arxiv_dl/bin/dl-paper"],

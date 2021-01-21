@@ -1,3 +1,5 @@
+# https://arxiv.org/help/api/user-manual
+
 # built-in modules
 import os
 import json
@@ -19,7 +21,7 @@ sh = colorlog.StreamHandler()
 sh.setLevel(logging.DEBUG)
 
 color_formatter = colorlog.ColoredFormatter(
-    fmt="%(log_color)s%(levelname)-8s%(reset)s %(log_color)s%(message)s %(black)s(%(filename)s:%(lineno)s)",
+    fmt="%(log_color)s%(levelname)-8s%(reset)s %(log_color)s%(message)s",
     datefmt=None,
     reset=True,
     log_colors={
@@ -102,8 +104,11 @@ def process_url(url: str) -> Dict[str, str]:
 
 
 def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
-    print("Processing...")
+    logger.setLevel(logging.DEBUG)
+    logger.debug("Processing...")
+    logger.setLevel(logging.WARNING)
     paper_url = tmp_paper_dict.get("paper_url")
+    paper_id = tmp_paper_dict.get("paper_id")
     response = requests.get(paper_url)
 
     if response.status_code != 200:
@@ -118,7 +123,9 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
     tmp = [i.string for i in result]
     paper_title = tmp.pop()
     tmp_paper_dict["title"] = paper_title
+    logger.setLevel(logging.DEBUG)
     logger.debug(f"Paper Title: {paper_title}")
+    logger.setLevel(logging.WARNING)
 
     # get AUTHORS
     result = soup.find("div", class_="authors")
@@ -145,6 +152,31 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
         comments = ""
     tmp_paper_dict["comments"] = comments.strip()
 
+    # get paper with code (pwc)
+    # API: https://arxiv.paperswithcode.com/api/v0/papers/{paper_id}
+    pwc_url = f"https://arxiv.paperswithcode.com/api/v0/papers/{paper_id}"
+    pwc_response = requests.get(pwc_url)
+    if pwc_response.status_code == 200:
+        pwc = pwc_response.text
+        pwc = json.loads(pwc)
+        official_code_urls: list = pwc.get("all_official", [])
+        official_code_urls: list = [i.get("url") for i in official_code_urls]
+        pwc_page_url: str = pwc.get("paper_url", "")
+    else:
+        official_code_urls = []
+        pwc_page_url = ""
+    tmp_paper_dict["official_code_urls"] = official_code_urls
+    tmp_paper_dict["pwc_page_url"] = pwc_page_url.strip()
+
+    # get BIBTEX 
+    bibtex_url = f"https://arxiv.org/bibtex/{paper_id}"
+    bibtex_response = requests.get(bibtex_url)
+    if bibtex_response.status_code == 200:
+        bibtex = bibtex_response.text
+    else:
+        bibtex = ""
+    tmp_paper_dict["bibtex"] = bibtex.strip()
+
     return tmp_paper_dict
 
 
@@ -153,13 +185,13 @@ def download_pdf(paper_dict: dict) -> None:
     if filepath.is_file():
         logger.debug(f"Paper PDF already exists at: {filepath}")
     else:
-        logger.debug(f"Downloading '{paper_dict.get('title', '')}'")
+        logger.debug(f"Downloading...")
         logger.setLevel(logging.WARNING)
         response = requests.get(paper_dict.get("pdf_url"))
         with filepath.open(mode="wb") as f:
             f.write(response.content)
         logger.setLevel(logging.DEBUG)
-        logger.debug(f"Successfully downloaded at: {filepath}")
+        logger.debug(f"Done! Paper saved to '{filepath}'")
     return
 
 
@@ -192,6 +224,16 @@ def create_paper_note(download_dir: Path, paper_dict: dict) -> None:
     authors: str = "\n".join(authors)
     abstract = paper_dict.get("abstract", "")
     comments = paper_dict.get("comments", "")
+    bibtex = paper_dict.get("bibtex", "")
+    
+    official_code_urls: list = paper_dict.get("official_code_urls", [])
+    official_code_urls : list = [f"- [{url}]({url})" for url in official_code_urls]
+    official_code_urls: str = "\n".join(official_code_urls)
+    pwc_page_url = paper_dict.get("pwc_page_url", "")
+    if pwc_page_url:
+        pwc_page_url = f"- [{pwc_page_url}]({pwc_page_url})"
+
+    # markdown content text
     contnet = f"""
 # {title}
 
@@ -209,9 +251,21 @@ def create_paper_note(download_dir: Path, paper_dict: dict) -> None:
 
 {comments}
 
-## Code
+## Source Code
 
-- [None](#)
+Official Code
+
+{official_code_urls}
+
+Community Code
+
+{pwc_page_url}
+
+## Bibtex
+
+```tex
+{bibtex}
+```
 
 ## Notes
 
@@ -347,4 +401,4 @@ def add_paper(url: str) -> None:
 
 
 if __name__ == "__main__":
-    add_paper("https://arxiv.org/pdf/2009.12547.pdf")
+    add_paper("https://arxiv.org/abs/1506.01497")
