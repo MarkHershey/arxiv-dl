@@ -19,7 +19,7 @@ Default Download Destination:
 Set Custom Download Destination via Environment Variable
 
 ```bash
-source ARXIV_DOWNLOAD_FOLDER="{$HOME}/Documents/papers"
+export ARXIV_DOWNLOAD_FOLDER="{$HOME}/Documents/papers"
 ```
 
 ## Usage
