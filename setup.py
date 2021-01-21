@@ -2,14 +2,14 @@ from setuptools import setup, find_packages, find_namespace_packages
 
 MAJOR = 0
 MINOR = 0
-MICRO = 1
+MICRO = 2
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
     long_description = f.read()
 
 setup(
-    name="arxiv_dl",
+    name="arxiv-dl",
     version=VERSION,
     author="Mark Huang",
     author_email="mark.h.huang@gmail.com",

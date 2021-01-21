@@ -102,6 +102,7 @@ def process_url(url: str) -> Dict[str, str]:
 
 
 def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
+    print("Processing...")
     paper_url = tmp_paper_dict.get("paper_url")
     response = requests.get(paper_url)
 
@@ -133,7 +134,7 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
     paper_abstract = tmp.pop()
     tmp = paper_abstract.split("\n")
     paper_abstract = " ".join(tmp)
-    tmp_paper_dict["abstract"] = paper_abstract
+    tmp_paper_dict["abstract"] = paper_abstract.strip()
 
     # get COMMENTS
     result = soup.find("td", class_="tablecell comments mathjax")
@@ -142,7 +143,7 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
         comments = " ".join(comments)
     else:
         comments = ""
-    tmp_paper_dict["comments"] = comments
+    tmp_paper_dict["comments"] = comments.strip()
 
     return tmp_paper_dict
 
@@ -150,8 +151,9 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
 def download_pdf(paper_dict: dict) -> None:
     filepath = Path(paper_dict.get("filepath"))
     if filepath.is_file():
-        logger.debug(f"Paper PDF already exist at: {filepath}")
+        logger.debug(f"Paper PDF already exists at: {filepath}")
     else:
+        logger.debug(f"Downloading '{paper_dict.get('title', '')}'")
         response = requests.get(paper_dict.get("pdf_url"))
         with filepath.open(mode="wb") as f:
             f.write(response.content)
@@ -207,7 +209,7 @@ def create_paper_note(download_dir: Path, paper_dict: dict) -> None:
 
 ## Code
 
-- [None]()
+- [None](#)
 
 ## Notes
 
@@ -255,6 +257,9 @@ def dl_paper(url: str) -> None:
     else:
         logger.error(f"Invalid source website: '{src_website}'")
         return
+
+    # adjust logging level
+    logger.setLevel(logging.DEBUG)
 
     # construct filename
     paper_title = paper_dict.get("title", "")
@@ -306,6 +311,9 @@ def add_paper(url: str) -> None:
     else:
         logger.error(f"Invalid source website: '{src_website}'")
         return
+
+    # adjust logging level
+    logger.setLevel(logging.DEBUG)
 
     # construct filename
     paper_title = paper_dict.get("title", "")
