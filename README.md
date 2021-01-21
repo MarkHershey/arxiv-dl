@@ -8,44 +8,55 @@ Download paper from arXiv
 pip install --upgrade arxiv-dl
 ```
 
-## Configuration (Optional)
+## Configuration 
 
-Default Download Destination: 
+Set Custom Download Destination *(Optional)*
 
-```bash
-"{$HOME}/Downloads/ArXiv_Papers"
-```
-
-Set Custom Download Destination
-
-- Let's say you want your papers get downloaded into `~/Documents/Papers`
-- Make sure the directory `~/Documents/Papers` exists
-
-```bash
-export ARXIV_DOWNLOAD_FOLDER=~/Documents/Papers
-```
+- Let's say you want your papers get downloaded into `~/Documents/Papers`.
+- First, make sure the directory `~/Documents/Papers` exists.
+- Then, set the environment variable `ARXIV_DOWNLOAD_FOLDER`:
+    ```bash
+    export ARXIV_DOWNLOAD_FOLDER=~/Documents/Papers
+    ```
+- If the environment variable is not set, paper will be downloaded into Default Download Destination (`~/Downloads/ArXiv_Papers`)
 
 ## Usage
+
+Type in command line:
 
 ```bash
 add-paper "URL"
 ```
-`add-paper` will do
 
-- Download paper `{paper_id}_{title}.pdf` into `ARXIV_DOWNLOAD_FOLDER`.
-- Maintain a paper list containing metadata in json at `ARXIV_DOWNLOAD_FOLDER/000_Paper_List.json`.
-- Create a new MarkDown document named `{paper_id}_Notes.md` in the same directory. (for you to add reading notes)
+or
 
 ```bash
 dl-paper "URL"
 ```
-`dl-paper` will do
 
-- Download paper `{paper_id}_{title}.pdf` into `ARXIV_DOWNLOAD_FOLDER`.
+Usage Example:
 
-## Currently supported URLs
+```bash
+add-paper https://arxiv.org/abs/1512.03385
+```
 
-- URLs from `arXiv.org`
+## Features
+
+### Commands
+
+**`add-paper` will do**
+
+- Download paper named `[id]_[title].pdf` into destination folder.
+- Maintain a papers list named `000_Paper_List.json` in the destination folder.
+- Create a new MarkDown document named `[id]_Notes.md` in the destination folder. (for adding personal reading notes)
+
+**`dl-paper` will do**
+
+- Download paper `[id]_[title].pdf` into destination folder.
+
+### Supported URLs
+
+- URLs from `arXiv.org` Only
     - Paper's abstract page `https://arxiv.org/abs/xxxx.xxxxx` 
     - or Paper's PDF URL `https://arxiv.org/pdf/xxxx.xxxxx.pdf`
 
