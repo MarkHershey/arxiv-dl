@@ -154,9 +154,11 @@ def download_pdf(paper_dict: dict) -> None:
         logger.debug(f"Paper PDF already exists at: {filepath}")
     else:
         logger.debug(f"Downloading '{paper_dict.get('title', '')}'")
+        logger.setLevel(logging.WARNING)
         response = requests.get(paper_dict.get("pdf_url"))
         with filepath.open(mode="wb") as f:
             f.write(response.content)
+        logger.setLevel(logging.DEBUG)
         logger.debug(f"Successfully downloaded at: {filepath}")
     return
 

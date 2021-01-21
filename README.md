@@ -16,10 +16,13 @@ Default Download Destination:
 "{$HOME}/Downloads/ArXiv_Papers"
 ```
 
-Set Custom Download Destination via Environment Variable
+Set Custom Download Destination
+
+- Let's say you want your papers get downloaded into `~/Documents/Papers`
+- Make sure the directory `~/Documents/Papers` exists
 
 ```bash
-export ARXIV_DOWNLOAD_FOLDER="{$HOME}/Documents/papers"
+export ARXIV_DOWNLOAD_FOLDER=~/Documents/Papers
 ```
 
 ## Usage
