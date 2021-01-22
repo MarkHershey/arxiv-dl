@@ -15,7 +15,7 @@ from bs4 import BeautifulSoup
 DEFAULT_DOWNLOAD_PATH = Path.home() / "Downloads/ArXiv_Papers"
 
 ###########################################################################
-# Set up logger
+# Set up colored logger
 
 logger = logging.getLogger()
 logger.setLevel(logging.WARNING)
@@ -60,6 +60,7 @@ def get_local_paper_folder_path() -> Path:
         if not download_path.is_dir():
             logger.debug(f"Creating Directory: '{DEFAULT_DOWNLOAD_PATH}'")
             os.makedirs(str(DEFAULT_DOWNLOAD_PATH))
+            
     return download_path
 
 
@@ -72,22 +73,22 @@ def process_arxiv_url(url: str) -> Tuple[str]:
             return url[:-4]
         else:
             return url
-
+        
+    paper_id = get_paper_id_from_url(url)
+    
     if "arxiv.org/abs" in url:
-        ## abstract page
-        paper_id = get_paper_id_from_url(url)
+        # url is abstract page
         paper_url = url
         pdf_url = f"https://arxiv.org/pdf/{paper_id}.pdf"
-        return paper_id, paper_url, pdf_url
     elif "arxiv.org/pdf" in url:
-        ## pdf page
-        paper_id = get_paper_id_from_url(url)
+        # url is pdf page
         paper_url = f"https://arxiv.org/abs/{paper_id}"
         pdf_url = url
-        return paper_id, paper_url, pdf_url
     else:
         logger.error("Unexpected URL Error by arxiv URL Handler.")
         raise Exception("Unexpected URL Error by arxiv URL Handler.")
+        
+    return paper_id, paper_url, pdf_url
 
 
 def process_url(url: str) -> Dict[str, str]:
@@ -157,7 +158,7 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
         comments = ""
     tmp_paper_dict["comments"] = comments.strip()
 
-    # get paper with code (pwc)
+    # get PWC (paper with code)
     # API: https://arxiv.paperswithcode.com/api/v0/papers/{paper_id}
     pwc_url = f"https://arxiv.paperswithcode.com/api/v0/papers/{paper_id}"
     pwc_response = requests.get(pwc_url)
@@ -230,7 +231,6 @@ def create_paper_note(download_dir: Path, paper_dict: Dict[str, str]) -> None:
     abstract = paper_dict.get("abstract", "")
     comments = paper_dict.get("comments", "")
     bibtex = paper_dict.get("bibtex", "")
-    # code
     official_code_urls: list = paper_dict.get("official_code_urls", [])
     official_code_urls: list = [f"- [{url}]({url})" for url in official_code_urls]
     official_code_urls: str = "\n".join(official_code_urls)
@@ -239,7 +239,7 @@ def create_paper_note(download_dir: Path, paper_dict: Dict[str, str]) -> None:
         pwc_page_url = f"- [{pwc_page_url}]({pwc_page_url})"
 
     # markdown content text
-    contnet = f"""
+    md_content = f"""
 # {title}
 
 [arXiv]({paper_url}), [PDF]({pdf_url})
@@ -279,7 +279,7 @@ Type your reading notes here...
 """
     if not note_path.is_file():
         with note_path.open(mode="w") as f:
-            f.write(contnet)
+            f.write(md_content)
     return
 
 
