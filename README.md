@@ -16,7 +16,7 @@ This is a command-line tool, you just need to use `Python3`'s `pip` to install t
 
 -   Download paper named `[id]_[title].pdf` into destination folder.
 -   Maintain a papers list named `000_Paper_List.json` in the destination folder.
--   Extract paper metadata, like `title`, `authors`, `abstract`, `bibtex`, `code`, and write them into a new MarkDown document named `[id]_Notes.md` in the destination folder.
+-   Extract paper metadata, like `title`, `authors`, `abstract`, `bibtex`, `code`, and write them into a new MarkDown document named `[id]__Notes.md` in the destination folder.
 
 **`dl-paper` will do**
 

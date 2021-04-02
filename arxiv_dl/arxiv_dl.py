@@ -60,7 +60,7 @@ def get_local_paper_folder_path() -> Path:
         if not download_path.is_dir():
             logger.debug(f"Creating Directory: '{DEFAULT_DOWNLOAD_PATH}'")
             os.makedirs(str(DEFAULT_DOWNLOAD_PATH))
-            
+
     return download_path
 
 
@@ -73,9 +73,9 @@ def process_arxiv_url(url: str) -> Tuple[str]:
             return url[:-4]
         else:
             return url
-        
+
     paper_id = get_paper_id_from_url(url)
-    
+
     if "arxiv.org/abs" in url:
         # url is abstract page
         paper_url = url
@@ -87,7 +87,7 @@ def process_arxiv_url(url: str) -> Tuple[str]:
     else:
         logger.error("Unexpected URL Error by arxiv URL Handler.")
         raise Exception("Unexpected URL Error by arxiv URL Handler.")
-        
+
     return paper_id, paper_url, pdf_url
 
 
@@ -221,7 +221,7 @@ def add_to_paper_list(download_dir: Path, paper_dict: Dict[str, str]) -> None:
 
 def create_paper_note(download_dir: Path, paper_dict: Dict[str, str]) -> None:
     paper_id = paper_dict.get("paper_id", "").strip()
-    note_path = Path(download_dir) / f"{paper_id}_Notes.md"
+    note_path = Path(download_dir) / f"{paper_id}__Notes.md"
     paper_url = paper_dict.get("paper_url", "")
     pdf_url = paper_dict.get("pdf_url", "")
     title = paper_dict.get("title", "")

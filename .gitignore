@@ -1,5 +1,6 @@
 .pypirc
 .testpypirc
+.vscode
 
 # OS generated files #
 ######################
