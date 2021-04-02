@@ -22,36 +22,34 @@ This is a command-line tool, you just need to use `Python3`'s `pip` to install t
 
 -   Download paper `[id]_[title].pdf` into destination folder.
 
-### Supported URLs
-
--   URLs from `arXiv.org` Only
-    -   Paper's abstract page `https://arxiv.org/abs/xxxx.xxxxx`
-    -   or Paper's PDF page `https://arxiv.org/pdf/xxxx.xxxxx.pdf`
-
 ## Usage
 
-To install
+To install the commands
 
 ```bash
 $ pip install --upgrade arxiv-dl
 ```
 
-To download paper
+To use the commands in your shell/terminal
 
 ```bash
-$ add-paper "URL"
-```
+$ add-paper "URL or ID"
 
-or
+# OR
 
-```bash
-$ dl-paper "URL"
+$ dl-paper "URL or ID"
 ```
 
 Usage Example:
 
 ```bash
+$ add-paper 1512.03385
+
+# OR
 $ add-paper https://arxiv.org/abs/1512.03385
+
+# OR
+$ add-paper https://arxiv.org/pdf/1512.03385.pdf
 ```
 
 ## Configuration (Optional)

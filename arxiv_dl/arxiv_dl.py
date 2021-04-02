@@ -1,15 +1,14 @@
 # https://arxiv.org/help/api/user-manual
 
-# built-in modules
 import json
 import logging
 import os
+import re
 from pathlib import Path
 from typing import Dict, List, Tuple
 
-# external modules
-import requests
 import colorlog
+import requests
 from bs4 import BeautifulSoup
 
 DEFAULT_DOWNLOAD_PATH = Path.home() / "Downloads/ArXiv_Papers"
@@ -98,6 +97,49 @@ def process_url(url: str) -> Dict[str, str]:
     else:
         logger.error("URL not supported")
         raise Exception("URL not supported")
+
+    tmp_paper_dict = {
+        "paper_id": paper_id,
+        "paper_url": paper_url,
+        "pdf_url": pdf_url,
+        "src_website": src_website,
+    }
+
+    return tmp_paper_dict
+
+
+def validate_arxiv_paper_id(paper_id: str) -> None:
+    """
+    Raise exception if the given paper_id is not a valid arXiv identifier.
+
+    Current implementation validates paper accepted by arXiv during 2007 to 2029
+
+    Ref: https://arxiv.org/help/arxiv_identifier
+    """
+    error = "Invalid arXiv paper identifier."
+    if not isinstance(paper_id, str):
+        raise TypeError(error)
+
+    pattern = "^([0-2])([0-9])(0|1)([0-9])\.[0-9]{4,5}(v[0-9]{1,2})?$"
+
+    if not re.fullmatch(pattern, paper_id):
+        raise ValueError(error)
+
+    year = int(paper_id[0:2])
+    month = int(paper_id[2:4])
+
+    if not 7 <= year <= 29:
+        raise ValueError(error)
+    if not 1 <= month <= 12:
+        raise ValueError(error)
+
+
+def process_paper_id(paper_id: str) -> Dict[str, str]:
+    # validate first
+    validate_arxiv_paper_id(paper_id)
+    src_website = "arxiv"
+    pdf_url = f"https://arxiv.org/pdf/{paper_id}.pdf"
+    paper_url = f"https://arxiv.org/abs/{paper_id}"
 
     tmp_paper_dict = {
         "paper_id": paper_id,
@@ -283,9 +325,11 @@ Type your reading notes here...
     return
 
 
-def dl_paper(url: str) -> None:
+def dl_paper(identifier: str) -> None:
     """
-    Get a Paper dictionary from a supported URL
+    Entry point for dl-paper command
+
+    Download paper only
     """
     try:
         download_dir: Path = get_local_paper_folder_path()
@@ -295,15 +339,20 @@ def dl_paper(url: str) -> None:
         return
 
     try:
-        tmp_paper_dict = process_url(url)
+        if identifier and identifier[0].isdigit():
+            tmp_paper_dict = process_paper_id(identifier)
+        else:
+            tmp_paper_dict = process_url(identifier)
     except Exception as err:
-        logger.error(f"Abort: Error while processing URL: {url}")
+        logger.error(f"Abort: Error while processing paper identifier: {identifier}")
         return
 
     # verify expected keys are present
     for key in ("paper_id", "paper_url", "pdf_url", "src_website"):
         if not key in tmp_paper_dict:
-            logger.error(f"Abort: Error while processing URL: {url}")
+            logger.error(
+                f"Abort: Error while processing paper identifier: {identifier}"
+            )
             return
 
     # start scraping from source website
@@ -337,9 +386,11 @@ def dl_paper(url: str) -> None:
         return
 
 
-def add_paper(url: str) -> None:
+def add_paper(identifier: str) -> None:
     """
-    Get a Paper dictionary from a supported URL
+    Entry point for add-paper command
+
+    Download paper and extract paper metadata
     """
     try:
         download_dir: Path = get_local_paper_folder_path()
@@ -349,15 +400,20 @@ def add_paper(url: str) -> None:
         return
 
     try:
-        tmp_paper_dict = process_url(url)
+        if identifier and identifier[0].isdigit():
+            tmp_paper_dict = process_paper_id(identifier)
+        else:
+            tmp_paper_dict = process_url(identifier)
     except Exception as err:
-        logger.error(f"Abort: Error while processing URL: {url}")
+        logger.error(f"Abort: Error while processing paper identifier: {identifier}")
         return
 
     # verify expected keys are present
     for key in ("paper_id", "paper_url", "pdf_url", "src_website"):
         if not key in tmp_paper_dict:
-            logger.error(f"Abort: Error while processing URL: {url}")
+            logger.error(
+                f"Abort: Error while processing paper identifier: {identifier}"
+            )
             return
 
     # start scraping from source website
@@ -406,4 +462,5 @@ def add_paper(url: str) -> None:
 
 
 if __name__ == "__main__":
+    add_paper("1506.01497")
     add_paper("https://arxiv.org/abs/1506.01497")

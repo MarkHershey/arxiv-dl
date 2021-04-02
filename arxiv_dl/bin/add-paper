@@ -8,16 +8,25 @@ if len(sys.argv) == 1:
     logger.error(
         """Missing argument.
          Usage:
-            add-paper 'URL'
-            dl-paper 'URL'"""
+            add-paper 'arXiv URL'
+            add-paper 'arXiv paper id'
+            dl-paper 'arXiv URL'
+            dl-paper 'arXiv paper id'
+         Example:
+            add-paper 2103.15538"""
     )
 elif len(sys.argv) == 2:
-    URL = sys.argv[1]
-    add_paper(URL)
+    arg = sys.argv[1]
+    add_paper(arg)
 else:
     logger.error(f"Unexpected arguments: {sys.argv[1:]}")
     logger.error(
-        """Usage:
-            add-paper 'URL'
-            dl-paper 'URL'"""
+        """Missing argument.
+         Usage:
+            add-paper 'arXiv URL'
+            add-paper 'arXiv paper id'
+            dl-paper 'arXiv URL'
+            dl-paper 'arXiv paper id'
+         Example:
+            add-paper 2103.15538"""
     )
