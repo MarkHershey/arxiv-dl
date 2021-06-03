@@ -21,7 +21,6 @@ setup(
     scripts=["arxiv_dl/bin/add-paper", "arxiv_dl/bin/dl-paper"],
     install_requires=[
         "colorlog>=4.1.0",
-        # "markkk",
         # "orderedset>=2.0.0",
         "requests",
         "beautifulsoup4",
