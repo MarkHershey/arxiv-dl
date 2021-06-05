@@ -1,0 +1,28 @@
+#!/usr/bin/env python3
+
+import sys
+
+from arxiv_dl.arxiv_dl import add_paper, logger
+
+if len(sys.argv) == 1:
+    logger.error(
+        """Missing argument.
+         Usage:
+            getpaper 'arXiv URL'
+            getpaper 'arXiv paper id'
+         Example:
+            getpaper 2103.15538"""
+    )
+elif len(sys.argv) == 2:
+    arg = sys.argv[1]
+    add_paper(arg)
+else:
+    logger.error(f"Unexpected arguments: {sys.argv[1:]}")
+    logger.error(
+        """Missing argument.
+         Usage:
+            getpaper 'arXiv URL'
+            getpaper 'arXiv paper id'
+         Example:
+            getpaper 2103.15538"""
+    )

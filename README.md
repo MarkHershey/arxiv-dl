@@ -2,55 +2,47 @@
 
 Command-line [arXiv.org](https://arxiv.org/) Papers Downloader
 
--   Powered by [arXiv API](https://arxiv.org/help/api/user-manual) and [Papers with code](https://paperswithcode.com/)
--   [Source Code](https://github.com/MarkHershey/arxiv-dl)
--   [Python Package Index (PyPI)](https://pypi.org/project/arxiv-dl/)
+[[Source Code]](https://github.com/MarkHershey/arxiv-dl)
+[[PyPI]](https://pypi.org/project/arxiv-dl/)
 
 ## Features
-
-This is a command-line tool, you just need to use `Python3`'s `pip` to install the package, then, you will be able to use the following commands in your shell/terminal.
-
-### Commands
-
-**`add-paper` will do**
 
 -   Download paper named `[id]_[title].pdf` into destination folder.
 -   Maintain a papers list named `000_Paper_List.json` in the destination folder.
 -   Extract paper metadata, like `title`, `authors`, `abstract`, `bibtex`, `code`, and write them into a new MarkDown document named `[id]__Notes.md` in the destination folder.
 
-**`dl-paper` will do**
+## Install
 
--   Download paper `[id]_[title].pdf` into destination folder.
+This is a command-line tool, you just need to use `pip` to install the package, then, you will be able to use the command `getpaper` in your terminal.
+
+-   Pre-requisite: `Python 3`
+
+```bash
+pip install arxiv-dl
+```
 
 ## Usage
 
-To install the commands
-
 ```bash
-$ pip install --upgrade arxiv-dl
+$ getpaper "URL or ID"
 ```
 
-To use the commands in your shell/terminal
+Example:
 
 ```bash
-$ add-paper "URL or ID"
+$ getpaper 1512.03385
 
 # OR
+$ getpaper https://arxiv.org/abs/1512.03385
 
-$ dl-paper "URL or ID"
+# OR
+$ getpaper https://arxiv.org/pdf/1512.03385.pdf
 ```
 
-Usage Example:
+Deprecating Commands:
 
-```bash
-$ add-paper 1512.03385
-
-# OR
-$ add-paper https://arxiv.org/abs/1512.03385
-
-# OR
-$ add-paper https://arxiv.org/pdf/1512.03385.pdf
-```
+-   `add-paper`
+-   `dl-paper`
 
 ## Configuration (Optional)
 

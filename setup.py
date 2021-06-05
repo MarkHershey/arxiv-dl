@@ -1,8 +1,8 @@
-from setuptools import find_namespace_packages, find_packages, setup
+from setuptools import find_namespace_packages, setup
 
 MAJOR = 0
 MINOR = 1
-MICRO = 0
+MICRO = 2
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -18,7 +18,11 @@ setup(
     long_description_content_type="text/markdown",
     url="https://github.com/MarkHershey/arxiv-dl",
     packages=find_namespace_packages(include=["arxiv_dl"]),
-    scripts=["arxiv_dl/bin/add-paper", "arxiv_dl/bin/dl-paper"],
+    scripts=[
+        "arxiv_dl/bin/getpaper",
+        "arxiv_dl/bin/add-paper",
+        "arxiv_dl/bin/dl-paper",
+    ],
     install_requires=[
         "colorlog>=4.1.0",
         # "orderedset>=2.0.0",
