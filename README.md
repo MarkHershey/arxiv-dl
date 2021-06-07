@@ -4,6 +4,8 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
 [[PyPI]](https://pypi.org/project/arxiv-dl/)
 [[Source]](https://github.com/MarkHershey/arxiv-dl)
 
+[![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
+[![](https://img.shields.io/pypi/dm/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
 [![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
