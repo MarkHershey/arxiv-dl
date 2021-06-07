@@ -1,15 +1,24 @@
 # arXiv-dl
 
-Command-line [arXiv.org](https://arxiv.org/) Papers Downloader
-
-[[Source Code]](https://github.com/MarkHershey/arxiv-dl)
+Command-line [arXiv](https://arxiv.org/) Paper Downloader.
 [[PyPI]](https://pypi.org/project/arxiv-dl/)
+[[Source]](https://github.com/MarkHershey/arxiv-dl)
+
+[![](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
 ## Features
 
--   Download paper named `[id]_[title].pdf` into destination folder.
--   Maintain a papers list named `000_Paper_List.json` in the destination folder.
--   Extract paper metadata, like `title`, `authors`, `abstract`, `bibtex`, `code`, and write them into a new MarkDown document named `[id]__Notes.md` in the destination folder.
+-   Download Paper from `arXiv.org` via command line interface.
+-   Name downloaded Paper by its arXiv ID and title without whitespace.
+-   Retrieve Paper metadata:
+
+    -   Paper Title
+    -   Authors
+    -   Abstract
+    -   Comments
+    -   Source Code
+    -   Citation (bibtex)
 
 ## Install
 
@@ -52,7 +61,7 @@ Set Custom Download Destination Folder _(Optional)_
 -   Make sure the folder `~/Documents/Papers` exists.
 -   Set the environment variable `ARXIV_DOWNLOAD_FOLDER` to your desired location.
     ```bash
-    $ export ARXIV_DOWNLOAD_FOLDER=~/Documents/Papers
+    export ARXIV_DOWNLOAD_FOLDER=~/Documents/Papers
     ```
 -   If the environment variable is not set, paper will be downloaded into the default Download Destination `~/Downloads/ArXiv_Papers`.
 
