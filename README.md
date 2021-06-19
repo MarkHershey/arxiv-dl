@@ -6,21 +6,21 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/pypi/dm/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
-[![](https://img.shields.io/badge/license-MIT-blue)](LICENSE)
+[![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE)
 [![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
 ## Features
 
 -   Download Paper from `arXiv.org` via command line interface.
 -   Name downloaded Paper by its arXiv ID and title without whitespace.
--   Retrieve Paper metadata:
-
+-   Retrieve Paper metadata and save them in a corresponding MarkDown document:
     -   Paper Title
     -   Authors
     -   Abstract
-    -   Comments
-    -   Source Code
-    -   Citation (bibtex)
+    -   Comments (Conference acceptance info)
+    -   Source Code Links
+    -   Citation (`BibTeX`)
+-   Configure desired download destination via environment variables.
 
 ## Install
 

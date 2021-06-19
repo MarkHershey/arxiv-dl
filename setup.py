@@ -1,8 +1,8 @@
 from setuptools import find_namespace_packages, setup
 
 MAJOR = 0
-MINOR = 1
-MICRO = 2
+MINOR = 2
+MICRO = 0
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -13,7 +13,7 @@ setup(
     version=VERSION,
     author="Mark Huang",
     author_email="mark.h.huang@gmail.com",
-    description="Download paper from arXiv",
+    description="Command-line arXiv.org Papers Downloader. Citation extraction and PDF naming automation.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/MarkHershey/arxiv-dl",
@@ -29,8 +29,15 @@ setup(
         "requests",
         "beautifulsoup4",
     ],
-    # extras_require={"dev": ["pytest", "tox", "wheel"]},
-    # Classifiers ref: https://pypi.org/classifiers/
+    extras_require={
+        "dev": [
+            "check-manifest",
+            "pytest",
+            "tox",
+            "twine",
+            "wheel",
+        ]
+    },
     classifiers=[
         "Topic :: Utilities",
         "Intended Audience :: Developers",
@@ -40,6 +47,7 @@ setup(
         "Programming Language :: Python :: 3.8",
         "Programming Language :: Python :: 3.9",
         "Operating System :: OS Independent",
+        "Natural Language :: English",
     ],
     python_requires=">=3.6",
 )
