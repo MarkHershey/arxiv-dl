@@ -11,16 +11,16 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
 
 ## Features
 
--   Download Paper from `arXiv.org` via command line interface.
--   Name downloaded Paper by its arXiv ID and title without whitespace.
--   Retrieve Paper metadata and save them in a corresponding MarkDown document:
+-   Download Papers from `arXiv.org` via command line interface.
+-   Name the downloaded Paper by its arXiv ID and title without whitespace.
+-   Retrieve the Paper's metadata and save them in a corresponding MarkDown document:
     -   Paper Title
     -   Authors
     -   Abstract
     -   Comments (Conference acceptance info)
     -   Source Code Links
     -   Citation (`BibTeX`)
--   Configure desired download destination via environment variables.
+-   Configure the desired download destination via environment variables.
 
 ## Install
 

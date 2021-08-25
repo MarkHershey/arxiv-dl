@@ -4,6 +4,7 @@ import json
 import logging
 import os
 import re
+import string
 from pathlib import Path
 from typing import Dict, List, Tuple
 
@@ -325,6 +326,21 @@ Type your reading notes here...
     return
 
 
+def normalize_paper_title(title: str) -> str:
+    normalized_title = ""
+    for char in title:
+        if char in string.printable:
+            if char in string.ascii_letters:
+                normalized_title += char
+            elif char in string.whitespace:
+                normalized_title += "_"
+            elif char in "?+-":
+                normalized_title += char
+            else:
+                pass
+    return normalized_title
+
+
 def dl_paper(identifier: str) -> None:
     """
     Entry point for dl-paper command
@@ -374,7 +390,7 @@ def dl_paper(identifier: str) -> None:
     # construct filename
     paper_title = paper_dict.get("title", "")
     paper_id = paper_dict.get("paper_id", "").strip()
-    paper_title = paper_title.strip().replace(" ", "_")
+    paper_title = normalize_paper_title(paper_title)
     filepath = download_dir / f"{paper_id}_{paper_title}.pdf"
     paper_dict["filepath"] = str(filepath)
 
@@ -435,7 +451,7 @@ def add_paper(identifier: str) -> None:
     # construct filename
     paper_title = paper_dict.get("title", "")
     paper_id = paper_dict.get("paper_id", "").strip()
-    paper_title = paper_title.strip().replace(" ", "_")
+    paper_title = normalize_paper_title(paper_title)
     filepath = download_dir / f"{paper_id}_{paper_title}.pdf"
     paper_dict["filepath"] = str(filepath)
 

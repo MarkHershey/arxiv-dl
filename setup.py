@@ -1,7 +1,7 @@
 from setuptools import find_namespace_packages, setup
 
-MAJOR = 0
-MINOR = 2
+MAJOR = 1
+MINOR = 0
 MICRO = 0
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
