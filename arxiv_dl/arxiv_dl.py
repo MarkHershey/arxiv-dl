@@ -330,7 +330,7 @@ def normalize_paper_title(title: str) -> str:
     normalized_title = ""
     for char in title:
         if char in string.printable:
-            if char in string.ascii_letters:
+            if char in string.ascii_letters or char in string.digits:
                 normalized_title += char
             elif char in string.whitespace:
                 normalized_title += "_"
