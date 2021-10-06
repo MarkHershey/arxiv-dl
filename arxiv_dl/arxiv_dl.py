@@ -240,7 +240,7 @@ def download_pdf(paper_dict: Dict[str, str]) -> None:
         with filepath.open(mode="wb") as f:
             f.write(response.content)
         logger.setLevel(logging.DEBUG)
-        logger.debug(f"Done! Paper saved to {filepath}")
+        logger.debug(f"Done! Paper saved to '{filepath}'")
     return
 
 
