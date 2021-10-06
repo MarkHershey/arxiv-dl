@@ -2,7 +2,7 @@ from setuptools import find_namespace_packages, setup
 
 MAJOR = 1
 MINOR = 0
-MICRO = 2
+MICRO = 3
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -25,7 +25,6 @@ setup(
     ],
     install_requires=[
         "colorlog>=4.1.0",
-        # "orderedset>=2.0.0",
         "requests",
         "beautifulsoup4",
     ],

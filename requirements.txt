@@ -1,2 +1,3 @@
+colorlog
 requests
 beautifulsoup4

@@ -232,7 +232,7 @@ def get_paper_from_arxiv(tmp_paper_dict: Dict[str, str]) -> Dict[str, str]:
 def download_pdf(paper_dict: Dict[str, str]) -> None:
     filepath = Path(paper_dict.get("filepath"))
     if filepath.is_file():
-        logger.debug(f"Paper PDF already exists at: {filepath}")
+        logger.debug(f'Paper PDF already exists at: "{filepath}"')
     else:
         logger.debug(f"Downloading...")
         logger.setLevel(logging.WARNING)
@@ -240,7 +240,7 @@ def download_pdf(paper_dict: Dict[str, str]) -> None:
         with filepath.open(mode="wb") as f:
             f.write(response.content)
         logger.setLevel(logging.DEBUG)
-        logger.debug(f"Done! Paper saved to '{filepath}'")
+        logger.debug(f'Done! Paper saved to "{filepath}"')
     return
 
 
