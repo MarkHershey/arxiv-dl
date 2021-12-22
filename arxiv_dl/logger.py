@@ -9,7 +9,8 @@ _sh = colorlog.StreamHandler()
 _sh.setLevel(logging.DEBUG)
 
 _color_formatter = colorlog.ColoredFormatter(
-    fmt="%(log_color)s%(levelname)-8s%(reset)s %(log_color)s%(message)s",
+    # fmt="%(log_color)s%(levelname)-8s%(reset)s %(log_color)s%(message)s",
+    fmt="%(log_color)s%(message)s",
     datefmt=None,
     reset=True,
     log_colors={

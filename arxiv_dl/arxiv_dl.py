@@ -191,7 +191,7 @@ Type your reading notes here...
     return
 
 
-def add_paper(target: str, *args, **kwargs) -> None:
+def add_paper(target: str, verbose: bool = False, *args, **kwargs) -> None:
     """
     Entry point
 
@@ -252,6 +252,8 @@ def add_paper(target: str, *args, **kwargs) -> None:
 
     # adjust logging level
     logger.setLevel(logging.DEBUG)
+    if verbose:
+        logger.debug(json.dumps(paper_data.dict(), indent=4))
 
     # download paper
     try:
@@ -276,5 +278,5 @@ def add_paper(target: str, *args, **kwargs) -> None:
 
 
 if __name__ == "__main__":
-    add_paper("1506.01497")
-    add_paper("https://arxiv.org/abs/1506.01497")
+    add_paper("1506.01497", verbose=True)
+    add_paper("https://arxiv.org/abs/1506.01497", verbose=True)
