@@ -8,10 +8,11 @@ class PaperData(BaseModel):
     abs_url: str = None
     pdf_url: str = None
     src_website: str = None
+    download_name: str = None
 
     title: str = None
-    download_name: str = None
-    download_path: str = None
+    year: int = None
+    paper_venue: str = None
     authors: List[str] = []
     abstract: str = None
     comments: str = None
