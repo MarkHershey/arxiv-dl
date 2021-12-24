@@ -229,5 +229,32 @@ def process_arxiv_target(target: str) -> PaperData:
     )
 
 
+###############################################################################
+### CVF Helper Functions
+
+
+def process_cvf_target(target: str) -> PaperData:
+    # TODO
+    ...
+
+
+###############################################################################
+### NeurIPS Helper Functions
+
+
+def process_nips_target(target: str) -> PaperData:
+    # TODO
+    ...
+
+
+###############################################################################
+### OpenReview Helper Functions
+
+
+def process_openreview_target(target: str) -> PaperData:
+    # TODO
+    ...
+
+
 if __name__ == "__main__":
     ...

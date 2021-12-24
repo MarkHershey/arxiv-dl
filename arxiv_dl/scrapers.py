@@ -88,3 +88,18 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
     )
 
     return None
+
+
+def scrape_metadata_cvf(paper_data: PaperData) -> None:
+    # TODO
+    ...
+
+
+def scrape_metadata_nips(paper_data: PaperData) -> None:
+    # TODO
+    ...
+
+
+def scrape_metadata_openreview(paper_data: PaperData) -> None:
+    # TODO
+    ...

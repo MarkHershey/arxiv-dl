@@ -2,11 +2,7 @@
 
 import json
 import logging
-import os
-import re
-import string
 from pathlib import Path
-from typing import Dict, List, Union
 
 from helpers import (
     add_to_paper_list,
@@ -14,13 +10,21 @@ from helpers import (
     download_pdf,
     get_download_destination,
     process_arxiv_target,
+    process_cvf_target,
+    process_nips_target,
+    process_openreview_target,
 )
 from logger import logger
 from models import PaperData
-from scrapers import scrape_metadata_arxiv
+from scrapers import (
+    scrape_metadata_arxiv,
+    scrape_metadata_cvf,
+    scrape_metadata_nips,
+    scrape_metadata_openreview,
+)
 
 
-def add_paper(target: str, verbose: bool = False, *args, **kwargs) -> None:
+def main(target: str, verbose: bool = False, *args, **kwargs) -> bool:
     """
     Entry point
 
@@ -28,36 +32,37 @@ def add_paper(target: str, verbose: bool = False, *args, **kwargs) -> None:
     """
     ### Get Target Download Directory
     try:
-        download_dir = get_download_destination()
+        download_dir: Path = get_download_destination()
     except Exception as e:
         logger.exception(e)
         logger.error("Abort: Environment Variable Error")
-        return
+        return False
 
     ### Filter Invalid Target String
     if not target or not isinstance(target, str):
         logger.error("Abort: Target is not specified correctly")
-        return
+        return False
 
     if (
         not target.startswith(("http://", "https://", "www."))
         and not target[0].isdigit()
     ):
         logger.error("Abort: Unknown target")
-        return
+        return False
 
     ### Identify Paper Source/Venues
     if target[0].isdigit() or "arxiv.org" in target:
         # assume target is an ArXiv ID
-        paper_data = process_arxiv_target(target)
+        paper_data: PaperData = process_arxiv_target(target)
     elif "openaccess.thecvf.com" in target:  # assume target is a CVF URL
         # CVPR, ICCV, WACV
-        ...
+        paper_data: PaperData = process_cvf_target(target)
     elif "papers.nips.cc/paper" in target:  # assume target is a NeurIPS URL
-        ...
+        paper_data: PaperData = process_nips_target(target)
     elif "openreview.net" in target:  # assume target is an OpenReview URL
-        ...
+        paper_data: PaperData = process_openreview_target(target)
     elif target.endswith(".pdf"):  # assume target is a PDF file
+        # TODO: download the pdf file only
         ...
     else:
         logger.error("Abort: Unknown target")
@@ -71,11 +76,11 @@ def add_paper(target: str, verbose: bool = False, *args, **kwargs) -> None:
         if paper_data.src_website == "ArXiv":
             scrape_metadata_arxiv(paper_data)
         elif paper_data.src_website == "CVF":
-            ...
+            scrape_metadata_cvf(paper_data)
         elif paper_data.src_website == "NeurIPS":
-            ...
+            scrape_metadata_nips(paper_data)
         elif paper_data.src_website == "OpenReview":
-            ...
+            scrape_metadata_openreview(paper_data)
         else:
             # TODO: check here
             logger.error(f"Invalid source website: '{paper_data.src_website}'")
@@ -111,7 +116,9 @@ def add_paper(target: str, verbose: bool = False, *args, **kwargs) -> None:
         logger.warning("Error while creating note")
         return False
 
+    return True
+
 
 if __name__ == "__main__":
-    add_paper("1506.01497", verbose=True)
-    add_paper("https://arxiv.org/abs/1506.01497", verbose=True)
+    main("1506.01497", verbose=True)
+    main("https://arxiv.org/abs/1506.01497", verbose=True)
