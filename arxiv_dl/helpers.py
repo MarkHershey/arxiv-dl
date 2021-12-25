@@ -7,8 +7,6 @@ from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
 import requests
-from bs4 import BeautifulSoup
-
 from logger import logger
 from models import PaperData
 

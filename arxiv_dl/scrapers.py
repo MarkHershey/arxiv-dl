@@ -1,14 +1,9 @@
 import json
 import logging
-import os
-import re
-import string
-from pathlib import Path
 from typing import Dict, List, Tuple
 
 import requests
 from bs4 import BeautifulSoup
-
 from helpers import normalize_paper_title
 from logger import logger
 from models import PaperData
