@@ -69,4 +69,4 @@ Set Custom Download Destination Folder _(Optional)_
 
 ## License
 
-[MIT License](LICENSE) - Copyright (c) 2021 Mark Huang
+[MIT License](LICENSE) - Copyright (c) 2021-2022 Mark Huang
