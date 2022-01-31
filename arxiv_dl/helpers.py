@@ -2,11 +2,14 @@ import json
 import logging
 import os
 import re
+import shlex
 import string
+import subprocess
 from pathlib import Path
 from typing import Dict, List, Tuple, Union
 
 import requests
+
 from logger import logger
 from models import PaperData
 
@@ -35,42 +38,165 @@ def normalize_paper_title(title: str) -> str:
     return normalized_title
 
 
-def get_download_destination() -> Path:
-    download_path: str = os.environ.get("ARXIV_DOWNLOAD_FOLDER")
+def get_download_dest() -> Path:
+    """Get the download destination folder path."""
+    dl_path: str = os.environ.get("ARXIV_DOWNLOAD_FOLDER")
 
-    if download_path:
-        download_path: Path = Path(download_path).resolve()
-
-        if not download_path.is_dir():
-            logger.error(
-                f"Invalid ARXIV_DOWNLOAD_FOLDER: '{download_path}' is not a directory."
-            )
-            raise Exception(
-                f"Invalid ARXIV_DOWNLOAD_FOLDER: '{download_path}' is not a directory."
-            )
+    if dl_path:
+        dl_path: Path = Path(dl_path).resolve()
     else:
-        download_path: Path = Path(DEFAULT_DOWNLOAD_PATH).resolve()
+        dl_path: Path = Path(DEFAULT_DOWNLOAD_PATH).resolve()
 
-        if not download_path.is_dir():
-            logger.debug(f"Creating Directory: '{DEFAULT_DOWNLOAD_PATH}'")
-            os.makedirs(str(DEFAULT_DOWNLOAD_PATH))
+    if not dl_path.is_dir():
+        logger.debug(f"Creating Directory: '{DEFAULT_DOWNLOAD_PATH}'")
+        os.makedirs(str(DEFAULT_DOWNLOAD_PATH))
+
+    return dl_path
+
+
+def download_pdf(
+    paper_data: PaperData,
+    download_dir: Union[str, Path],
+    parallel_connections: int = 5,
+) -> None:
+    download_path: Path = Path(download_dir) / paper_data.download_name
+    N = int(parallel_connections)
+    assert N > 0, "Number of parallel connections must be greater than 0."
+    assert N <= 16, "Number of parallel connections must be less than 16."
+
+    if download_path.is_file():
+        logger.debug(f'Paper PDF already exists at: "{download_path}"')
+        return None
+
+    if parallel_connections == 1:
+        out = single_thread_download(
+            url=paper_data.pdf_url,
+            download_dir=download_dir,
+            download_name=paper_data.download_name,
+        )
+    else:
+        if command_exists("aria2c"):
+            out = aria2_download(
+                url=paper_data.pdf_url,
+                download_dir=download_dir,
+                download_name=paper_data.download_name,
+                parallel_connections=parallel_connections,
+            )
+        else:
+            # TODO: fall back to custom implementation of multi-threaded download
+            out = multi_thread_download(
+                url=paper_data.pdf_url,
+                download_dir=download_dir,
+                download_name=paper_data.download_name,
+                parallel_connections=parallel_connections,
+            )
+
+    if isinstance(out, Path):
+        if out.is_file():
+            logger.debug(f'Done! Paper saved to "{download_path}"')
+
+    return None
+
+
+def single_thread_download(
+    url: str,
+    download_dir: Union[str, Path],
+    download_name: str,
+) -> Path:
+    """
+    Assume:
+        1. download_dir exists.
+        2. target file does not exist.
+    """
+    download_dir = Path(download_dir)
+    assert download_dir.is_dir(), "Download directory does not exist."
+    download_path: Path = download_dir / download_name
+    assert download_path.is_file() is False, "File already exists"
+
+    logger.setLevel(logging.WARNING)
+    response = requests.get(url)
+    with download_path.open(mode="wb") as f:
+        f.write(response.content)
+    logger.setLevel(logging.DEBUG)
+    return download_path
+
+
+def multi_thread_download(
+    url: str,
+    download_dir: Union[str, Path],
+    download_name: str,
+    parallel_connections: int = 5,
+) -> Path:
+    # TODO: custom implementation of multi-threaded download
+    return single_thread_download(
+        url=url,
+        download_dir=download_dir,
+        download_name=download_name,
+    )
+
+
+def aria2_download(
+    url: str,
+    download_dir: Union[str, Path],
+    download_name: str,
+    parallel_connections: int = 5,
+) -> Path:
+    """
+    Download the paper using aria2. Assume the aria2 executable is in the system path.
+
+    Args:
+        url: URL of the paper.
+        download_dir: Directory to download the paper to.
+    """
+    download_dir = Path(download_dir)
+    assert download_dir.is_dir(), "Download directory does not exist."
+    download_path: Path = download_dir / download_name
+    assert download_path.is_file() is False, "File already exists"
+
+    N = int(parallel_connections)
+    assert N > 0, "Number of parallel connections must be greater than 0."
+    assert N <= 16, "Number of parallel connections must be less than 16."
+
+    aria2_command = f"aria2c -x {N} -s {N} -d {download_dir} -o {download_name} {url}"
+    # NOTE: aria2c flags:
+    # -x, --max-connection-per-server=<NUM>
+    #     The maximum number of connections to one server for each download.
+    # -s, --split=<N>
+    #     Download a file using N connections.
+    # -d, --dir=<DIR>
+    #     The directory to store the downloaded file.
+    # -o, --out=<FILE>
+    #     The file name of the downloaded file relative to the directory given in -d option.
+    logger.debug(f"Executing: '{aria2_command}'")
+    completed_proc = subprocess.run(
+        shlex.split(aria2_command),
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+    )
+    if completed_proc.returncode != 0:
+        logger.error(
+            f"Error: aria2c failed with return code {completed_proc.returncode}"
+        )
+        logger.error(f"Output: {completed_proc.stdout.decode('utf-8')}")
+        return None
 
     return download_path
 
 
-def download_pdf(paper_data: PaperData, download_dir: Union[str, Path]) -> None:
-    download_path: Path = Path(download_dir) / paper_data.download_name
-    if download_path.is_file():
-        logger.debug(f'Paper PDF already exists at: "{download_path}"')
-    else:
-        logger.debug(f"Downloading...")
-        logger.setLevel(logging.WARNING)
-        response = requests.get(paper_data.pdf_url)
-        with download_path.open(mode="wb") as f:
-            f.write(response.content)
-        logger.setLevel(logging.DEBUG)
-        logger.debug(f'Done! Paper saved to "{download_path}"')
-    return None
+def command_exists(command: str) -> bool:
+    """
+    Check if the command exists in the system.
+
+    Args: str
+        command: command to be checked.
+
+    Returns: bool
+        True if the command exists. False otherwise.
+    """
+    # >= Python 3.3 and is cross-platform
+    from shutil import which
+
+    return which(command) is not None
 
 
 def add_to_paper_list(paper_data: PaperData, download_dir: Union[str, Path]) -> None:

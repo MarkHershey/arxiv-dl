@@ -8,7 +8,7 @@ from helpers import (
     add_to_paper_list,
     create_paper_note,
     download_pdf,
-    get_download_destination,
+    get_download_dest,
     process_arxiv_target,
     process_cvf_target,
     process_nips_target,
@@ -24,7 +24,13 @@ from scrapers import (
 )
 
 
-def main(target: str, verbose: bool = False, *args, **kwargs) -> bool:
+def main(
+    target: str,
+    verbose: bool = False,
+    download_dir: Path = None,
+    *args,
+    **kwargs,
+) -> bool:
     """
     Entry point
 
@@ -32,7 +38,11 @@ def main(target: str, verbose: bool = False, *args, **kwargs) -> bool:
     """
     ### Get Target Download Directory
     try:
-        download_dir: Path = get_download_destination()
+        if download_dir is None:
+            download_dir: Path = get_download_dest()
+        else:
+            download_dir: Path = Path(download_dir).resolve()
+            assert download_dir.is_dir()
     except Exception as e:
         logger.exception(e)
         logger.error("Abort: Environment Variable Error")
@@ -120,5 +130,14 @@ def main(target: str, verbose: bool = False, *args, **kwargs) -> bool:
 
 
 if __name__ == "__main__":
-    main("1506.01497", verbose=True)
-    main("https://arxiv.org/abs/1506.01497", verbose=True)
+    root_dir = Path(__file__).resolve().parent.parent
+    tmp_dir = root_dir / "tmp"
+
+    from puts import timeitprint
+
+    @timeitprint
+    def test_performances():
+        main("1506.01497", verbose=True, download_dir=tmp_dir)
+        # main("https://arxiv.org/abs/1506.01497", verbose=True, download_dir=tmp_dir)
+
+    test_performances()

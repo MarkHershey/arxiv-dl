@@ -8,5 +8,6 @@ clean:
 	$(REMOVE) dist
 	$(REMOVE) arxiv_dl.egg-info
 	$(REMOVE) ./**/__pycache__
+	$(REMOVE) tmp/*
 publish:
 	python -m twine upload dist/*

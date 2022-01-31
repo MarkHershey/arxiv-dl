@@ -1,6 +1,7 @@
 .pypirc
 .testpypirc
 .vscode
+tmp/*
 
 # OS generated files #
 ######################
