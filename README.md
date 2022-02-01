@@ -9,10 +9,13 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
 [![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE)
 [![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
+_Disclaimer: This is a highly-opinionated CLI tool for downloading papers. It is designed to be easy to use. Obviously, not an official project._
+
 ## Features
 
 -   Download papers from `arXiv.org` via simple command line interface.
 -   Support downloading speedup by using [aria2c](https://aria2.github.io/).
+-   Automatically maintain a local list of downloaded papers.
 -   Retrieve the paper's metadata and citation:
     -   Paper Title
     -   Authors
@@ -21,7 +24,13 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
     -   Source Code Links
     -   Citation (`BibTeX`)
 -   Configure the desired download destination via environment variables.
--   All downloaded papers will be named by its arXiv ID and paper title without whitespaces.
+-   All downloaded papers will be named by its arXiv ID and paper title without whitespace.
+
+### Why?
+
+-   Save time and effort to download, rename, and organize papers.
+-   Speedup downloading process by using parallel connections.
+-   Local paper list would be handy for quick local lookup, locate, and cite papers.
 
 ## Install
 
@@ -32,6 +41,11 @@ This is a command-line tool, use `pip` to install the package globally.
 ```bash
 python3 -m pip install --upgrade arxiv-dl
 ```
+
+(Optional) Install [aria2c](https://aria2.github.io/) for download speedup.
+
+-   MacOS: `brew install aria2`
+-   Linux: `sudo snap install aria2c`
 
 ## Usage
 
