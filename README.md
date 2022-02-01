@@ -11,7 +11,8 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
 
 ## Features
 
--   Download Papers from `arXiv.org` via command line interface.
+-   Download papers from `arXiv.org` via command line interface.
+-   Support downloading speedup by using [aria2c](https://aria2.github.io/).
 -   Name the downloaded Paper by its arXiv ID and title without whitespace.
 -   Retrieve the Paper's metadata and save them in a corresponding MarkDown document:
     -   Paper Title
@@ -35,7 +36,7 @@ pip install arxiv-dl
 ## Usage
 
 ```bash
-$ getpaper "URL or ID"
+$ getpaper [-v] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
 ```
 
 Example:
@@ -50,11 +51,6 @@ $ getpaper https://arxiv.org/abs/1512.03385
 $ getpaper https://arxiv.org/pdf/1512.03385.pdf
 ```
 
-Deprecating Commands:
-
--   `add-paper`
--   `dl-paper`
-
 ## Configuration (Optional)
 
 Set Custom Download Destination Folder _(Optional)_
@@ -66,6 +62,14 @@ Set Custom Download Destination Folder _(Optional)_
     export ARXIV_DOWNLOAD_FOLDER=~/Documents/Papers
     ```
 -   If the environment variable is not set, paper will be downloaded into the default Download Destination `~/Downloads/ArXiv_Papers`.
+
+## Development
+
+```bash
+python3 -m venv venv && \
+source venv/bin/activate && \
+pip install -e ".[dev]"
+```
 
 ## License
 

@@ -6,12 +6,12 @@ import shlex
 import string
 import subprocess
 from pathlib import Path
-from typing import Dict, List, Tuple, Union
+from typing import Union
 
 import requests
 
-from logger import logger
-from models import PaperData
+from .logger import logger
+from .models import PaperData
 
 DEFAULT_DOWNLOAD_PATH = Path.home() / "Downloads/ArXiv_Papers"
 
@@ -65,40 +65,31 @@ def download_pdf(
     assert N <= 16, "Number of parallel connections must be less than 16."
 
     if download_path.is_file():
-        logger.debug(f'Paper PDF already exists at: "{download_path}"')
+        logger.debug(f'[Done] Paper PDF already exists at: "{download_path}"')
         return None
 
-    if parallel_connections == 1:
-        out = single_thread_download(
+    if command_exists("aria2c") and parallel_connections > 1:
+        out = aria2_download(
+            url=paper_data.pdf_url,
+            download_dir=download_dir,
+            download_name=paper_data.download_name,
+            parallel_connections=parallel_connections,
+        )
+    else:
+        out = http_download(
             url=paper_data.pdf_url,
             download_dir=download_dir,
             download_name=paper_data.download_name,
         )
-    else:
-        if command_exists("aria2c"):
-            out = aria2_download(
-                url=paper_data.pdf_url,
-                download_dir=download_dir,
-                download_name=paper_data.download_name,
-                parallel_connections=parallel_connections,
-            )
-        else:
-            # TODO: fall back to custom implementation of multi-threaded download
-            out = multi_thread_download(
-                url=paper_data.pdf_url,
-                download_dir=download_dir,
-                download_name=paper_data.download_name,
-                parallel_connections=parallel_connections,
-            )
 
     if isinstance(out, Path):
         if out.is_file():
-            logger.debug(f'Done! Paper saved to "{download_path}"')
+            logger.debug(f'[Done] Paper saved to "{download_path}"')
 
     return None
 
 
-def single_thread_download(
+def http_download(
     url: str,
     download_dir: Union[str, Path],
     download_name: str,
@@ -113,26 +104,13 @@ def single_thread_download(
     download_path: Path = download_dir / download_name
     assert download_path.is_file() is False, "File already exists"
 
+    logger.debug("[Downloading] Using HTTP")
     logger.setLevel(logging.WARNING)
     response = requests.get(url)
     with download_path.open(mode="wb") as f:
         f.write(response.content)
     logger.setLevel(logging.DEBUG)
     return download_path
-
-
-def multi_thread_download(
-    url: str,
-    download_dir: Union[str, Path],
-    download_name: str,
-    parallel_connections: int = 5,
-) -> Path:
-    # TODO: custom implementation of multi-threaded download
-    return single_thread_download(
-        url=url,
-        download_dir=download_dir,
-        download_name=download_name,
-    )
 
 
 def aria2_download(
@@ -157,7 +135,9 @@ def aria2_download(
     assert N > 0, "Number of parallel connections must be greater than 0."
     assert N <= 16, "Number of parallel connections must be less than 16."
 
-    aria2_command = f"aria2c -x {N} -s {N} -d {download_dir} -o {download_name} {url}"
+    aria2_command = (
+        f"aria2c -x {N} -s {N} -d '{download_dir}' -o '{download_name}' {url}"
+    )
     # NOTE: aria2c flags:
     # -x, --max-connection-per-server=<NUM>
     #     The maximum number of connections to one server for each download.
@@ -167,7 +147,9 @@ def aria2_download(
     #     The directory to store the downloaded file.
     # -o, --out=<FILE>
     #     The file name of the downloaded file relative to the directory given in -d option.
-    logger.debug(f"Executing: '{aria2_command}'")
+
+    # logger.debug(f"Executing: '{aria2_command}'")
+    logger.debug(f"[Downloading] Using aria2 with {N} connections")
     completed_proc = subprocess.run(
         shlex.split(aria2_command),
         stdout=subprocess.PIPE,
@@ -175,9 +157,9 @@ def aria2_download(
     )
     if completed_proc.returncode != 0:
         logger.error(
-            f"Error: aria2c failed with return code {completed_proc.returncode}"
+            f"[Error] aria2c failed with return code {completed_proc.returncode}"
         )
-        logger.error(f"Output: {completed_proc.stdout.decode('utf-8')}")
+        logger.error(f"[Error] Output: {completed_proc.stdout.decode('utf-8')}")
         return None
 
     return download_path

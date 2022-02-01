@@ -1,18 +1,17 @@
 import json
 import logging
-from typing import Dict, List, Tuple
 
 import requests
 from bs4 import BeautifulSoup
 
-from helpers import normalize_paper_title
-from logger import logger
-from models import PaperData
+from .helpers import normalize_paper_title
+from .logger import logger
+from .models import PaperData
 
 
 def scrape_metadata_arxiv(paper_data: PaperData) -> None:
     logger.setLevel(logging.DEBUG)
-    logger.debug("Processing...")
+    logger.debug("[Processing] Retrieving paper metadata")
     logger.setLevel(logging.WARNING)
 
     response = requests.get(paper_data.abs_url)

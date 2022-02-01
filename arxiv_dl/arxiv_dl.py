@@ -4,7 +4,7 @@ import json
 import logging
 from pathlib import Path
 
-from helpers import (
+from .helpers import (
     add_to_paper_list,
     create_paper_note,
     download_pdf,
@@ -14,9 +14,9 @@ from helpers import (
     process_nips_target,
     process_openreview_target,
 )
-from logger import logger
-from models import PaperData
-from scrapers import (
+from .logger import logger
+from .models import PaperData
+from .scrapers import (
     scrape_metadata_arxiv,
     scrape_metadata_cvf,
     scrape_metadata_nips,
@@ -28,6 +28,7 @@ def main(
     target: str,
     verbose: bool = False,
     download_dir: Path = None,
+    n_threads: int = 5,
     *args,
     **kwargs,
 ) -> bool:
@@ -45,19 +46,19 @@ def main(
             assert download_dir.is_dir()
     except Exception as e:
         logger.exception(e)
-        logger.error("Abort: Environment Variable Error")
+        logger.error("[Abort] Environment Variable Error")
         return False
 
     ### Filter Invalid Target String
     if not target or not isinstance(target, str):
-        logger.error("Abort: Target is not specified correctly")
+        logger.error("[Abort] Target is not specified correctly")
         return False
 
     if (
         not target.startswith(("http://", "https://", "www."))
         and not target[0].isdigit()
     ):
-        logger.error("Abort: Unknown target")
+        logger.error(f"[Abort] Unknown target: {target}")
         return False
 
     ### Identify Paper Source/Venues
@@ -75,7 +76,7 @@ def main(
         # TODO: download the pdf file only
         ...
     else:
-        logger.error("Abort: Unknown target")
+        logger.error(f"[Abort] Unknown target: {target}")
         return False
 
     # TODO: verify expected keys are present
@@ -97,7 +98,7 @@ def main(
             return False
     except Exception as err:
         logger.error(err)
-        logger.error("Abort: Error while getting paper")
+        logger.error("[Abort] Error while getting paper")
         return False
 
     # adjust logging level
@@ -107,7 +108,11 @@ def main(
 
     # download paper
     try:
-        download_pdf(paper_data, download_dir=download_dir)
+        download_pdf(
+            paper_data,
+            download_dir=download_dir,
+            parallel_connections=n_threads,
+        )
     except Exception as err:
         logger.error("Error while downloading paper")
         return False

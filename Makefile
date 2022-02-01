@@ -9,5 +9,6 @@ clean:
 	$(REMOVE) arxiv_dl.egg-info
 	$(REMOVE) ./**/__pycache__
 	$(REMOVE) tmp/*
+	$(REMOVE) .DS_Store
 publish:
 	python -m twine upload dist/*

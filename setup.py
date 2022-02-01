@@ -1,8 +1,8 @@
 from setuptools import find_namespace_packages, setup
 
 MAJOR = 1
-MINOR = 0
-MICRO = 3
+MINOR = 1
+MICRO = 0
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -20,12 +20,11 @@ setup(
     packages=find_namespace_packages(include=["arxiv_dl"]),
     scripts=[
         "arxiv_dl/bin/getpaper",
-        "arxiv_dl/bin/add-paper",
-        "arxiv_dl/bin/dl-paper",
     ],
     install_requires=[
         "colorlog>=4.1.0",
         "requests",
+        "pydantic",
         "beautifulsoup4",
     ],
     extras_require={

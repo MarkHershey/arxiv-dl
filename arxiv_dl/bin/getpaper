@@ -1,29 +1,43 @@
 #!/usr/bin/env python3
+import argparse
 
-import sys
+from arxiv_dl.arxiv_dl import main
 
-# TODO: fix this
-# from arxiv_dl.arxiv_dl import add_paper, logger
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "urls",
+    nargs="+",
+    type=str,
+    help="specify paper URL or arXiv ID",
+)
+parser.add_argument(
+    "-v",
+    "--verbose",
+    action="store_true",
+    help="verbose mode",
+)
+parser.add_argument(
+    "-d",
+    "--download_dir",
+    type=str,
+    help="specify download directory",
+    required=False,
+)
+parser.add_argument(
+    "-n",
+    "--n_threads",
+    type=int,
+    help="specify number of threads used for downloading",
+    required=False,
+    default=5,
+)
+args = parser.parse_args()
 
-# if len(sys.argv) == 1:
-#     logger.error(
-#         """Missing argument.
-#          Usage:
-#             getpaper 'arXiv URL'
-#             getpaper 'arXiv paper id'
-#          Example:
-#             getpaper 2103.15538"""
-#     )
-# elif len(sys.argv) == 2:
-#     arg = sys.argv[1]
-#     add_paper(arg)
-# else:
-#     logger.error(f"Unexpected arguments: {sys.argv[1:]}")
-#     logger.error(
-#         """Missing argument.
-#          Usage:
-#             getpaper 'arXiv URL'
-#             getpaper 'arXiv paper id'
-#          Example:
-#             getpaper 2103.15538"""
-#     )
+for i in args.urls:
+    main(
+        target=i,
+        verbose=args.verbose,
+        download_dir=args.download_dir,
+        n_threads=args.n_threads,
+    )
+    print()
