@@ -11,10 +11,9 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
 
 ## Features
 
--   Download papers from `arXiv.org` via command line interface.
+-   Download papers from `arXiv.org` via simple command line interface.
 -   Support downloading speedup by using [aria2c](https://aria2.github.io/).
--   Name the downloaded Paper by its arXiv ID and title without whitespace.
--   Retrieve the Paper's metadata and save them in a corresponding MarkDown document:
+-   Retrieve the paper's metadata and citation:
     -   Paper Title
     -   Authors
     -   Abstract
@@ -22,54 +21,88 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
     -   Source Code Links
     -   Citation (`BibTeX`)
 -   Configure the desired download destination via environment variables.
+-   All downloaded papers will be named by its arXiv ID and paper title without whitespaces.
 
 ## Install
 
-This is a command-line tool, you just need to use `pip` to install the package, then, you will be able to use the command `getpaper` in your terminal.
+This is a command-line tool, use `pip` to install the package globally.
 
--   Pre-requisite: `Python 3`
+-   Pre-requisite: `Python 3.x`
 
 ```bash
-pip install arxiv-dl
+python3 -m pip install --upgrade arxiv-dl
 ```
 
 ## Usage
+
+After installation, the command `getpaper` should be available in your terminal.
 
 ```bash
 $ getpaper [-v] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
 ```
 
+Options:
+
+-   `-v`, `--verbose` (optional): Print paper metadata.
+-   `-d`, `--download-dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DL_DOWNLOAD_DIR`.
+-   `-n`, `--n-threads` (optional): Specify the number of parallel connections to be used by `aria2`.
+
 Example:
 
+![](imgs/demo.png)
+
 ```bash
-$ getpaper 1512.03385
+# Use ArXiv Paper ID
+$ getpaper 1512.03385 2103.15538
 
-# OR
-$ getpaper https://arxiv.org/abs/1512.03385
+# Use ArXiv Abstract Page URL
+$ getpaper https://arxiv.org/abs/2103.15538
 
-# OR
+# Use ArXiv PDF Page URL
 $ getpaper https://arxiv.org/pdf/1512.03385.pdf
 ```
 
-## Configuration (Optional)
+## Configurations
 
 Set Custom Download Destination Folder _(Optional)_
 
 -   Let's say you want your papers get downloaded into `~/Documents/Papers`.
--   Make sure the folder `~/Documents/Papers` exists.
 -   Set the environment variable `ARXIV_DOWNLOAD_FOLDER` to your desired location.
     ```bash
     export ARXIV_DOWNLOAD_FOLDER=~/Documents/Papers
     ```
 -   If the environment variable is not set, paper will be downloaded into the default Download Destination `~/Downloads/ArXiv_Papers`.
 
+Set Custom Alias _(Optional)_
+
+-   You can always set your own preferred alias for the `getpaper` command.
+-   Include the alias in your `~/.bashrc` or other shell profile.
+    ```bash
+    alias dp="getpaper"
+    alias dpv="getpaper -v -d '~/Documents/Papers'"
+    ```
+
 ## Development
+
+### Set up development environment
 
 ```bash
 python3 -m venv venv && \
 source venv/bin/activate && \
 pip install -e ".[dev]"
 ```
+
+### Build the package
+
+```bash
+make
+```
+
+## TODOs
+
+-   [x] Add support for ara2c.
+-   [ ] Add support for papers on OpenReview.
+-   [ ] Add support for papers on CVF Open Access.
 
 ## License
 
