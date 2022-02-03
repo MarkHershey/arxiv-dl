@@ -5,7 +5,9 @@ Command-line [arXiv](https://arxiv.org/) Paper Downloader.
 [[Source]](https://github.com/MarkHershey/arxiv-dl)
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
-[![](https://img.shields.io/pypi/dm/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
+[![](https://img.shields.io/pypi/pyversions/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
+[![](https://img.shields.io/pypi/wheel/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
+[![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE)
 [![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
@@ -58,7 +60,7 @@ $ getpaper [-v] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
 Options:
 
 -   `-v`, `--verbose` (optional): Print paper metadata.
--   `-d`, `--download-dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DL_DOWNLOAD_DIR`.
+-   `-d`, `--download-dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
 -   `-n`, `--n-threads` (optional): Specify the number of parallel connections to be used by `aria2`.
 
 Example:
