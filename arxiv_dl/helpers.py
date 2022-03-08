@@ -340,8 +340,36 @@ def process_arxiv_target(target: str) -> PaperData:
 
 
 def process_cvf_target(target: str) -> PaperData:
-    # TODO
-    ...
+    idx = target.find("openaccess.thecvf.com")
+    target = target[idx + 22 :]
+    tokens = target.split("/")
+
+    if len(tokens) == 4:
+        ...
+        # TODO: handle two cases
+
+    if tokens[-2] == "papers":
+        paper_id = tokens[-1][:-4]
+    elif tokens[-2] == "html":
+        paper_id = tokens[-1][:-5]
+    else:
+        raise Exception("Unexpected CVF URL.")
+
+    # FIXME: fix the url
+    abs_url = f"https://openaccess.thecvf.com/content/CVPR2021/html/{paper_id}.html"
+    pdf_url = f"https://openaccess.thecvf.com/content/CVPR2021/papers/{paper_id}.pdf"
+    src_website = "CVF"
+    paper_venue = tokens[-3]
+    if paper_venue.startswith("content_"):
+        paper_venue = paper_venue[8:]
+
+    return PaperData(
+        paper_id=paper_id,
+        abs_url=abs_url,
+        pdf_url=pdf_url,
+        src_website=src_website,
+        paper_venue=paper_venue,
+    )
 
 
 ###############################################################################

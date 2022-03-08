@@ -109,9 +109,7 @@ def main(
     # download paper
     try:
         download_pdf(
-            paper_data,
-            download_dir=download_dir,
-            parallel_connections=n_threads,
+            paper_data, download_dir=download_dir, parallel_connections=n_threads
         )
     except Exception as err:
         logger.error("Error while downloading paper")
