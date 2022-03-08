@@ -1,3 +1,4 @@
+import json
 from typing import List
 
 from pydantic import BaseModel
@@ -19,3 +20,9 @@ class PaperData(BaseModel):
     official_code_urls: List[str] = []
     pwc_page_url: str = None
     bibtex: str = None
+
+    def __repr__(self) -> str:
+        return json.dumps(self.dict(), sort_keys=True, indent=4)
+
+    def __str__(self) -> str:
+        return self.__repr__()

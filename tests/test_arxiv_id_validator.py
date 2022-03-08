@@ -2,11 +2,11 @@ import sys
 import unittest
 from pathlib import Path
 
+from arxiv_dl.helpers import valid_arxiv_id
+
 root_dir = Path(__file__).resolve().parent.parent
 
 sys.path.insert(0, str(root_dir))
-
-from arxiv_dl.helpers import valid_arxiv_id
 
 
 class TestArxivIdentifier(unittest.TestCase):

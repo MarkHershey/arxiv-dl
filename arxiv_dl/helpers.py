@@ -279,7 +279,7 @@ def valid_arxiv_id(paper_id: str) -> bool:
     if not isinstance(paper_id, str):
         return False
 
-    pattern = "^([0-2])([0-9])(0|1)([0-9])\.[0-9]{4,5}(v[0-9]{1,2})?$"
+    pattern = r"^([0-2])([0-9])(0|1)([0-9])\.[0-9]{4,5}(v[0-9]{1,2})?$"
 
     if not re.fullmatch(pattern, paper_id):
         return False
@@ -308,7 +308,7 @@ def get_arxiv_id_from_url(url: str) -> str:
     Raises:
         Exception: If the URL is not a valid arXiv URL.
     """
-    pattern = "([0-2])([0-9])(0|1)([0-9])\.[0-9]{4,5}(v[0-9]{1,2})?"
+    pattern = r"([0-2])([0-9])(0|1)([0-9])\.[0-9]{4,5}(v[0-9]{1,2})?"
     match = re.search(pattern, url)
     if match:
         return match[0]
@@ -343,30 +343,48 @@ def process_cvf_target(target: str) -> PaperData:
     idx = target.find("openaccess.thecvf.com")
     target = target[idx + 22 :]
     tokens = target.split("/")
+    src_website = "CVF"
+
+    target = tokens[-1]
 
     if len(tokens) == 4:
-        ...
-        # TODO: handle two cases
-
-    if tokens[-2] == "papers":
-        paper_id = tokens[-1][:-4]
-    elif tokens[-2] == "html":
-        paper_id = tokens[-1][:-5]
+        venue = tokens[1]
+        content_type = tokens[2]
+        mid_path = f"content/{venue}"
+    elif len(tokens) == 3:
+        venue = tokens[0]
+        content_type = tokens[1]
+        mid_path = venue
     else:
         raise Exception("Unexpected CVF URL.")
 
-    # FIXME: fix the url
-    abs_url = f"https://openaccess.thecvf.com/content/CVPR2021/html/{paper_id}.html"
-    pdf_url = f"https://openaccess.thecvf.com/content/CVPR2021/papers/{paper_id}.pdf"
-    src_website = "CVF"
+    if content_type == "papers":
+        target_name = target[:-4]
+    elif content_type == "html":
+        target_name = target[:-5]
+    else:
+        raise Exception("Unexpected CVF URL.")
+
+    abs_url = f"https://openaccess.thecvf.com/{mid_path}/html/{target_name}.html"
+    pdf_url = f"https://openaccess.thecvf.com/{mid_path}/papers/{target_name}.pdf"
+
     paper_venue = tokens[-3]
-    if paper_venue.startswith("content_"):
-        paper_venue = paper_venue[8:]
+    if venue.startswith("content_"):
+        venue_tokens = venue.split("_")
+        paper_venue = venue_tokens[1].upper()
+        year = venue_tokens[2]
+    else:
+        idx = venue.find("20")
+        paper_venue = venue[:idx].upper()
+        year = venue[idx:]
+
+    paper_id = "_".join(target_name.split("_")[1:-3])
 
     return PaperData(
         paper_id=paper_id,
         abs_url=abs_url,
         pdf_url=pdf_url,
+        year=year,
         src_website=src_website,
         paper_venue=paper_venue,
     )
@@ -391,4 +409,18 @@ def process_openreview_target(target: str) -> PaperData:
 
 
 if __name__ == "__main__":
-    ...
+    abs_url = "https://openaccess.thecvf.com/content/CVPR2021/html/Wu_Greedy_Hierarchical_Variational_Autoencoders_for_Large-Scale_Video_Prediction_CVPR_2021_paper.html"
+    pdf_url = "https://openaccess.thecvf.com/content/CVPR2021/papers/Wu_Greedy_Hierarchical_Variational_Autoencoders_for_Large-Scale_Video_Prediction_CVPR_2021_paper.pdf"
+    paper_data = process_cvf_target(abs_url)
+    print(paper_data)
+
+    abs_url2 = "https://openaccess.thecvf.com/content_cvpr_2013/html/Kim_Deformable_Spatial_Pyramid_2013_CVPR_paper.html"
+    pdf_url2 = "https://openaccess.thecvf.com/content_cvpr_2013/papers/Kim_Deformable_Spatial_Pyramid_2013_CVPR_paper.pdf"
+    paper_data2 = process_cvf_target(abs_url2)
+    print(paper_data)
+
+    assert paper_data.abs_url == abs_url
+    assert paper_data.pdf_url == pdf_url
+
+    assert paper_data2.abs_url == abs_url2
+    assert paper_data2.pdf_url == pdf_url2
