@@ -340,43 +340,136 @@ def process_arxiv_target(target: str) -> PaperData:
 
 
 def process_cvf_target(target: str) -> PaperData:
+    # Get conference year
+    pattern = r"20[0-9][0-9]"
+    match = re.search(pattern, target)
+    if match:
+        idx_s, idx_e = match.span()
+        year = int(target[idx_s:idx_e])
+    else:
+        year = None
+
     idx = target.find("openaccess.thecvf.com")
     target = target[idx + 22 :]
     tokens = target.split("/")
     src_website = "CVF"
 
     target = tokens[-1]
-
-    if len(tokens) == 4:
-        venue = tokens[1]
-        content_type = tokens[2]
-        mid_path = f"content/{venue}"
-    elif len(tokens) == 3:
-        venue = tokens[0]
-        content_type = tokens[1]
-        mid_path = venue
-    else:
-        raise Exception("Unexpected CVF URL.")
-
-    if content_type == "papers":
+    if target.endswith(".pdf"):
         target_name = target[:-4]
-    elif content_type == "html":
+    elif target.endswith(".html"):
         target_name = target[:-5]
     else:
         raise Exception("Unexpected CVF URL.")
 
-    abs_url = f"https://openaccess.thecvf.com/{mid_path}/html/{target_name}.html"
-    pdf_url = f"https://openaccess.thecvf.com/{mid_path}/papers/{target_name}.pdf"
+    workshop_name = None
 
-    paper_venue = tokens[-3]
-    if venue.startswith("content_"):
-        venue_tokens = venue.split("_")
-        paper_venue = venue_tokens[1].upper()
-        year = venue_tokens[2]
+    if year <= 2016 or (year == 2017 and "CVPR" in target):
+        # main: content_venue/html/
+        # main: content_venue/papers/
+        # workshop: content_venue/workshop_name/html/
+        # workshop: content_venue/workshop_name/papers/
+        if len(tokens) == 4:
+            venue = tokens[0]  # e.g. content_iccv_workshops_2013
+            workshop_name = tokens[1]
+            mid_path = f"{venue}/{workshop_name}"
+        elif len(tokens) == 3:
+            venue = tokens[0]  # e.g. content_cvpr_2013
+            mid_path = f"{venue}"
+        else:
+            raise Exception("Unexpected CVF URL.")
+
+        abs_url = f"https://openaccess.thecvf.com/{mid_path}/html/{target_name}.html"
+        pdf_url = f"https://openaccess.thecvf.com/{mid_path}/papers/{target_name}.pdf"
+
+    elif year == 2017 and "ICCV" in target:
+        # super special case: content_venue is smaller case in main conference's abs_url only
+        # main: content_venue/html/
+        # main: content_venue/papers/
+        # workshop: content_venue/workshop_name/html
+        # workshop: content_venue/papers/workshop_name/
+        if len(tokens) == 3:
+            venue = tokens[0]
+            abs_url = f"https://openaccess.thecvf.com/content_iccv_2017/html/{target_name}.html"
+            pdf_url = f"https://openaccess.thecvf.com/content_ICCV_2017/papers/{target_name}.pdf"
+        elif len(tokens) == 4:
+            venue = tokens[0]
+            if target.endswith(".html"):
+                workshop_name = tokens[1]
+            else:
+                workshop_name = tokens[2]
+            abs_url = f"https://openaccess.thecvf.com/{venue}/{workshop_name}/html/{target_name}.html"
+            pdf_url = f"https://openaccess.thecvf.com/{venue}/papers/{workshop_name}/{target_name}.pdf"
+        else:
+            raise Exception("Unexpected CVF URL.")
+    elif year == 2018:
+        # main: content_venue/html/
+        # main: content_venue/papers/
+        # workshop: content_venue/workshop_name/html
+        # workshop: content_venue/papers/workshop_name/
+        if len(tokens) == 3:
+            venue = tokens[0]
+            abs_url = f"https://openaccess.thecvf.com/{venue}/html/{target_name}.html"
+            pdf_url = f"https://openaccess.thecvf.com/{venue}/papers/{target_name}.pdf"
+        elif len(tokens) == 4:
+            venue = tokens[0]
+            if target.endswith(".html"):
+                workshop_name = tokens[1]
+            else:
+                workshop_name = tokens[2]
+            abs_url = f"https://openaccess.thecvf.com/{venue}/{workshop_name}/html/{target_name}.html"
+            pdf_url = f"https://openaccess.thecvf.com/{venue}/papers/{workshop_name}/{target_name}.pdf"
+        else:
+            raise Exception("Unexpected CVF URL.")
+    elif 2019 <= year <= 2020:
+        # main: content_venue/html/
+        # main: content_venue/papers/
+        # workshop: content_venue/html/workshop_name/
+        # workshop: content_venue/papers/workshop_name/
+        if len(tokens) == 3:
+            venue = tokens[0]
+            abs_url = f"https://openaccess.thecvf.com/{venue}/html/{target_name}.html"
+            pdf_url = f"https://openaccess.thecvf.com/{venue}/papers/{target_name}.pdf"
+        elif len(tokens) == 4:
+            venue = tokens[0]
+            workshop_name = tokens[2]
+            abs_url = f"https://openaccess.thecvf.com/{venue}/html/{workshop_name}/{target_name}.html"
+            pdf_url = f"https://openaccess.thecvf.com/{venue}/papers/{workshop_name}/{target_name}.pdf"
+        else:
+            raise Exception("Unexpected CVF URL.")
+
+    elif year >= 2021:
+        # main: content/venue/html/
+        # main: content/venue/papers/
+        # workshop: content/venue/workshop_name/html/
+        # workshop: content/venue/workshop_name/papers/
+        if len(tokens) == 4:
+            venue = tokens[1]
+            mid_path = f"content/{venue}"
+        elif len(tokens) == 5:
+            venue = tokens[1]
+            workshop_name = tokens[2]
+            mid_path = f"content/{venue}/{workshop_name}"
+        else:
+            raise Exception("Unexpected CVF URL.")
+
+        abs_url = f"https://openaccess.thecvf.com/{mid_path}/html/{target_name}.html"
+        pdf_url = f"https://openaccess.thecvf.com/{mid_path}/papers/{target_name}.pdf"
+
     else:
-        idx = venue.find("20")
-        paper_venue = venue[:idx].upper()
-        year = venue[idx:]
+        raise Exception("Unexpected CVF URL.")
+
+    # get conference venue
+    _venue = venue.upper()
+    if "ICCV" in _venue:
+        paper_venue = "ICCV"
+    elif "CVPR" in _venue:
+        paper_venue = "CVPR"
+    elif "WACV" in _venue:
+        paper_venue = "WACV"
+
+    if workshop_name:
+        paper_venue += "_Workshops"
 
     paper_id = "_".join(target_name.split("_")[1:-3])
 
@@ -417,7 +510,7 @@ if __name__ == "__main__":
     abs_url2 = "https://openaccess.thecvf.com/content_cvpr_2013/html/Kim_Deformable_Spatial_Pyramid_2013_CVPR_paper.html"
     pdf_url2 = "https://openaccess.thecvf.com/content_cvpr_2013/papers/Kim_Deformable_Spatial_Pyramid_2013_CVPR_paper.pdf"
     paper_data2 = process_cvf_target(abs_url2)
-    print(paper_data)
+    print(paper_data2)
 
     assert paper_data.abs_url == abs_url
     assert paper_data.pdf_url == pdf_url
