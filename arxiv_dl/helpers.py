@@ -347,7 +347,7 @@ def process_cvf_target(target: str) -> PaperData:
         idx_s, idx_e = match.span()
         year = int(target[idx_s:idx_e])
     else:
-        year = None
+        year = 0
 
     idx = target.find("openaccess.thecvf.com")
     target = target[idx + 22 :]
@@ -364,7 +364,7 @@ def process_cvf_target(target: str) -> PaperData:
 
     workshop_name = None
 
-    if year <= 2016 or (year == 2017 and "CVPR" in target):
+    if 2013 <= year <= 2016 or (year == 2017 and "CVPR" in target):
         # main: content_venue/html/
         # main: content_venue/papers/
         # workshop: content_venue/workshop_name/html/
@@ -473,6 +473,8 @@ def process_cvf_target(target: str) -> PaperData:
 
     paper_id = "_".join(target_name.split("_")[1:-3])
 
+    download_name = f"{year}_{paper_venue}_{paper_id}.pdf"
+
     return PaperData(
         paper_id=paper_id,
         abs_url=abs_url,
@@ -480,6 +482,7 @@ def process_cvf_target(target: str) -> PaperData:
         year=year,
         src_website=src_website,
         paper_venue=paper_venue,
+        download_name=download_name,
     )
 
 

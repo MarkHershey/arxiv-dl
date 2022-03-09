@@ -108,17 +108,29 @@ source venv/bin/activate && \
 pip install -e ".[dev]"
 ```
 
+### Run Tests
+
+```bash
+pytest
+```
+
 ### Build the package
 
 ```bash
 make
 ```
 
+### Clean cache & build artifacts
+
+```bash
+make clean
+```
+
 ## TODOs
 
 -   [x] Add support for ara2c.
--   [ ] Add support for papers on OpenReview.
 -   [ ] Add support for papers on CVF Open Access.
+-   [ ] Add support for papers on OpenReview.
 
 ## License
 
