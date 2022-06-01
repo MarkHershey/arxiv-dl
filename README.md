@@ -1,6 +1,6 @@
 # arXiv-dl
 
-Command-line [ArXiv](https://arxiv.org/) Paper Downloader.
+Command-line [ArXiv](https://arxiv.org/) & [CVF Open Access](https://openaccess.thecvf.com/menu) Paper Downloader.
 [[PyPI]](https://pypi.org/project/arxiv-dl/)
 [[Source]](https://github.com/MarkHershey/arxiv-dl)
 
@@ -11,11 +11,12 @@ Command-line [ArXiv](https://arxiv.org/) Paper Downloader.
 [![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE)
 [![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
-_Disclaimer: This is a highly-opinionated CLI tool for downloading papers. It is designed to be easy to use. Obviously, not an official project._
+_Disclaimer: This is a highly-opinionated CLI tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an official project._
 
 ## Features
 
--   Download papers from `arXiv.org` via simple command line interface.
+-   Download papers from via simple command line interface.
+-   Support papers from [ArXiv](https://arxiv.org/) and [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu).
 -   Support downloading speedup by using [aria2c](https://aria2.github.io/).
 -   Automatically maintain a local list of downloaded papers.
 -   Retrieve the paper's metadata and citation:
@@ -63,9 +64,7 @@ Options:
 -   `-d`, `--download_dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
 -   `-n`, `--n_threads` (optional): Specify the number of parallel connections to be used by `aria2`.
 
-Example:
-
-![](imgs/demo.png)
+### Usage Examples:
 
 ```bash
 # Use ArXiv Paper ID
@@ -76,7 +75,12 @@ $ getpaper https://arxiv.org/abs/2103.15538
 
 # Use ArXiv PDF Page URL
 $ getpaper https://arxiv.org/pdf/1512.03385.pdf
+
+# Use CVF Open Access URL
+$ getpaper "https://openaccess.thecvf.com/content/CVPR2021/html/Lin_Real-Time_High-Resolution_Background_Matting_CVPR_2021_paper.html"
 ```
+
+![](imgs/demo.png)
 
 ## Configurations
 
@@ -132,7 +136,7 @@ make clean
 ## TODOs
 
 -   [x] Add support for ara2c.
--   [ ] Add support for papers on CVF Open Access.
+-   [x] Add support for papers on CVF Open Access.
 -   [ ] Add support for papers on OpenReview.
 
 ## License
