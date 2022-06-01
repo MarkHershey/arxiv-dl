@@ -97,7 +97,7 @@ def main(
             logger.error(f"Invalid source website: '{paper_data.src_website}'")
             return False
     except Exception as err:
-        logger.error(err)
+        logger.exception(err)
         logger.error("[Abort] Error while getting paper")
         return False
 
@@ -112,21 +112,24 @@ def main(
             paper_data, download_dir=download_dir, parallel_connections=n_threads
         )
     except Exception as err:
-        logger.error("Error while downloading paper")
+        logger.exception(err)
+        logger.error("[Abort] Error while downloading paper")
         return False
 
     # update paper list
     try:
         add_to_paper_list(paper_data, download_dir=download_dir)
     except Exception as err:
-        logger.warning("Error while updating paper list")
+        logger.exception(err)
+        logger.warning("[Warn] Error while updating paper list")
         return False
 
     # Create paper notes
     try:
         create_paper_note(paper_data, download_dir=download_dir)
     except Exception as err:
-        logger.warning("Error while creating note")
+        logger.exception(err)
+        logger.warning("[Warn] Error while creating note")
         return False
 
     return True

@@ -49,7 +49,7 @@ def get_download_dest() -> Path:
 
     if not dl_path.is_dir():
         logger.debug(f"Creating Directory: '{DEFAULT_DOWNLOAD_PATH}'")
-        os.makedirs(str(DEFAULT_DOWNLOAD_PATH))
+        os.makedirs(str(DEFAULT_DOWNLOAD_PATH), exist_ok=True)
 
     return dl_path
 
