@@ -1,0 +1,26 @@
+name: CI
+
+on:
+    push:
+        branches:
+            - master
+
+jobs:
+    build:
+        runs-on: ubuntu-latest
+        steps:
+            - name: Checkout
+              uses: actions/checkout@v2
+            - name: Setup Development Environment
+              env:
+                  TERM: xterm-256color
+              run: |
+                  pwd
+                  export TERM=xterm-256color
+                  python3 -m venv venv && \
+                  source venv/bin/activate && \
+                  pip install -e ".[dev]"
+            - name: Run Unit Tests
+              run: |
+                  source venv/bin/activate
+                  pytest

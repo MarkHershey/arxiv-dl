@@ -127,16 +127,16 @@ def scrape_metadata_cvf(paper_data: PaperData) -> None:
     # print(bibtex)
 
     # get pdf link
-    result = soup.find_all("a", string="pdf")
-    if len(result) == 1:
-        pdf_url = result[0].get("href")
-        paper_data.pdf_url = f"https://openaccess.thecvf.com{pdf_url.strip()}"
+    # result = soup.find_all("a", string="pdf")
+    # if len(result) == 1:
+    #     pdf_url = result[0].get("href")
+    #     paper_data.pdf_url = f"https://openaccess.thecvf.com{pdf_url.strip()}"
 
-    # get supplementary link
+    # get supplementary path
     result = soup.find_all("a", string="supp")
     if len(result) == 1:
         supp_url = result[0].get("href")
-        paper_data.supp_url = f"https://openaccess.thecvf.com{supp_url.strip()}"
+        paper_data.supp_url = f"{supp_url.strip()}"
 
     return None
 
