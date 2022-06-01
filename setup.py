@@ -2,7 +2,7 @@ from setuptools import find_namespace_packages, setup
 
 MAJOR = 1
 MINOR = 1
-MICRO = 0
+MICRO = 1
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 with open("README.md", "r") as f:
@@ -11,9 +11,9 @@ with open("README.md", "r") as f:
 setup(
     name="arxiv-dl",
     version=VERSION,
-    author="Mark Huang",
-    author_email="mark.h.huang@gmail.com",
-    description="Command-line arXiv.org Papers Downloader. Citation extraction and PDF naming automation.",
+    author="Mark He Huang",
+    author_email="dev@markhh.com",
+    description="Command-line arXiv Papers Downloader. Citation extraction and PDF naming automation.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/MarkHershey/arxiv-dl",

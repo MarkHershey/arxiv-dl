@@ -3,6 +3,8 @@ import subprocess
 import unittest
 from pathlib import Path
 
+from arxiv_dl.helpers import DEFAULT_DOWNLOAD_PATH
+
 
 class TestCLI(unittest.TestCase):
     """Test Command Line Interface"""
@@ -16,12 +18,14 @@ class TestCLI(unittest.TestCase):
     def tearDown(self):
         shutil.rmtree(self.test_dir, ignore_errors=True)
 
+    @unittest.skipIf(DEFAULT_DOWNLOAD_PATH.exists(), "Default download path exists")
     def test_simple(self):
         subprocess.run(
             f"getpaper {self.test_target}",
             shell=True,
             check=True,
         )
+        shutil.rmtree(DEFAULT_DOWNLOAD_PATH, ignore_errors=True)
 
     def test_with_inline_env(self):
         subprocess.run(
