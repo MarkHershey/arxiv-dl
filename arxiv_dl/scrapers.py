@@ -86,8 +86,59 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
 
 
 def scrape_metadata_cvf(paper_data: PaperData) -> None:
-    # TODO
-    ...
+    logger.setLevel(logging.DEBUG)
+    logger.debug("[Processing] Retrieving paper metadata from CVF")
+    logger.setLevel(logging.WARNING)
+
+    response = requests.get(paper_data.abs_url)
+    if response.status_code != 200:
+        logger.error(f"Cannot connect to {paper_data.abs_url}")
+        raise Exception(f"Cannot connect to {paper_data.abs_url}")
+    # make soup
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # get TITLE
+    result = soup.find("div", id="papertitle")
+    tmp = [i.string.strip() for i in result if i.string]
+    paper_title = tmp[0].strip()  # NOTE: hardcoded
+    paper_data.title = paper_title
+    # print(paper_title)
+
+    # get AUTHORS
+    result = soup.find("div", id="authors")
+    tmp = [i.string.strip() for i in result if i.string]
+    authors_str = tmp[1].strip()  # NOTE: hardcoded
+    authors_list = [x.strip() for x in authors_str.split(",") if x]
+    paper_data.authors = authors_list
+    # print(authors_list)
+
+    # get ABSTRACT
+    result = soup.find("div", id="abstract")
+    tmp = [i.string.strip() for i in result if i.string]
+    paper_abstract = "".join(tmp)
+    paper_data.abstract = paper_abstract.strip()
+    # print(paper_abstract)
+
+    # get BIBTEX
+    result = soup.find("div", class_="bibref")
+    tmp = [i.string.strip() for i in result if i.string]
+    bibtex = "".join(tmp)
+    paper_data.bibtex = bibtex.strip()
+    # print(bibtex)
+
+    # get pdf link
+    result = soup.find_all("a", string="pdf")
+    if len(result) == 1:
+        pdf_url = result[0].get("href")
+        paper_data.pdf_url = f"https://openaccess.thecvf.com{pdf_url.strip()}"
+
+    # get supplementary link
+    result = soup.find_all("a", string="supp")
+    if len(result) == 1:
+        supp_url = result[0].get("href")
+        paper_data.supp_url = f"https://openaccess.thecvf.com{supp_url.strip()}"
+
+    return None
 
 
 def scrape_metadata_nips(paper_data: PaperData) -> None:
@@ -97,4 +148,8 @@ def scrape_metadata_nips(paper_data: PaperData) -> None:
 
 def scrape_metadata_openreview(paper_data: PaperData) -> None:
     # TODO
+    ...
+
+
+if __name__ == "__main__":
     ...
