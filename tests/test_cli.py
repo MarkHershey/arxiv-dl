@@ -1,0 +1,38 @@
+import shutil
+import subprocess
+import unittest
+from pathlib import Path
+
+
+class TestCLI(unittest.TestCase):
+    """Test Command Line Interface"""
+
+    def setUp(self):
+        self.root_dir = Path(__file__).resolve().parent.parent
+        self.test_dir = self.root_dir / "tests" / "test_tmp"
+        self.test_dir.mkdir(exist_ok=True)
+        self.test_target = "https://openaccess.thecvf.com/content/CVPR2021/html/Xu_SUTD-TrafficQA_A_Question_Answering_Benchmark_and_an_Efficient_Network_for_CVPR_2021_paper.html"
+
+    def tearDown(self):
+        shutil.rmtree(self.test_dir, ignore_errors=True)
+
+    def test_simple(self):
+        subprocess.run(
+            f"getpaper {self.test_target}",
+            shell=True,
+            check=True,
+        )
+
+    def test_with_inline_env(self):
+        subprocess.run(
+            f"ARXIV_DOWNLOAD_FOLDER={self.test_dir} getpaper {self.test_target}",
+            shell=True,
+            check=True,
+        )
+
+    def test_with_flags(self):
+        subprocess.run(
+            f"getpaper {self.test_target} --verbose --download_dir {self.test_dir}",
+            shell=True,
+            check=True,
+        )
