@@ -68,7 +68,11 @@ def download_pdf(
         logger.debug(f'[Done] Paper PDF already exists at: "{download_path}"')
         return None
 
-    if command_exists("aria2c") and parallel_connections > 1:
+    if paper_data.src_website == "CVF":
+        # NOTE: download from CVF is sufficiently fast using 1 connection
+        N = 1
+
+    if command_exists("aria2c") and N > 1:
         out = aria2_download(
             url=paper_data.pdf_url,
             download_dir=download_dir,
@@ -218,7 +222,7 @@ def create_paper_note(paper_data: PaperData, download_dir: Union[str, Path]) -> 
     md_content = f"""
 # {paper_data.title}
 
-[arXiv]({paper_data.abs_url}), [PDF]({paper_data.pdf_url})
+[Abstract]({paper_data.abs_url}), [PDF]({paper_data.pdf_url})
 
 ## Authors
 

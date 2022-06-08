@@ -55,12 +55,13 @@ python3 -m pip install --upgrade arxiv-dl
 After installation, the command `getpaper` should be available in your terminal.
 
 ```bash
-$ getpaper [-h] [-v] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
+$ getpaper [-h] [-v] [-p] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
 ```
 
 Options:
 
 -   `-v`, `--verbose` (optional): Print paper metadata.
+-   `-p`, `--pdf_only` (optional): Download PDF only without creating Markdown notes
 -   `-d`, `--download_dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
 -   `-n`, `--n_threads` (optional): Specify the number of parallel connections to be used by `aria2`.
 

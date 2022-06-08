@@ -126,6 +126,7 @@ def scrape_metadata_cvf(paper_data: PaperData) -> None:
     paper_data.bibtex = bibtex.strip()
     # print(bibtex)
 
+    # NOTE: this doesn't work cuz it's a relative path and the path construction is different every year
     # get pdf link
     # result = soup.find_all("a", string="pdf")
     # if len(result) == 1:

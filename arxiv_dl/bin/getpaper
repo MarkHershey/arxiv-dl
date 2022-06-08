@@ -17,6 +17,12 @@ parser.add_argument(
     help="verbose mode",
 )
 parser.add_argument(
+    "-p",
+    "--pdf_only",
+    action="store_true",
+    help="download PDF only without creating Markdown notes",
+)
+parser.add_argument(
     "-d",
     "--download_dir",
     type=str,
@@ -39,5 +45,6 @@ for i in args.urls:
         verbose=args.verbose,
         download_dir=args.download_dir,
         n_threads=args.n_threads,
+        pdf_only=args.pdf_only,
     )
     print()

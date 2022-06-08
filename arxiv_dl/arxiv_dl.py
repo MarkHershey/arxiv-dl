@@ -29,6 +29,7 @@ def main(
     verbose: bool = False,
     download_dir: Path = None,
     n_threads: int = 5,
+    pdf_only: bool = False,
     *args,
     **kwargs,
 ) -> bool:
@@ -126,7 +127,8 @@ def main(
 
     # Create paper notes
     try:
-        create_paper_note(paper_data, download_dir=download_dir)
+        if not pdf_only:
+            create_paper_note(paper_data, download_dir=download_dir)
     except Exception as err:
         logger.exception(err)
         logger.warning("[Warn] Error while creating note")
