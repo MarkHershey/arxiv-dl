@@ -18,6 +18,38 @@ class TestProcessCVFTarget(unittest.TestCase):
     # workshop: content/venue/workshop_name/html/
     # workshop: content/venue/workshop_name/papers/
 
+    def test_CVPR2022(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2022/html/Granot_Drop_the_GAN_In_Defense_of_Patches_Nearest_Neighbors_As_CVPR_2022_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2022/papers/Granot_Drop_the_GAN_In_Defense_of_Patches_Nearest_Neighbors_As_CVPR_2022_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "CVPR")
+        self.assertEqual(paper_data.year, 2022)
+        paper_data = process_cvf_target(pdf_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "CVPR")
+        self.assertEqual(paper_data.year, 2022)
+
+    def test_CVPR2022W(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2022W/WAD/html/Zheng_Multi-Modal_3D_Human_Pose_Estimation_With_2D_Weak_Supervision_in_CVPRW_2022_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2022W/WAD/papers/Zheng_Multi-Modal_3D_Human_Pose_Estimation_With_2D_Weak_Supervision_in_CVPRW_2022_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "CVPR_Workshops")
+        self.assertEqual(paper_data.year, 2022)
+        paper_data = process_cvf_target(pdf_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "CVPR_Workshops")
+        self.assertEqual(paper_data.year, 2022)
+
     def test_WACV2022(self):
         abs_url = "https://openaccess.thecvf.com/content/WACV2022/html/Agarwal_Does_Data_Repair_Lead_to_Fair_Models_Curating_Contextually_Fair_WACV_2022_paper.html"
         pdf_url = "https://openaccess.thecvf.com/content/WACV2022/papers/Agarwal_Does_Data_Repair_Lead_to_Fair_Models_Curating_Contextually_Fair_WACV_2022_paper.pdf"
