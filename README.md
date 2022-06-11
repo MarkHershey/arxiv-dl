@@ -13,29 +13,27 @@ Command-line [ArXiv](https://arxiv.org/) & [CVF Open Access](https://openaccess.
 
 _Disclaimer: This is a highly-opinionated CLI tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an official project._
 
-## Features
+## What does it do?
 
--   Download papers from via simple command line interface.
--   Support papers from [ArXiv](https://arxiv.org/) and [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu).
+-   Support downloading papers from [ArXiv](https://arxiv.org/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
 -   Support downloading speedup by using [aria2c](https://aria2.github.io/).
--   Automatically maintain a local list of downloaded papers.
--   Retrieve the paper's metadata and citation:
-    -   Paper Title
+-   Retrieve the paper's metadata such as:
+    -   Title, Abstract, Year
     -   Authors
-    -   Abstract
     -   Comments (Conference acceptance info)
-    -   Source Code Links
-    -   Citation (`BibTeX`)
--   Configure the desired download destination via environment variables.
--   All downloaded papers will be named by its arXiv ID and paper title without whitespace.
+    -   Repository URLs
+    -   `BibTeX` Citation
+-   Automatically maintain a list of local papers and their metadata in a JSON file.
+-   Configure the desired download destination via an environment variable or a command-line argument.
+-   All downloaded papers will have standardized filename for easy browsing.
 
-### Why?
+## Why?
 
--   Save time and effort to download, rename, and organize papers.
--   Speedup downloading process by using parallel connections.
--   Local paper list would be handy for quick local lookup, locate, and cite papers.
+-   Save time and effort to download and organize papers on your machine.
+-   Speedup downloading process by using multiple parallel connections.
+-   Local paper list would be handy for quick local lookup, making notes, and doing citations.
 
-## Install
+## How to install it?
 
 This is a command-line tool, use `pip` to install the package globally.
 
@@ -50,7 +48,7 @@ python3 -m pip install --upgrade arxiv-dl
 -   MacOS: `brew install aria2`
 -   Linux: `sudo snap install aria2c`
 
-## Usage
+## How to use it?
 
 After installation, the command `getpaper` should be available in your terminal.
 
