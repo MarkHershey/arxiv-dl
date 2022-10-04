@@ -2,6 +2,7 @@
 import argparse
 
 from arxiv_dl.arxiv_dl import main
+import tqdm
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -30,6 +31,13 @@ parser.add_argument(
     required=False,
 )
 parser.add_argument(
+    "-pb",
+    "--progbar",
+    action="store_true",
+    help="use progbar",
+)
+
+parser.add_argument(
     "-n",
     "--n_threads",
     type=int,
@@ -39,7 +47,11 @@ parser.add_argument(
 )
 args = parser.parse_args()
 
-for i in args.urls:
+urls = args.urls
+if args.progbar:
+    urls = tqdm.tqdm(urls)
+
+for i in urls:
     main(
         target=i,
         verbose=args.verbose,
