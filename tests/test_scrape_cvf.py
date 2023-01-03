@@ -12,6 +12,13 @@ sys.path.insert(0, str(root_dir))
 
 
 class TestScrapeCVF(unittest.TestCase):
+    def test_WACV2023(self):
+        abs_url = "https://openaccess.thecvf.com/content/WACV2023/html/Qiu_3D_Change_Localization_and_Captioning_From_Dynamic_Scans_of_Indoor_WACV_2023_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/WACV2023/papers/Qiu_3D_Change_Localization_and_Captioning_From_Dynamic_Scans_of_Indoor_WACV_2023_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        scrape_metadata_cvf(paper_data)
+        ...
+
     def test_CVPR2022(self):
         abs_url = "https://openaccess.thecvf.com/content/CVPR2022/html/Granot_Drop_the_GAN_In_Defense_of_Patches_Nearest_Neighbors_As_CVPR_2022_paper.html"
         pdf_url = "https://openaccess.thecvf.com/content/CVPR2022/papers/Granot_Drop_the_GAN_In_Defense_of_Patches_Nearest_Neighbors_As_CVPR_2022_paper.pdf"
