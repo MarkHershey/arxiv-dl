@@ -12,6 +12,31 @@ sys.path.insert(0, str(root_dir))
 
 
 class TestScrapeCVF(unittest.TestCase):
+    def test_CVPR2023(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2023/html/Xu_Meta_Compositional_Referring_Expression_Segmentation_CVPR_2023_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2023/papers/Xu_Meta_Compositional_Referring_Expression_Segmentation_CVPR_2023_paper.pdf"
+        paper_title = "Meta Compositional Referring Expression Segmentation"
+        paper_data = process_cvf_target(abs_url)
+        scrape_metadata_cvf(paper_data)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.src_website, "CVF")
+        self.assertEqual(paper_data.title, paper_title)
+        self.assertEqual(paper_data.year, 2023)
+        self.assertEqual(paper_data.paper_venue, "CVPR")
+        self.assertEqual(
+            paper_data.authors,
+            [
+                "Li Xu",
+                "Mark He Huang",
+                "Xindi Shang",
+                "Zehuan Yuan",
+                "Ying Sun",
+                "Jun Liu",
+            ],
+        )
+
     def test_WACV2023(self):
         abs_url = "https://openaccess.thecvf.com/content/WACV2023/html/Qiu_3D_Change_Localization_and_Captioning_From_Dynamic_Scans_of_Indoor_WACV_2023_paper.html"
         pdf_url = "https://openaccess.thecvf.com/content/WACV2023/papers/Qiu_3D_Change_Localization_and_Captioning_From_Dynamic_Scans_of_Indoor_WACV_2023_paper.pdf"

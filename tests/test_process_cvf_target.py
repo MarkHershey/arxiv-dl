@@ -16,6 +16,22 @@ class TestProcessCVFTarget(unittest.TestCase):
     # 2023
     # content/venue
 
+    def test_CVPR2023(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2023/html/Xu_Meta_Compositional_Referring_Expression_Segmentation_CVPR_2023_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2023/papers/Xu_Meta_Compositional_Referring_Expression_Segmentation_CVPR_2023_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "CVPR")
+        self.assertEqual(paper_data.year, 2023)
+        paper_data = process_cvf_target(pdf_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "CVPR")
+        self.assertEqual(paper_data.year, 2023)
+
     def test_WACV2023(self):
         abs_url = "https://openaccess.thecvf.com/content/WACV2023/html/Kundu_FLOAT_Fast_Learnable_Once-for-All_Adversarial_Training_for_Tunable_Trade-Off_Between_WACV_2023_paper.html"
         pdf_url = "https://openaccess.thecvf.com/content/WACV2023/papers/Kundu_FLOAT_Fast_Learnable_Once-for-All_Adversarial_Training_for_Tunable_Trade-Off_Between_WACV_2023_paper.pdf"
