@@ -59,7 +59,9 @@ def main(
         not target.startswith(("http://", "https://", "www."))
         and not target[0].isdigit()
     ):
-        logger.error(f"[Abort] Unknown target: {target}")
+        logger.error(
+            f"[Abort] Target should be a URL or an ArXiv ID. Unknown target: '{target}'"
+        )
         return False
 
     ### Identify Paper Source/Venues

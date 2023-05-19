@@ -8,8 +8,7 @@ import subprocess
 from pathlib import Path
 from typing import Union
 
-import requests
-
+from .dl_utils import download
 from .logger import logger
 from .models import PaperData
 
@@ -109,11 +108,7 @@ def http_download(
     assert download_path.is_file() is False, "File already exists"
 
     logger.debug("[Downloading] Using HTTP")
-    logger.setLevel(logging.WARNING)
-    response = requests.get(url)
-    with download_path.open(mode="wb") as f:
-        f.write(response.content)
-    logger.setLevel(logging.DEBUG)
+    download(url=url, out=str(download_path))
     return download_path
 
 

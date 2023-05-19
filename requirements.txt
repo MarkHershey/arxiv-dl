@@ -2,4 +2,3 @@ beautifulsoup4
 colorlog
 pydantic
 requests
-tqdm

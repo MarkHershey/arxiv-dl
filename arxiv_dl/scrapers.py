@@ -11,7 +11,7 @@ from .models import PaperData
 
 def scrape_metadata_arxiv(paper_data: PaperData) -> None:
     logger.setLevel(logging.DEBUG)
-    logger.debug("[Processing] Retrieving paper metadata")
+    logger.debug("[Processing] Retrieving paper metadata...")
     logger.setLevel(logging.WARNING)
 
     response = requests.get(paper_data.abs_url)
@@ -87,7 +87,7 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
 
 def scrape_metadata_cvf(paper_data: PaperData) -> None:
     logger.setLevel(logging.DEBUG)
-    logger.debug("[Processing] Retrieving paper metadata from CVF")
+    logger.debug("[Processing] Retrieving paper metadata from CVF...")
     logger.setLevel(logging.WARNING)
 
     response = requests.get(paper_data.abs_url)

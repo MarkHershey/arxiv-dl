@@ -26,7 +26,6 @@ setup(
         "requests",
         "pydantic",
         "beautifulsoup4",
-        "tqdm",
     ],
     extras_require={
         "dev": [
