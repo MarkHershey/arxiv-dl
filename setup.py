@@ -5,6 +5,13 @@ MINOR = 1
 MICRO = 2
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
+def update_version_file():
+    VERSION_FILE = "VERSION"
+    with open(VERSION_FILE, "w") as f:
+        f.write(VERSION)
+
+update_version_file()
+
 with open("README.md", "r") as f:
     long_description = f.read()
 
@@ -19,7 +26,9 @@ setup(
     url="https://github.com/MarkHershey/arxiv-dl",
     packages=find_namespace_packages(include=["arxiv_dl"]),
     scripts=[
+        "arxiv_dl/bin/arxiv-dl",
         "arxiv_dl/bin/getpaper",
+        "arxiv_dl/bin/paper",
     ],
     install_requires=[
         "colorlog>=4.1.0",
