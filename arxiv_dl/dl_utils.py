@@ -1,11 +1,9 @@
-# Note: this code was originally from wget:
+# NOTE: this code was originally from wget:
 # http://pypi.python.org/pypi/wget
 
 ################################################################################
 ################################################################################
-################################################################################
-
-# WGET
+### WGET code below ############################################################
 
 __version__ = "3.2"
 
@@ -570,143 +568,6 @@ def download(url, out=None, bar=bar_adaptive):
     return filename
 
 
+### WGET code above ############################################################
 ################################################################################
 ################################################################################
-################################################################################
-
-# T-LESS DOWNLOAD
-
-# import zipfile
-# import argparse
-
-# version = 2
-# url_root = "http://ptak.felk.cvut.cz/darwin/t-less/v" + str(version)
-# train_ids = list(range(1, 31))
-# test_ids = list(range(1, 21))
-# t_types = ["train", "test"]
-# sensor_types = ["primesense", "kinect", "canon"]
-# model_types = ["cad", "cad_subdivided", "reconst"]
-
-# def parse():
-#     parser = argparse.ArgumentParser(
-#         description="Downloads and unpacks the selected parts of the T-LESS dataset. "
-#                     "Example usage: "
-#                     "\"t-less_download.py --train --test --models --sensors primesense\" "
-#                     "- downloads and unpacks all models and all images from the Primesense sensor.")
-#     parser.add_argument("--destination", default=".",
-#                         help="destination folder inside which a new folder for the dataset is created"
-#                              " (default is the current folder)")
-#     parser.add_argument("--train", nargs="*", type=int, choices=train_ids, default=train_ids,
-#                         metavar="obj_id", help="IDs of objects (all are downloaded if no ID is specified)")
-#     parser.add_argument("--test", nargs="*", type=int, choices=test_ids, default=test_ids,
-#                         metavar="scene_id", help="IDs of scenes (all are downloaded if no ID is specified)")
-#     parser.add_argument("--sensors", nargs="+", default=sensor_types, choices=sensor_types,
-#                         help="sensors (images from all sensors are downloaded if none is specified)")
-#     parser.add_argument("--models", nargs="*", choices=model_types,default=model_types,
-#                         help="variants of 3D object models (all variants are downloaded if none is specified)")
-#     args = parser.parse_args()
-
-#     def reinterpret_arg(arg, all, none):
-#         if arg == none:
-#             return all
-#         elif arg is None:
-#             return none
-#         else:
-#             return arg
-
-#     dest = os.path.normpath(args.destination)
-#     ids = [args.train, args.test]
-#     if all(i is None for i in ids + [args.models]):
-#         #parser.error("What should be downloaded?")
-#         parser.print_usage()
-#         parser.exit()
-#     for i, id_list in enumerate(ids):
-#         ids[i] = reinterpret_arg(id_list, train_ids if i < 1 else test_ids, [])
-#     args.models = reinterpret_arg(args.models, model_types, [])
-#     return dest, ids, args.sensors, args.models
-
-# step_current = 0
-# step_total = 0
-# def down_unzip(url, dest, zip_download_dir):
-#     global step_current
-#     step_current += 1
-#     down_path = os.path.join(zip_download_dir, os.path.basename(url))
-
-#     print("Downloading {}/{}: {}".format(step_current, step_total, url))
-#     name_file = download(url, out=down_path)
-#     print("")
-
-#     print("Unpacking")
-#     unzip(name_file, dest)
-#     print("")
-
-#     print("")
-
-# def unzip(name_file, dest):
-#     zip_file = zipfile.ZipFile(name_file)
-#     # zip_file.extractall(dest)  # no progress bar
-#     size_uncompress = sum((f.file_size for f in zip_file.infolist()))
-#     size_extracted = 0
-#     for f in zip_file.infolist():
-#         size_extracted += f.file_size
-#         callback_progress_zip(size_extracted, size_uncompress)
-#         zip_file.extract(f, dest)
-#     zip_file.close()
-#     os.remove(name_file)
-
-# def callback_progress_zip(size_current, size_total, bar_function=bar_adaptive):
-#     width = min(100, get_console_width())
-#     progress = bar_function(size_current, size_total, width)
-#     if progress:
-#         sys.stdout.write("\r" + progress)
-
-# def main():
-#     global step_total
-#     path_dest_home, ids_lists, sensors, models = parse()
-#     step_total = len(sensors) * len(ids_lists) * sum((len(i) for i in ids_lists)) + len(models)
-
-#     down_sensors = ", ".join(sensors)
-#     if down_sensors == "": down_sensors = "-"
-#     down_obj_ids = ", ".join(map(str, ids_lists[0]))
-#     if down_obj_ids == "": down_obj_ids = "-"
-#     down_scene_ids = ", ".join(map(str, ids_lists[1]))
-#     if down_scene_ids == "": down_scene_ids = "-"
-#     down_model_types = ", ".join(models)
-#     if down_model_types == "": down_model_types = "-"
-
-#     print("\nData to be downloaded to \"{}\":\n"
-#           "------------------------------------\n"
-#           "Training images (from sensors: {}) for objects:\n{}\n\n"
-#           "Test images (from sensors: {}) for scenes:\n{}\n\n"
-#           "Models:\n{}\n"
-#           "------------------------------------\n".format(
-#         path_dest_home, down_sensors, down_obj_ids, down_sensors,
-#         down_scene_ids, down_model_types))
-#     print("Note: If you have already downloaded some of these dataset parts to "
-#           "the same destination folder, they will be downloaded again and overwritten.\n")
-#     inp = input if PY3K else raw_input
-#     inp("Press ENTER to continue.")
-#     print("")
-
-#     root = "t-less_v{:d}".format(version)
-#     zip_download_dir = os.path.join(path_dest_home, root)
-
-#     if not os.path.exists(zip_download_dir):
-#         os.makedirs(zip_download_dir)
-
-#     for sensor in sensors:
-#         for id_data_type, ids in enumerate(ids_lists):
-#             parent = "{}_{}".format(t_types[id_data_type], sensor)
-#             for id in ids:
-#                 name = "{:02d}".format(id)
-#                 path = os.path.join(path_dest_home, root, parent)
-#                 url = "{}/{}.zip".format(url_root, "_".join([root, parent, name]))
-#                 down_unzip(url, path, zip_download_dir)
-#     for model_type in models:
-#         name = "models_" + model_type
-#         path_base = os.path.join(root)
-#         url = "{}/{}.zip".format(url_root, "{}_{}".format(root, name))
-#         down_unzip(url, os.path.join(path_dest_home, path_base), zip_download_dir)
-
-# if __name__ == '__main__':
-#     main()

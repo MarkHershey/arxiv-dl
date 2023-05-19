@@ -1,0 +1,57 @@
+#!/usr/bin/env python3
+import argparse
+
+from arxiv_dl.arxiv_dl import main
+
+parser = argparse.ArgumentParser()
+parser.add_argument(
+    "urls",
+    nargs="+",
+    type=str,
+    help="specify paper URL or arXiv ID",
+)
+parser.add_argument(
+    "-v",
+    "--verbose",
+    action="store_true",
+    help="verbose mode",
+)
+parser.add_argument(
+    "-p",
+    "--pdf_only",
+    action="store_true",
+    help="download PDF only without creating Markdown notes",
+)
+parser.add_argument(
+    "-d",
+    "--download_dir",
+    type=str,
+    help="specify download directory",
+    required=False,
+)
+parser.add_argument(
+    "-n",
+    "--n_threads",
+    type=int,
+    help="specify number of threads used for downloading",
+    required=False,
+    default=5,
+)
+args = parser.parse_args()
+
+urls = args.urls
+
+for i, url in enumerate(urls):
+    print(f"[{i+1}/{len(urls)}] >>> {url}")
+    try:
+        main(
+            target=url,
+            verbose=args.verbose,
+            download_dir=args.download_dir,
+            n_threads=args.n_threads,
+            pdf_only=args.pdf_only,
+        )
+    except Exception as e:
+        print(e)
+
+    print()
