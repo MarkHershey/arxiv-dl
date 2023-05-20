@@ -50,10 +50,10 @@ python3 -m pip install --upgrade arxiv-dl
 
 ## How to use it?
 
-After installation, the command `getpaper` should be available in your terminal.
+After installation, three equivalent commands `arxiv-dl`, `getpaper`, `paper` should be available in your terminal.
 
 ```bash
-$ getpaper [-h] [-v] [-p] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
+$ paper [-h] [-v] [-p] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
 ```
 
 Options:
@@ -67,16 +67,16 @@ Options:
 
 ```bash
 # Use ArXiv Paper ID
-$ getpaper 1512.03385 2103.15538
+$ paper 1512.03385 2103.15538
 
 # Use ArXiv Abstract Page URL
-$ getpaper https://arxiv.org/abs/2103.15538
+$ paper https://arxiv.org/abs/2103.15538
 
 # Use ArXiv PDF Page URL
-$ getpaper https://arxiv.org/pdf/1512.03385.pdf
+$ paper https://arxiv.org/pdf/1512.03385.pdf
 
 # Use CVF Open Access URL
-$ getpaper "https://openaccess.thecvf.com/content/CVPR2021/html/Lin_Real-Time_High-Resolution_Background_Matting_CVPR_2021_paper.html"
+$ paper "https://openaccess.thecvf.com/content/CVPR2021/html/Lin_Real-Time_High-Resolution_Background_Matting_CVPR_2021_paper.html"
 ```
 
 ![](imgs/demo.png)

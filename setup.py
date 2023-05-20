@@ -2,13 +2,15 @@ from setuptools import find_namespace_packages, setup
 
 MAJOR = 1
 MINOR = 1
-MICRO = 2
+MICRO = 3
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
+
 
 def update_version_file():
     VERSION_FILE = "VERSION"
     with open(VERSION_FILE, "w") as f:
         f.write(VERSION)
+
 
 update_version_file()
 
