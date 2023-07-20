@@ -35,7 +35,7 @@ _Disclaimer: This is a highly-opinionated CLI tool for downloading papers. It pr
 
 ## How to install it?
 
-This is a command-line tool, use `pip` to install the package globally.
+This is a command-line tool, simply use `pip` to install the package globally, then you are good to go!
 
 -   Pre-requisite: `Python 3.x`
 
@@ -43,14 +43,14 @@ This is a command-line tool, use `pip` to install the package globally.
 python3 -m pip install --upgrade arxiv-dl
 ```
 
-(Optional) Install [aria2c](https://aria2.github.io/) for download speedup.
+Optionally, install [aria2c](https://aria2.github.io/) for download speedup.
 
 -   MacOS: `brew install aria2`
 -   Linux: `sudo snap install aria2c`
 
 ## How to use it?
 
-After installation, three equivalent commands `arxiv-dl`, `getpaper`, `paper` should be available in your terminal.
+After installation, you may use the command `paper` in your shell to download papers. (You may also use the `getpaper` or `arxiv-dl` command, they are all equivalent.)
 
 ```bash
 $ paper [-h] [-v] [-p] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
@@ -66,16 +66,19 @@ Options:
 ### Usage Examples:
 
 ```bash
-# Use ArXiv Paper ID
-$ paper 1512.03385 2103.15538
+# Use a paper's ArXiv ID
+$ paper 1512.03385
 
-# Use ArXiv Abstract Page URL
+# You can download multiple papers at once
+$ paper 1512.03385 2103.15538 2304.04415
+
+# Use ArXiv URL (either abstract page or PDF page URL works!)
 $ paper https://arxiv.org/abs/2103.15538
 
-# Use ArXiv PDF Page URL
+# Use ArXiv URL (either abstract page or PDF page URL works!)
 $ paper https://arxiv.org/pdf/1512.03385.pdf
 
-# Use CVF Open Access URL
+# Use CVF Open Access URL (either abstract page or PDF page URL works!)
 $ paper "https://openaccess.thecvf.com/content/CVPR2021/html/Lin_Real-Time_High-Resolution_Background_Matting_CVPR_2021_paper.html"
 ```
 
@@ -83,25 +86,30 @@ $ paper "https://openaccess.thecvf.com/content/CVPR2021/html/Lin_Real-Time_High-
 
 ## Configurations
 
-### Set Custom Download Destination _(Optional)_
+### Default Download Destination
 
--   Default Download Destination: `~/Downloads/ArXiv_Papers`
--   To set custom download destination, use the environment variable `ARXIV_DOWNLOAD_FOLDER`. Include the following line in your `.bashrc` or `.zshrc` file:
-    ```bash
-    export ARXIV_DOWNLOAD_FOLDER=~/Documents/Papers
-    ```
--   Precedence:
+-   Without any configurations, all paper will be downloaded to `$HOME/Downloads/ArXiv_Papers`.
+
+### Set Your Custom Download Destination _(Optional)_
+
+You may configure your preferred download destination once and for all via an environment variable. This will override the default download destination. To do that, include the following line in your `.bashrc` or `.zshrc` file:
+
+```bash
+export ARXIV_DOWNLOAD_FOLDER="YOUR/PATH/TO/ANY/FOLDER"
+```
+
+-   Every time you use the `paper` command, the download destination will be set to the following order of priority:
     1.  Command-line option `-d`
     2.  Environment variable `ARXIV_DOWNLOAD_FOLDER`
     3.  Default download destination
 
 ### Set Custom Command Alias _(Optional)_
 
--   You can always set your own preferred alias for the default `getpaper` command.
+-   You can always set your own preferred alias to rename the command or add more options.
 -   Include the following line(s) in your `.bashrc` or `.zshrc` file to set your preferred alias:
     ```bash
-    alias dp="getpaper"
-    alias dpv="getpaper -v -d '~/Documents/Papers'"
+    alias dp="paper"
+    alias dpv="paper -v -d '~/Documents/Papers'"
     ```
 
 ## Development
@@ -140,4 +148,4 @@ make clean
 
 ## License
 
-[MIT License](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE) - Copyright (c) 2021-2022 Mark Huang
+[MIT License](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE) - Copyright (c) 2021-2023 Mark Huang
