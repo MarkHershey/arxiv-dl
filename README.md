@@ -43,6 +43,8 @@ This is a command-line tool, simply use `pip` to install the package globally, t
 python3 -m pip install --upgrade arxiv-dl
 ```
 
+NOTE: After installation, you need to ensure the installation path is included in your PATH variable. If you encounter any difficulty finding / setting the PATH, there is this recommended way of [installing stand alone command line tools](https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/), kindly follow its instruction when installing `arxiv-dl`.
+
 Optionally, install [aria2c](https://aria2.github.io/) for download speedup.
 
 -   MacOS: `brew install aria2`
