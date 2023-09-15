@@ -1,6 +1,7 @@
 import json
 import logging
 import os
+import pypdf
 import re
 import shlex
 import string
@@ -88,6 +89,8 @@ def download_pdf(
     if isinstance(out, Path):
         if out.is_file():
             logger.debug(f'[Done] Paper saved to "{download_path}"')
+
+    add_pdf_metadata(paper_data, download_path)
 
     return None
 
@@ -178,6 +181,30 @@ def command_exists(command: str) -> bool:
     from shutil import which
 
     return which(command) is not None
+
+
+def add_pdf_metadata(paper_data: PaperData, download_path: Path):
+    reader = pypdf.PdfReader(download_path)
+    writer = pypdf.PdfWriter()
+
+    # Add all pages to the writer
+    for page in reader.pages:
+        writer.add_page(page)
+
+    # Add the old metadata
+    metadata = reader.metadata
+    writer.add_metadata(metadata)
+
+    # Add the new metadata
+    writer.add_metadata({
+        "/Author": ", ".join(paper_data.authors),
+        "/Title": paper_data.title,
+        "/Subject": paper_data.abstract,
+    })
+
+    # Save the new PDF to a file
+    with open(download_path, "wb") as f:
+        writer.write(f)
 
 
 def add_to_paper_list(paper_data: PaperData, download_dir: Union[str, Path]) -> None:

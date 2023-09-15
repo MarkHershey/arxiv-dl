@@ -36,6 +36,7 @@ setup(
         "colorlog>=4.1.0",
         "requests",
         "pydantic",
+        "pypdf>=3.10.0",
         "beautifulsoup4",
     ],
     extras_require={
