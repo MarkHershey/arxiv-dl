@@ -2,6 +2,7 @@
 import argparse
 
 from arxiv_dl.arxiv_dl import main
+from arxiv_dl.updater import check_update
 
 parser = argparse.ArgumentParser()
 parser.add_argument(
@@ -40,6 +41,8 @@ parser.add_argument(
 args = parser.parse_args()
 
 urls = args.urls
+
+check_update()
 
 for i, url in enumerate(urls):
     print(f"[{i+1}/{len(urls)}] >>> {url}")

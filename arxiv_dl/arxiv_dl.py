@@ -22,6 +22,7 @@ from .scrapers import (
     scrape_metadata_nips,
     scrape_metadata_openreview,
 )
+from .updater import check_update
 
 
 def main(
@@ -38,6 +39,7 @@ def main(
 
     Download paper and extract paper metadata
     """
+
     ### Get Target Download Directory
     try:
         if download_dir is None:
