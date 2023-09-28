@@ -48,6 +48,22 @@ class TestProcessCVFTarget(unittest.TestCase):
         self.assertEqual(paper_data.paper_venue, "WACV")
         self.assertEqual(paper_data.year, 2023)
 
+    def test_ICCV2023(self):
+        abs_url = "https://openaccess.thecvf.com/content/ICCV2023/html/Han_Towards_Attack-tolerant_Federated_Learning_via_Critical_Parameter_Analysis_ICCV_2023_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/ICCV2023/papers/Han_Towards_Attack-tolerant_Federated_Learning_via_Critical_Parameter_Analysis_ICCV_2023_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "ICCV")
+        self.assertEqual(paper_data.year, 2023)
+        paper_data = process_cvf_target(pdf_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "ICCV")
+        self.assertEqual(paper_data.year, 2023)
+
     ################################################################
     # 2022
     # content/venue

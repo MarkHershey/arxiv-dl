@@ -12,6 +12,13 @@ sys.path.insert(0, str(root_dir))
 
 
 class TestScrapeCVF(unittest.TestCase):
+    def test_ICCV2023(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2023/html/Xu_Meta_Compositional_Referring_Expression_Segmentation_CVPR_2023_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2023/papers/Xu_Meta_Compositional_Referring_Expression_Segmentation_CVPR_2023_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        scrape_metadata_cvf(paper_data)
+        ...
+
     def test_CVPR2023(self):
         abs_url = "https://openaccess.thecvf.com/content/CVPR2023/html/Xu_Meta_Compositional_Referring_Expression_Segmentation_CVPR_2023_paper.html"
         pdf_url = "https://openaccess.thecvf.com/content/CVPR2023/papers/Xu_Meta_Compositional_Referring_Expression_Segmentation_CVPR_2023_paper.pdf"
