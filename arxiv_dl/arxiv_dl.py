@@ -22,7 +22,6 @@ from .scrapers import (
     scrape_metadata_nips,
     scrape_metadata_openreview,
 )
-from .updater import check_update
 
 
 def main(
