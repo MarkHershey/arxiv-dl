@@ -11,12 +11,12 @@ Command-line [ArXiv](https://arxiv.org/) & [CVF Open Access](https://openaccess.
 [![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE)
 [![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 
-_Disclaimer: This is a highly-opinionated CLI tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an official project._
+_Disclaimer: This is a highly-opinionated command-line tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an official project._
 
 ## What does it do?
 
 -   Support downloading papers from [ArXiv](https://arxiv.org/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
--   Support downloading speedup by using [aria2c](https://aria2.github.io/).
+-   Support downloading speedup by using [aria2](https://aria2.github.io/).
 -   Retrieve the paper's metadata such as:
     -   Title, Abstract, Year
     -   Authors
@@ -150,4 +150,4 @@ make clean
 
 ## License
 
-[MIT License](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE) - Copyright (c) 2021-2023 Mark Huang
+[MIT License](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE) - Copyright (c) 2021-2024 Mark H. Huang
