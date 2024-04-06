@@ -13,6 +13,42 @@ sys.path.insert(0, str(root_dir))
 class TestProcessCVFTarget(unittest.TestCase):
 
     ################################################################
+    # 2024
+    # content/venue
+
+    def test_WACV2024(self):
+        abs_url = "https://openaccess.thecvf.com/content/WACV2024/html/Zhang_Object-Centric_Video_Representation_for_Long-Term_Action_Anticipation_WACV_2024_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/WACV2024/papers/Zhang_Object-Centric_Video_Representation_for_Long-Term_Action_Anticipation_WACV_2024_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "WACV")
+        self.assertEqual(paper_data.year, 2024)
+        paper_data = process_cvf_target(pdf_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "WACV")
+        self.assertEqual(paper_data.year, 2024)
+
+    def test_WACV2024W(self):
+        abs_url = "https://openaccess.thecvf.com/content/WACV2024W/CV4Smalls/html/Kholiavchenko_KABR_In-Situ_Dataset_for_Kenyan_Animal_Behavior_Recognition_From_Drone_WACVW_2024_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/WACV2024W/CV4Smalls/papers/Kholiavchenko_KABR_In-Situ_Dataset_for_Kenyan_Animal_Behavior_Recognition_From_Drone_WACVW_2024_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "WACV_Workshops")
+        self.assertEqual(paper_data.year, 2024)
+        paper_data = process_cvf_target(pdf_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "WACV_Workshops")
+        self.assertEqual(paper_data.year, 2024)
+
+    ################################################################
     # 2023
     # content/venue
 
@@ -30,6 +66,22 @@ class TestProcessCVFTarget(unittest.TestCase):
         self.assertEqual(paper_data.abs_url, abs_url)
         self.assertEqual(paper_data.pdf_url, pdf_url)
         self.assertEqual(paper_data.paper_venue, "CVPR")
+        self.assertEqual(paper_data.year, 2023)
+
+    def test_CVPR2023W(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2023W/TCV/html/Gowda_Synthetic_Sample_Selection_for_Generalized_Zero-Shot_Learning_CVPRW_2023_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2023W/TCV/papers/Gowda_Synthetic_Sample_Selection_for_Generalized_Zero-Shot_Learning_CVPRW_2023_paper.pdf"
+        paper_data = process_cvf_target(abs_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "CVPR_Workshops")
+        self.assertEqual(paper_data.year, 2023)
+        paper_data = process_cvf_target(pdf_url)
+        self.assertTrue(isinstance(paper_data, PaperData))
+        self.assertEqual(paper_data.abs_url, abs_url)
+        self.assertEqual(paper_data.pdf_url, pdf_url)
+        self.assertEqual(paper_data.paper_venue, "CVPR_Workshops")
         self.assertEqual(paper_data.year, 2023)
 
     def test_WACV2023(self):
