@@ -13,6 +13,8 @@ Command-line [ArXiv](https://arxiv.org/) & [CVF Open Access](https://openaccess.
 
 _Disclaimer: This is a highly-opinionated command-line tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an official project._
 
+![](imgs/carbon_demo.png)
+
 ## What does it do?
 
 -   Support downloading papers from [ArXiv](https://arxiv.org/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
@@ -84,7 +86,6 @@ $ paper https://arxiv.org/pdf/1512.03385.pdf
 $ paper "https://openaccess.thecvf.com/content/CVPR2021/html/Lin_Real-Time_High-Resolution_Background_Matting_CVPR_2021_paper.html"
 ```
 
-![](imgs/demo.png)
 
 ## Configurations
 
