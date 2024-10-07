@@ -146,7 +146,8 @@ make clean
 ## TODOs
 
 -   [x] Add support for ara2c.
--   [x] Add support for papers on CVF Open Access.
+-   [x] Add support for papers on [CVF Open Access](https://openaccess.thecvf.com/menu).
+-   [ ] Add support for papers on [ECVA](https://www.ecva.net/papers.php) (ECCV).
 -   [ ] Add support for papers on OpenReview.
 
 ## License
