@@ -59,36 +59,6 @@ After installation, you may use the command `paper` in your shell to download pa
 paper [OPTIONS] TARGET
 ```
 
-### Supported TARGETs:
-
-Legend: ✅ Supported, 🚧 Coming Soon, ❌ Not Supported
-
--   **[ArXiv](https://arxiv.org/)** 
-    -   ✅ ArXiv ID: `1512.03385`
-    -   ✅ ArXiv Abstract Page URL: `https://arxiv.org/abs/` 
-    -   ✅ ArXiv PDF Page URL: `https://arxiv.org/pdf/`
--   **[CVF Open Access](https://openaccess.thecvf.com/menu)**
-    -   ✅ CVF Abstract Page URL: `https://openaccess.thecvf.com/content/**/html/**/*.html`
-    -   ✅ CVF PDF Page URL: `https://openaccess.thecvf.com/content/**/papers/**/*.pdf`
--   **[ECVA](https://www.ecva.net/papers.php)** (ECCV)
-    -   🚧 ECVA Abstract Page URL: `https://www.ecva.net/papers/**/*.php`
-    -   ❌ ECVA PDF Page URL: `https://www.ecva.net/papers/**/*.php`
-        -   2024: 🚧
-        -   2022: ❌ (allow `--pdf_only`)
-        -   2020: ❌ (allow `--pdf_only`)
-        -   2018: ❌ (allow `--pdf_only`)
-
-
-
-### Supported Options:
-
--   `-v`, `--verbose` (optional): Print paper metadata.
--   `-p`, `--pdf_only` (optional): Download PDF only without creating Markdown notes
--   `-d`, `--download_dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
--   `-n`, `--n_threads` (optional): Specify the number of parallel connections to be used by `aria2`.
-
-
-
 ### Usage Examples:
 
 ```bash
@@ -98,6 +68,33 @@ $ paper 1512.03385
 # download multiple TARGETs at once
 $ paper 1512.03385 2103.15538 2304.04415
 ```
+
+### Supported types of TARGET:
+
+✅ Supported, 🚧 Coming Soon, ❌ Not Supported
+
+-   **[ARXIV.ORG](https://arxiv.org/)** 
+    -   ✅ ArXiv ID: `1512.03385`
+    -   ✅ ArXiv Abstract Page URL: `https://arxiv.org/abs/` 
+    -   ✅ ArXiv PDF Page URL: `https://arxiv.org/pdf/`
+-   **[CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV)**
+    -   ✅ CVF Abstract Page URL: `https://openaccess.thecvf.com/content/**/html/**/*.html`
+    -   ✅ CVF PDF Page URL: `https://openaccess.thecvf.com/content/**/papers/**/*.pdf`
+-   **[ECVA](https://www.ecva.net/papers.php) (ECCV)** 
+    -   🚧 ECVA Abstract Page URL: `https://www.ecva.net/papers/**/*.php`
+    -   ❌ ECVA PDF Page URL: `https://www.ecva.net/papers/**/*.php`
+
+
+
+### Supported OPTIONS:
+
+-   `-v`, `--verbose` (optional): Print paper metadata.
+-   `-p`, `--pdf_only` (optional): Download PDF only without creating Markdown notes
+-   `-d`, `--download_dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
+-   `-n`, `--n_threads` (optional): Specify the number of parallel connections to be used by `aria2`.
+
+
+
 
 
 ## Configurations

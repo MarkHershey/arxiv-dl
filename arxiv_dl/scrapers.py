@@ -9,6 +9,32 @@ from .logger import logger
 from .models import PaperData
 
 
+def scrape_metadata(paper_data: PaperData) -> None:
+    try:
+        if paper_data.abs_url:
+            if paper_data.src_website == "ArXiv":
+                scrape_metadata_arxiv(paper_data)
+            elif paper_data.src_website == "CVF":
+                scrape_metadata_cvf(paper_data)
+            elif paper_data.src_website == "ECVA":
+                scrape_metadata_ecva(paper_data)
+            elif paper_data.src_website == "NeurIPS":
+                scrape_metadata_nips(paper_data)
+            elif paper_data.src_website == "OpenReview":
+                scrape_metadata_openreview(paper_data)
+            else:
+                # TODO: check here
+                logger.error(f"Invalid source website: '{paper_data.src_website}'")
+                return False
+        else:
+            # TODO: think how to handle this; maybe do nothing
+            logger.warning("[Warn] No abstract URL")
+    except Exception as err:
+        logger.exception(err)
+        logger.error("[Abort] Error while getting paper")
+        return False
+
+
 def scrape_metadata_arxiv(paper_data: PaperData) -> None:
     logger.setLevel(logging.DEBUG)
     logger.debug("[Processing] Retrieving paper metadata...")
