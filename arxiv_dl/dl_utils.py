@@ -25,6 +25,7 @@ else:
 
 # --- workarounds for Python misbehavior ---
 
+
 # enable passing unicode arguments from command line in Python 2.x
 # https://stackoverflow.com/questions/846850/read-unicode-characters
 def win32_utf8_argv():
@@ -446,7 +447,6 @@ def bar_adaptive(current, total, width=80):
     # render
     output = ""
     for field in selected:
-
         if field == "percent":
             # fixed size width for percentage
             output += ("%s%%" % (100 * current // total)).rjust(min_width["percent"])
@@ -468,6 +468,8 @@ def bar_adaptive(current, total, width=80):
 
 
 __current_size = 0  # global state variable, which exists solely as a
+
+
 # workaround against Python 3.3.0 regression
 # http://bugs.python.org/issue16409
 # fixed in Python 3.3.1

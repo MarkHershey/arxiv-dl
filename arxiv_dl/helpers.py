@@ -516,6 +516,76 @@ def process_cvf_target(target: str) -> PaperData:
 
 
 ###############################################################################
+### ECVA (ECCV) Helper Functions
+
+
+def process_ecva_target(target: str) -> PaperData:
+    # https://www.ecva.net/papers/eccv_2024/papers_ECCV/html/6863_ECCV_2024_paper.php
+    # https://www.ecva.net/papers/eccv_2024/papers_ECCV/papers/06863.pdf
+    assert "www.ecva.net" in target
+    paper_data = PaperData(
+        src_website="ECVA",
+        paper_venue="ECCV",
+    )
+
+    tokens = target.split("/")
+    _start = tokens.index("www.ecva.net")
+    tokens = tokens[_start:]
+    """
+    0 www.ecva.net
+    1 papers
+    2 eccv_2024
+    3 papers_ECCV
+    4 html / papers
+    5 xxxxxxxxxxxx.php
+    """
+    year = int(tokens[2].split("_")[1])
+    paper_data.year = year
+
+    if tokens[4] == "html" and year >= 2024:
+        assert tokens[5].endswith(".php")
+        paper_id: str = tokens[5].split("_")[0]
+        # pad paper_id with zeros
+        paper_id: str = paper_id.zfill(5)
+        paper_data.paper_id = paper_id
+        paper_data.abs_url = target
+        paper_data.pdf_url = (
+            f"https://www.ecva.net/papers/eccv_{year}/papers_ECCV/papers/{paper_id}.pdf"
+        )
+    elif tokens[4] == "html" and year == 2018:
+        assert tokens[5].endswith(".php")
+        paper_id: str = tokens[5][:-4]  # remove ".php"
+        paper_data.paper_id = paper_id
+        paper_data.abs_url = target
+        paper_data.pdf_url = (
+            f"https://www.ecva.net/papers/eccv_{year}/papers_ECCV/papers/{paper_id}.pdf"
+        )
+    elif tokens[4] == "html" and year <= 2022:
+        assert tokens[5].endswith(".php")
+        paper_id: str = tokens[5].split("_")[0]
+        # pad paper_id with zeros
+        paper_id: str = paper_id.zfill(5)
+        paper_data.paper_id = paper_id
+        paper_data.abs_url = target
+        # unable to infer pdf_url from abs_url for ECCV 2022 and 2020
+    elif tokens[4] == "papers" and year >= 2024:
+        assert tokens[5].endswith(".pdf")
+        paper_id: str = tokens[5].split(".")[0]
+        paper_data.paper_id = paper_id
+        # remove leading zeros
+        paper_id: str = paper_id.lstrip("0")
+        paper_data.abs_url = f"https://www.ecva.net/papers/eccv_{year}/papers_ECCV/html/{paper_id}_ECCV_2024_paper.php"
+        paper_data.pdf_url = target
+    elif tokens[4] == "papers" and year <= 2022:
+        paper_data.pdf_url = target
+        print(f"Currently unable to infer abs_url from pdf_url for ECCV {year}")
+    else:
+        raise Exception("Unexpected ECVA URL: {target}")
+
+    return paper_data
+
+
+###############################################################################
 ### NeurIPS Helper Functions
 
 

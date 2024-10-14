@@ -11,7 +11,6 @@ sys.path.insert(0, str(root_dir))
 
 
 class TestProcessCVFTarget(unittest.TestCase):
-
     ################################################################
     # 2024
     # content/venue
@@ -450,7 +449,6 @@ class TestProcessCVFTarget(unittest.TestCase):
         self.assertEqual(paper_data.year, 2018)
 
     def test_CVPR2018W(self):
-
         abs_url = "https://openaccess.thecvf.com/content_cvpr_2018_workshops/w3/html/Naphade_The_2018_NVIDIA_CVPR_2018_paper.html"
         pdf_url = "https://openaccess.thecvf.com/content_cvpr_2018_workshops/papers/w3/Naphade_The_2018_NVIDIA_CVPR_2018_paper.pdf"
         paper_data = process_cvf_target(abs_url)

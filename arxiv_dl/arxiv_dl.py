@@ -11,6 +11,7 @@ from .helpers import (
     get_download_dest,
     process_arxiv_target,
     process_cvf_target,
+    process_ecva_target,
     process_nips_target,
     process_openreview_target,
 )
@@ -19,6 +20,7 @@ from .models import PaperData
 from .scrapers import (
     scrape_metadata_arxiv,
     scrape_metadata_cvf,
+    scrape_metadata_ecva,
     scrape_metadata_nips,
     scrape_metadata_openreview,
 )
@@ -76,6 +78,8 @@ def main(
         paper_data: PaperData = process_nips_target(target)
     elif "openreview.net" in target:  # assume target is an OpenReview URL
         paper_data: PaperData = process_openreview_target(target)
+    elif "ecva.net" in target:  # assume target is an ECCV URL
+        paper_data: PaperData = process_ecva_target(target)
     elif target.endswith(".pdf"):  # assume target is a PDF file
         # TODO: download the pdf file only
         ...
@@ -88,18 +92,24 @@ def main(
 
     # start scraping from source website
     try:
-        if paper_data.src_website == "ArXiv":
-            scrape_metadata_arxiv(paper_data)
-        elif paper_data.src_website == "CVF":
-            scrape_metadata_cvf(paper_data)
-        elif paper_data.src_website == "NeurIPS":
-            scrape_metadata_nips(paper_data)
-        elif paper_data.src_website == "OpenReview":
-            scrape_metadata_openreview(paper_data)
+        if paper_data.abs_url:
+            if paper_data.src_website == "ArXiv":
+                scrape_metadata_arxiv(paper_data)
+            elif paper_data.src_website == "CVF":
+                scrape_metadata_cvf(paper_data)
+            elif paper_data.src_website == "ECVA":
+                scrape_metadata_ecva(paper_data)
+            elif paper_data.src_website == "NeurIPS":
+                scrape_metadata_nips(paper_data)
+            elif paper_data.src_website == "OpenReview":
+                scrape_metadata_openreview(paper_data)
+            else:
+                # TODO: check here
+                logger.error(f"Invalid source website: '{paper_data.src_website}'")
+                return False
         else:
-            # TODO: check here
-            logger.error(f"Invalid source website: '{paper_data.src_website}'")
-            return False
+            # TODO: think how to handle this; maybe do nothing
+            logger.warning("[Warn] No abstract URL")
     except Exception as err:
         logger.exception(err)
         logger.error("[Abort] Error while getting paper")
@@ -112,9 +122,13 @@ def main(
 
     # download paper
     try:
-        download_pdf(
-            paper_data, download_dir=download_dir, parallel_connections=n_threads
-        )
+        if paper_data.pdf_url:
+            download_pdf(
+                paper_data, download_dir=download_dir, parallel_connections=n_threads
+            )
+        else:
+            # TODO: think how to handle this; maybe improve error message
+            logger.warning("[Warn] No PDF URL found")
     except Exception as err:
         logger.exception(err)
         logger.error("[Abort] Error while downloading paper")
@@ -143,6 +157,7 @@ def main(
 if __name__ == "__main__":
     root_dir = Path(__file__).resolve().parent.parent
     tmp_dir = root_dir / "tmp"
+    tmp_dir.mkdir(exist_ok=True)
 
     from puts import timeitprint
 

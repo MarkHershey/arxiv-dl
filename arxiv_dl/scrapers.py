@@ -142,6 +142,82 @@ def scrape_metadata_cvf(paper_data: PaperData) -> None:
     return None
 
 
+def scrape_metadata_ecva(paper_data: PaperData) -> None:
+    # TODO
+    logger.setLevel(logging.DEBUG)
+    logger.debug("[Processing] Retrieving paper metadata...")
+    logger.setLevel(logging.WARNING)
+
+    response = requests.get(paper_data.abs_url)
+    if response.status_code != 200:
+        logger.error(f"Cannot connect to {paper_data.abs_url}")
+        raise Exception(f"Cannot connect to {paper_data.abs_url}")
+    # make soup
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    # get TITLE
+    result = soup.find("div", id="papertitle")
+    tmp = [i.string.strip() for i in result if i.string]
+    paper_title = tmp[0].strip()  # NOTE: hardcoded
+    paper_data.title = paper_title
+    # print(paper_title)
+
+    # get AUTHORS
+    result = soup.find("div", id="authors")
+    tmp = [i.string.strip() for i in result if i.string]
+    authors_str = tmp[0].strip()  # NOTE: hardcoded
+    authors_list = [x.strip(" *") for x in authors_str.split(",") if x]
+    paper_data.authors = authors_list
+    # print(authors_list)
+
+    # get ABSTRACT
+    result = soup.find("div", id="abstract")
+    tmp = [i.string.strip() for i in result if i.string]
+    paper_abstract = "".join(tmp)
+    paper_data.abstract = paper_abstract.strip(' "')
+    # print(paper_abstract)
+
+    # get pdf path
+    result = soup.find_all("a", string="pdf")
+    if len(result) == 1:
+        pdf_url = result[0].get("href")
+        if pdf_url.startswith("../../../../"):
+            pdf_url = pdf_url.replace("../../../../", "https://www.ecva.net/")
+            paper_data.pdf_url = pdf_url
+        else:
+            # TODO: check here
+            # print("Unexpected pdf_url:", pdf_url)
+            pass
+
+    # get doi url
+    result = soup.find_all("a", string="DOI")
+    if len(result) == 1:
+        doi_url = result[0].get("href")
+        if doi_url.startswith("https"):
+            paper_data.doi_url = doi_url
+        else:
+            # TODO: check here
+            # print("Unexpected doi_url:", doi_url)
+            pass
+
+    # get supplementary path
+    result = soup.find_all("a", string="supplementary material")
+    if len(result) == 1:
+        supp_url = result[0].get("href")
+        if supp_url.startswith("../../../../"):
+            supp_url = supp_url.replace("../../../../", "https://www.ecva.net/")
+            paper_data.supp_url = supp_url
+        else:
+            # TODO: check here
+            # print("Unexpected supp_url:", supp_url)
+            pass
+
+    # construct filename
+    paper_data.download_name = f"{paper_data.year}_{paper_data.paper_venue}_{paper_data.paper_id}_{normalize_paper_title(paper_data.title)}.pdf"
+
+    return None
+
+
 def scrape_metadata_nips(paper_data: PaperData) -> None:
     # TODO
     ...
