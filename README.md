@@ -1,15 +1,14 @@
 # arXiv-dl
 
-Command-line [ArXiv](https://arxiv.org/) & [CVF Open Access](https://openaccess.thecvf.com/menu) Paper Downloader.
+Command-line [ArXiv](https://arxiv.org/), [ECVA](https://www.ecva.net/papers.php) & [CVF Open Access](https://openaccess.thecvf.com/menu) Paper Downloader.
 [[PyPI]](https://pypi.org/project/arxiv-dl/)
 [[Source]](https://github.com/MarkHershey/arxiv-dl)
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
-[![](https://img.shields.io/pypi/pyversions/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/pypi/wheel/arxiv-dl)](https://github.com/MarkHershey/arxiv-dl/releases)
-[![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypistats.org/packages/arxiv-dl)
 [![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE)
 [![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypistats.org/packages/arxiv-dl)
 
 _Disclaimer: This is a highly-opinionated command-line tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an official project._
 
@@ -17,7 +16,7 @@ _Disclaimer: This is a highly-opinionated command-line tool for downloading pape
 
 ## What does it do?
 
--   Support downloading papers from [ArXiv](https://arxiv.org/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
+-   Support downloading papers from [ArXiv](https://arxiv.org/), [ECCV](https://www.ecva.net/papers.php), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
 -   Support downloading speedup by using [aria2](https://aria2.github.io/).
 -   Retrieve the paper's metadata such as:
     -   Title, Abstract, Year
@@ -57,33 +56,47 @@ Optionally, install [aria2c](https://aria2.github.io/) for download speedup.
 After installation, you may use the command `paper` in your shell to download papers. (You may also use the `getpaper` or `arxiv-dl` command, they are all equivalent.)
 
 ```bash
-$ paper [-h] [-v] [-p] [-d DOWNLOAD_DIR] [-n N_THREADS] urls [urls ...]
+paper [OPTIONS] TARGET
 ```
 
-Options:
+### Supported TARGETs:
+
+Legend: ✅ Supported, 🚧 Coming Soon, ❌ Not Supported
+
+-   **[ArXiv](https://arxiv.org/)** 
+    -   ✅ ArXiv ID: `1512.03385`
+    -   ✅ ArXiv Abstract Page URL: `https://arxiv.org/abs/` 
+    -   ✅ ArXiv PDF Page URL: `https://arxiv.org/pdf/`
+-   **[CVF Open Access](https://openaccess.thecvf.com/menu)**
+    -   ✅ CVF Abstract Page URL: `https://openaccess.thecvf.com/content/**/html/**/*.html`
+    -   ✅ CVF PDF Page URL: `https://openaccess.thecvf.com/content/**/papers/**/*.pdf`
+-   **[ECVA](https://www.ecva.net/papers.php)** (ECCV)
+    -   🚧 ECVA Abstract Page URL: `https://www.ecva.net/papers/**/*.php`
+    -   ❌ ECVA PDF Page URL: `https://www.ecva.net/papers/**/*.php`
+        -   2024: 🚧
+        -   2022: ❌ (allow `--pdf_only`)
+        -   2020: ❌ (allow `--pdf_only`)
+        -   2018: ❌ (allow `--pdf_only`)
+
+
+
+### Supported Options:
 
 -   `-v`, `--verbose` (optional): Print paper metadata.
 -   `-p`, `--pdf_only` (optional): Download PDF only without creating Markdown notes
 -   `-d`, `--download_dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
 -   `-n`, `--n_threads` (optional): Specify the number of parallel connections to be used by `aria2`.
 
+
+
 ### Usage Examples:
 
 ```bash
-# Use a paper's ArXiv ID
+# download a single TARGET
 $ paper 1512.03385
 
-# You can download multiple papers at once
+# download multiple TARGETs at once
 $ paper 1512.03385 2103.15538 2304.04415
-
-# Use ArXiv URL (either abstract page or PDF page URL works!)
-$ paper https://arxiv.org/abs/2103.15538
-
-# Use ArXiv URL (either abstract page or PDF page URL works!)
-$ paper https://arxiv.org/pdf/1512.03385.pdf
-
-# Use CVF Open Access URL (either abstract page or PDF page URL works!)
-$ paper "https://openaccess.thecvf.com/content/CVPR2021/html/Lin_Real-Time_High-Resolution_Background_Matting_CVPR_2021_paper.html"
 ```
 
 

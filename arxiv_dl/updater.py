@@ -38,8 +38,10 @@ def check_update():
 
     if latest_version and latest_version != current_version:
         print(
-            f"[arxiv-dl] latest version available: {latest_version}. You may update by running: pip install --upgrade arxiv-dl\n"
+            f"[arxiv-dl] latest version available: {latest_version}. You may update by running: pip install --upgrade arxiv-dl"
         )
+
+    print()
 
 
 if __name__ == "__main__":
