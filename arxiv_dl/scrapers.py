@@ -19,9 +19,9 @@ def scrape_metadata(paper_data: PaperData) -> None:
             elif paper_data.src_website == "ECVA":
                 scrape_metadata_ecva(paper_data)
             elif paper_data.src_website == "NeurIPS":
-                scrape_metadata_nips(paper_data)
+                raise NotImplementedError("NeurIPS scraper is not implemented yet")
             elif paper_data.src_website == "OpenReview":
-                scrape_metadata_openreview(paper_data)
+                raise NotImplementedError("OpenReview scraper is not implemented yet")
             else:
                 # TODO: check here
                 logger.error(f"Invalid source website: '{paper_data.src_website}'")

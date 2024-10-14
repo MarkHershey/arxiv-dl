@@ -1,6 +1,22 @@
 # NOTE: this code was originally from wget:
 # http://pypi.python.org/pypi/wget
 
+
+################################################################################
+### Mark code below ############################################################
+
+
+def bytes_to_mb(bytes_int: int) -> float:
+    return bytes_int / 1024 / 1024
+
+
+def bytes_to_mb_str(bytes_int: int) -> str:
+    mb = bytes_to_mb(bytes_int)
+    return f"{mb:.2f}"
+
+
+_b2ms = bytes_to_mb_str
+
 ################################################################################
 ################################################################################
 ### WGET code below ############################################################
@@ -430,7 +446,7 @@ def bar_adaptive(current, total, width=80):
     min_width = {
         "percent": 4,  # 100%
         "bar": 3,  # [.]
-        "size": len("%s" % total) * 2 + 3,  # 'xxxx / yyyy'
+        "size": len(_b2ms(total)) * 2 + 3,  # 'xxxx / yyyy'
     }
     priority = ["percent", "bar", "size"]
 
@@ -445,7 +461,7 @@ def bar_adaptive(current, total, width=80):
             )  # +1 is for separator or for reserved space at
             # the end of line to avoid linefeed on Windows
     # render
-    output = ""
+    output = "[Downloading] "
     for field in selected:
         if field == "percent":
             # fixed size width for percentage
@@ -455,8 +471,14 @@ def bar_adaptive(current, total, width=80):
             output += bar_thermometer(current, total, min_width["bar"] + avail)
         elif field == "size":
             # size field has a constant width (min == max)
-            output += ("%s / %s" % (current, total)).rjust(min_width["size"])
 
+            # OLD implementation
+            # output += ("%s / %s" % (current, total)).rjust(min_width["size"])
+
+            # [Mark implementation] convert bytes to MB
+            output += (_b2ms(current) + " / " + _b2ms(total) + " MB").rjust(
+                min_width["size"]
+            )
         selected = selected[1:]
         if selected:
             output += " "  # add field separator
