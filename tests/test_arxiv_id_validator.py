@@ -2,7 +2,7 @@ import sys
 import unittest
 from pathlib import Path
 
-from arxiv_dl.helpers import valid_arxiv_id
+from arxiv_dl.target_parser import valid_arxiv_id
 
 root_dir = Path(__file__).resolve().parent.parent
 

@@ -2,7 +2,7 @@ import sys
 import unittest
 from pathlib import Path
 
-from arxiv_dl.helpers import process_cvf_target
+from arxiv_dl.target_parser import process_cvf_target
 from arxiv_dl.models import PaperData
 
 root_dir = Path(__file__).resolve().parent.parent
