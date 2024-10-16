@@ -511,7 +511,8 @@ def callback_progress(blocks, block_size, total_size, bar_function):
     """
     global __current_size
 
-    width = min(100, get_console_width())
+    # width = min(100, get_console_width())
+    width = get_console_width() - 20
 
     if sys.version_info[:3] == (3, 3, 0):  # regression workaround
         if blocks == 0:  # first call

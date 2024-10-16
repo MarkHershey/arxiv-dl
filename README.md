@@ -83,7 +83,11 @@ $ paper 1512.03385 2103.15538 2304.04415
 -   **[ECVA](https://www.ecva.net/papers.php) (ECCV)** 
     -   🚧 ECVA Abstract Page URL: `https://www.ecva.net/html/**/*.php`
     -   ❌ ECVA PDF Page URL: `https://www.ecva.net/papers/**/*.pdf`
-
+-   **[NeurIPS](https://papers.nips.cc/)**
+    -   🚧 NeurIPS Abstract Page URL
+    -   🚧 NeurIPS PDF Page URL
+-   **[OpenReview](https://openreview.net/)**
+    -   🚧 TODO
 
 
 ### Supported OPTIONS:
@@ -150,13 +154,6 @@ make
 ```bash
 make clean
 ```
-
-## TODOs
-
--   [x] Add support for ara2c.
--   [x] Add support for papers on [CVF Open Access](https://openaccess.thecvf.com/menu).
--   [ ] Add support for papers on [ECVA](https://www.ecva.net/papers.php) (ECCV).
--   [ ] Add support for papers on OpenReview.
 
 ## License
 

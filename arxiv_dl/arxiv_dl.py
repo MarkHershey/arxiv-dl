@@ -9,12 +9,8 @@ from .helpers import (
     create_paper_note,
     download_pdf,
     get_download_dest,
-    process_arxiv_target,
-    process_cvf_target,
-    process_ecva_target,
-    process_nips_target,
-    process_openreview_target,
 )
+from .target_parser import parse_target
 from .logger import logger
 from .models import PaperData
 from .scrapers import scrape_metadata
@@ -30,9 +26,11 @@ def main(
     **kwargs,
 ) -> bool:
     """
-    Entry point
-
-    Download paper and extract paper metadata
+    Entry point of the package's main functionality.
+    This pipeline has three main steps:
+        1. Process Target: Identify the source of the paper (ArXiv, CVF, NeurIPS, OpenReview, etc.)
+        2. Scrape Metadata: Extract metadata from the source website
+        3. Download Paper: Download the paper PDF file and save it to the target directory
     """
 
     ### Get Target Download Directory
@@ -41,7 +39,7 @@ def main(
             download_dir: Path = get_download_dest()
         else:
             download_dir: Path = Path(download_dir).resolve()
-            assert download_dir.is_dir()
+            download_dir.mkdir(parents=True, exist_ok=True)
     except Exception as e:
         logger.exception(e)
         logger.error("[Abort] Environment Variable Error")
@@ -62,24 +60,7 @@ def main(
         return False
 
     ### Identify Paper Source/Venues
-    if target[0].isdigit() or "arxiv.org" in target:
-        # assume target is an ArXiv ID
-        paper_data: PaperData = process_arxiv_target(target)
-    elif "openaccess.thecvf.com" in target:  # assume target is a CVF URL
-        # CVPR, ICCV, WACV
-        paper_data: PaperData = process_cvf_target(target)
-    elif "papers.nips.cc/paper" in target:  # assume target is a NeurIPS URL
-        paper_data: PaperData = process_nips_target(target)
-    elif "openreview.net" in target:  # assume target is an OpenReview URL
-        paper_data: PaperData = process_openreview_target(target)
-    elif "ecva.net" in target:  # assume target is an ECCV URL
-        paper_data: PaperData = process_ecva_target(target)
-    elif target.endswith(".pdf"):  # assume target is a PDF file
-        # TODO: download the pdf file only
-        ...
-    else:
-        logger.error(f"[Abort] Unknown target: {target}")
-        return False
+    paper_data: PaperData = parse_target(target)
 
     # start scraping from source website
     scrape_metadata(paper_data)
