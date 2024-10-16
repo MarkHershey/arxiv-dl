@@ -4,6 +4,7 @@ import os
 import re
 import shlex
 import string
+import sys
 import subprocess
 from pathlib import Path
 from typing import Union
@@ -19,6 +20,40 @@ DEFAULT_DOWNLOAD_PATH = Path.home() / "Downloads/ArXiv_Papers"
 
 ###########################################################################
 ### General Helper Functions
+
+
+def _initial_configs() -> dict:
+    return dict(
+        download_dir=str(DEFAULT_DOWNLOAD_PATH),  # download destination folder
+        verbose=False,  # show verbose prints
+        debug=False,  # show debug prints
+        quite=False,  # no stdout, return code only
+        pdf_only=False,  # download only PDF
+        n_threads=5,  # number of parallel connections
+    )
+
+
+def get_config_path() -> Path:
+    """Get platform-specific config file path."""
+    current_platform = sys.platform
+    if current_platform in ("linux", "darwin"):
+        config_dir = Path.home() / ".config/arxiv-dl"
+        config_dir.mkdir(parents=True, exist_ok=True)
+        config_path = config_dir / "config.json"
+    elif current_platform == "win32":
+        local_app_data = os.getenv("LOCALAPPDATA", Path.home() / "AppData/Local")
+        config_dir = Path(local_app_data) / "arxiv-dl"
+        config_dir.mkdir(parents=True, exist_ok=True)
+        config_path = config_dir / "config.json"
+    else:
+        raise Exception("Unknown platform.")
+
+    # create config file if it does not exist
+    if not config_path.is_file():
+        with config_path.open(mode="w") as f:
+            json.dump(_initial_configs(), f, indent=4, sort_keys=True)
+
+    return config_path
 
 
 def normalize_paper_title(title: str) -> str:
