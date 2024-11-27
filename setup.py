@@ -38,6 +38,7 @@ setup(
         "pydantic",
         "pypdf>=3.10.0",
         "beautifulsoup4",
+        "setuptools",
     ],
     extras_require={
         "dev": [
