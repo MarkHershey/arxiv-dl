@@ -81,7 +81,7 @@ $ paper 1512.03385 2103.15538 2304.04415
     -   ✅ CVF Abstract Page URL: `https://openaccess.thecvf.com/content/**/html/**/*.html`
     -   ✅ CVF PDF Page URL: `https://openaccess.thecvf.com/content/**/papers/**/*.pdf`
 -   **[ECVA](https://www.ecva.net/papers.php) (ECCV)** 
-    -   🚧 ECVA Abstract Page URL: `https://www.ecva.net/html/**/*.php`
+    -   ✅ ECVA Abstract Page URL: `https://www.ecva.net/html/**/*.php`
     -   ❌ ECVA PDF Page URL: `https://www.ecva.net/papers/**/*.pdf`
 -   **[NeurIPS](https://papers.nips.cc/)**
     -   🚧 NeurIPS Abstract Page URL

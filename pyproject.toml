@@ -19,7 +19,7 @@ keywords = [
     "CVF",
 ]
 readme = "README.md"
-requires-python = ">=3.8"
+requires-python = ">=3.6"
 dependencies = [
     "colorlog>=4.1.0",
     "requests",
