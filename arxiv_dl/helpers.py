@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 from typing import Union
 
-import fitz
+import pymupdf
 
 from .dl_utils import download
 from .logger import logger
@@ -220,12 +220,14 @@ def command_exists(command: str) -> bool:
 
 
 def add_pdf_metadata(paper_data: PaperData, download_path: Path):
-    doc = fitz.open(download_path)
-    doc.set_metadata({
-        'author': ", ".join(paper_data.authors),
-        'title': paper_data.title,
-        'subject': paper_data.abstract,
-    })
+    doc = pymupdf.open(download_path)
+    doc.set_metadata(
+        {
+            "author": ", ".join(paper_data.authors),
+            "title": paper_data.title,
+            "subject": paper_data.abstract,
+        }
+    )
     doc.saveIncr()
     doc.close()
 
