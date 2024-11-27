@@ -9,7 +9,7 @@ import subprocess
 from pathlib import Path
 from typing import Union
 
-import pypdf
+import fitz
 
 from .dl_utils import download
 from .logger import logger
@@ -220,29 +220,14 @@ def command_exists(command: str) -> bool:
 
 
 def add_pdf_metadata(paper_data: PaperData, download_path: Path):
-    reader = pypdf.PdfReader(download_path)
-    writer = pypdf.PdfWriter()
-
-    # Add all pages to the writer
-    for page in reader.pages:
-        writer.add_page(page)
-
-    # Add the old metadata
-    metadata = reader.metadata
-    writer.add_metadata(metadata)
-
-    # Add the new metadata
-    writer.add_metadata(
-        {
-            "/Author": ", ".join(paper_data.authors),
-            "/Title": paper_data.title,
-            "/Subject": paper_data.abstract,
-        }
-    )
-
-    # Save the new PDF to a file
-    with open(download_path, "wb") as f:
-        writer.write(f)
+    doc = fitz.open(download_path)
+    doc.set_metadata({
+        'author': ", ".join(paper_data.authors),
+        'title': paper_data.title,
+        'subject': paper_data.abstract,
+    })
+    doc.saveIncr()
+    doc.close()
 
 
 def add_to_paper_list(paper_data: PaperData, download_dir: Union[str, Path]) -> None:
