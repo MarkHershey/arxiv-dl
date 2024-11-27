@@ -1,6 +1,6 @@
 beautifulsoup4
 colorlog
 pydantic
-pypdf
+pymupdf
 requests
 setuptools
