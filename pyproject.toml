@@ -1,0 +1,50 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "arxiv-dl"
+version = "1.1.6"
+authors = [{ name = "Mark He Huang", email = "dev@markhh.com" }]
+license = { file = "LICENSE" }
+description = "Command-line Papers Downloader. Citation extraction and PDF naming automation."
+keywords = [
+    "arxiv",
+    "paper",
+    "downloader",
+    "CVPR",
+    "ICCV",
+    "ECCV",
+    "WACV",
+    "CVF",
+]
+readme = "README.md"
+requires-python = ">=3.8"
+dependencies = [
+    "colorlog>=4.1.0",
+    "requests",
+    "pydantic",
+    "pymupdf",
+    "beautifulsoup4",
+    "black",
+    "isort",
+]
+classifiers = [
+    "Topic :: Utilities",
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+    "Natural Language :: English",
+]
+
+[project.optional-dependencies]
+dev = ["check-manifest", "pytest", "tox", "twine", "wheel"]
+
+[project.scripts]
+paper = "arxiv_dl.__main__:cli"
+getpaper = "arxiv_dl.__main__:cli"
+arxiv-dl = "arxiv_dl.__main__:cli"
+
+[project.urls]
+Homepage = "https://github.com/MarkHershey/arxiv-dl"
+Issues = "https://github.com/MarkHershey/arxiv-dl/issues"

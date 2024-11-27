@@ -4,10 +4,6 @@ from pathlib import Path
 
 from arxiv_dl.target_parser import valid_arxiv_id
 
-root_dir = Path(__file__).resolve().parent.parent
-
-sys.path.insert(0, str(root_dir))
-
 
 class TestArxivIdentifier(unittest.TestCase):
     def test_valid_identifier(self):

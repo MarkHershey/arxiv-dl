@@ -5,10 +5,6 @@ from pathlib import Path
 from arxiv_dl.models import PaperData
 from arxiv_dl.target_parser import process_cvf_target
 
-root_dir = Path(__file__).resolve().parent.parent
-
-sys.path.insert(0, str(root_dir))
-
 
 class TestProcessCVFTarget(unittest.TestCase):
     ################################################################
@@ -750,3 +746,7 @@ class TestProcessCVFTarget(unittest.TestCase):
         self.assertEqual(paper_data.pdf_url, pdf_url)
         self.assertEqual(paper_data.paper_venue, "CVPR_Workshops")
         self.assertEqual(paper_data.year, 2013)
+
+
+if __name__ == "__main__":
+    unittest.main()

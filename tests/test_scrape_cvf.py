@@ -6,10 +6,6 @@ from arxiv_dl.models import PaperData
 from arxiv_dl.scrapers import scrape_metadata_cvf
 from arxiv_dl.target_parser import process_cvf_target
 
-root_dir = Path(__file__).resolve().parent.parent
-
-sys.path.insert(0, str(root_dir))
-
 
 class TestScrapeCVF(unittest.TestCase):
     def test_ICCV2023(self):
@@ -224,3 +220,7 @@ class TestScrapeCVF(unittest.TestCase):
         paper_data = process_cvf_target(abs_url)
         scrape_metadata_cvf(paper_data)
         ...
+
+
+if __name__ == "__main__":
+    unittest.main()

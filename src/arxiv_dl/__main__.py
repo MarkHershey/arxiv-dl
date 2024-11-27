@@ -1,5 +1,6 @@
 # https://arxiv.org/help/api/user-manual
 
+import argparse
 import json
 import logging
 from pathlib import Path
@@ -14,9 +15,10 @@ from .logger import logger
 from .models import PaperData
 from .scrapers import scrape_metadata
 from .target_parser import parse_target
+from .updater import check_update
 
 
-def main(
+def download_paper(
     target: str,
     verbose: bool = False,
     download_dir: Path = None,
@@ -104,16 +106,62 @@ def main(
     return True
 
 
+def cli():
+    parser = argparse.ArgumentParser()
+    parser.add_argument(
+        "urls",
+        nargs="+",
+        type=str,
+        help="specify paper URL or arXiv ID",
+    )
+    parser.add_argument(
+        "-v",
+        "--verbose",
+        action="store_true",
+        help="verbose mode",
+    )
+    parser.add_argument(
+        "-p",
+        "--pdf_only",
+        action="store_true",
+        help="download PDF only without creating Markdown notes",
+    )
+    parser.add_argument(
+        "-d",
+        "--download_dir",
+        type=str,
+        help="specify download directory",
+        required=False,
+    )
+    parser.add_argument(
+        "-n",
+        "--n_threads",
+        type=int,
+        help="specify number of threads used for downloading",
+        required=False,
+        default=5,
+    )
+    args = parser.parse_args()
+
+    urls = args.urls
+
+    check_update()
+
+    for i, url in enumerate(urls):
+        print(f"[{i+1}/{len(urls)}] >>> {url}")
+        try:
+            download_paper(
+                target=url,
+                verbose=args.verbose,
+                download_dir=args.download_dir,
+                n_threads=args.n_threads,
+                pdf_only=args.pdf_only,
+            )
+        except Exception as e:
+            print(e)
+
+        print()
+
+
 if __name__ == "__main__":
-    root_dir = Path(__file__).resolve().parent.parent
-    tmp_dir = root_dir / "tmp"
-    tmp_dir.mkdir(exist_ok=True)
-
-    from puts import timeitprint
-
-    @timeitprint
-    def test_performances():
-        main("1506.01497", verbose=True, download_dir=tmp_dir)
-        # main("https://arxiv.org/abs/1506.01497", verbose=True, download_dir=tmp_dir)
-
-    test_performances()
+    cli()

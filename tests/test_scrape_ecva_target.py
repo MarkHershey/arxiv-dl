@@ -6,10 +6,6 @@ from arxiv_dl.models import PaperData
 from arxiv_dl.scrapers import scrape_metadata_ecva
 from arxiv_dl.target_parser import process_ecva_target
 
-root_dir = Path(__file__).resolve().parent.parent
-
-sys.path.insert(0, str(root_dir))
-
 
 class TestScrapeECVA(unittest.TestCase):
     def test_ECCV2024(self):
@@ -111,3 +107,7 @@ class TestScrapeECVA(unittest.TestCase):
                 "Tong Zhang",
             ],
         )
+
+
+if __name__ == "__main__":
+    unittest.main()

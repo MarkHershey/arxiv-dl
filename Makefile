@@ -1,15 +1,18 @@
 REMOVE = rm -rvf
 
 all:
-	python setup.py sdist bdist_wheel
+	python3 -m build
 clean:
 	$(REMOVE) build
 	$(REMOVE) logs
 	$(REMOVE) dist
 	$(REMOVE) arxiv_dl.egg-info
 	$(REMOVE) ./**/__pycache__
+	$(REMOVE) ./*/**/__pycache__
 	$(REMOVE) tmp/*
 	$(REMOVE) .pytest_cache
 	$(REMOVE) .DS_Store
 publish:
-	python -m twine upload dist/*
+	python3 -m twine upload dist/*
+testpublish:
+	python3 -m twine upload --repository testpypi dist/*

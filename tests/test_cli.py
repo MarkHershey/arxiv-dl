@@ -21,7 +21,7 @@ class TestCLI(unittest.TestCase):
     @unittest.skipIf(DEFAULT_DOWNLOAD_PATH.exists(), "Default download path exists")
     def test_simple(self):
         subprocess.run(
-            f"getpaper {self.test_target}",
+            f"paper {self.test_target}",
             shell=True,
             check=True,
         )
@@ -29,14 +29,18 @@ class TestCLI(unittest.TestCase):
 
     def test_with_inline_env(self):
         subprocess.run(
-            f"ARXIV_DOWNLOAD_FOLDER={self.test_dir} getpaper {self.test_target}",
+            f"ARXIV_DOWNLOAD_FOLDER={self.test_dir} paper {self.test_target}",
             shell=True,
             check=True,
         )
 
     def test_with_flags(self):
         subprocess.run(
-            f"getpaper {self.test_target} --verbose --download_dir {self.test_dir}",
+            f"paper {self.test_target} --verbose --download_dir {self.test_dir}",
             shell=True,
             check=True,
         )
+
+
+if __name__ == "__main__":
+    unittest.main()
