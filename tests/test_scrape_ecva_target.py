@@ -2,9 +2,9 @@ import sys
 import unittest
 from pathlib import Path
 
-from arxiv_dl.target_parser import process_ecva_target
 from arxiv_dl.models import PaperData
 from arxiv_dl.scrapers import scrape_metadata_ecva
+from arxiv_dl.target_parser import process_ecva_target
 
 root_dir = Path(__file__).resolve().parent.parent
 

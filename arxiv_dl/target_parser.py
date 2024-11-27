@@ -246,6 +246,10 @@ def process_cvf_target(target: str) -> PaperData:
         paper_venue = "CVPR"
     elif "WACV" in _venue:
         paper_venue = "WACV"
+    elif "ACCV" in _venue:
+        paper_venue = "ACCV"
+    else:
+        raise Exception("Unexpected CVF URL.")
 
     if workshop_name:
         paper_venue += "_Workshops"

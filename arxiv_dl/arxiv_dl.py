@@ -10,10 +10,10 @@ from .helpers import (
     download_pdf,
     get_download_dest,
 )
-from .target_parser import parse_target
 from .logger import logger
 from .models import PaperData
 from .scrapers import scrape_metadata
+from .target_parser import parse_target
 
 
 def main(

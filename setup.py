@@ -2,7 +2,7 @@ from setuptools import find_namespace_packages, setup
 
 MAJOR = 1
 MINOR = 1
-MICRO = 5
+MICRO = 6
 VERSION = "%d.%d.%d" % (MAJOR, MINOR, MICRO)
 
 
@@ -22,7 +22,7 @@ setup(
     version=VERSION,
     author="Mark He Huang",
     author_email="dev@markhh.com",
-    description="Command-line arXiv Papers Downloader. Citation extraction and PDF naming automation.",
+    description="Command-line Papers Downloader. Citation extraction and PDF naming automation.",
     long_description=long_description,
     long_description_content_type="text/markdown",
     url="https://github.com/MarkHershey/arxiv-dl",

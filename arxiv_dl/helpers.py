@@ -4,8 +4,8 @@ import os
 import re
 import shlex
 import string
-import sys
 import subprocess
+import sys
 from pathlib import Path
 from typing import Union
 
@@ -250,7 +250,8 @@ def add_to_paper_list(paper_data: PaperData, download_dir: Union[str, Path]) -> 
 
 
 def create_paper_note(paper_data: PaperData, download_dir: Union[str, Path]) -> None:
-    note_path: Path = Path(download_dir) / f"{paper_data.paper_id}__Notes.md"
+    download_path: Path = Path(download_dir) / paper_data.download_name
+    note_path = download_path.with_suffix(".txt")
     authors: list = paper_data.authors
     authors: list = [f"- {name}" for name in authors]
     authors: str = "\n".join(authors)
