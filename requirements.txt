@@ -3,3 +3,4 @@ colorlog
 pydantic
 pypdf
 requests
+setuptools
