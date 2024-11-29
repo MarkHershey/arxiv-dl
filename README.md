@@ -1,16 +1,13 @@
 # arXiv-dl
 
-Command-line [ArXiv](https://arxiv.org/), [ECVA](https://www.ecva.net/papers.php) & [CVF Open Access](https://openaccess.thecvf.com/menu) Paper Downloader.
-[[PyPI]](https://pypi.org/project/arxiv-dl/)
-[[Source]](https://github.com/MarkHershey/arxiv-dl)
+Command-line Paper Downloader for [`ArXiv`](https://arxiv.org/), [`ECVA`](https://www.ecva.net/papers.php) & [`CVF Open Access`](https://openaccess.thecvf.com/menu).
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
-[![](https://img.shields.io/pypi/wheel/arxiv-dl)](https://github.com/MarkHershey/arxiv-dl/releases)
-[![](https://img.shields.io/badge/license-MIT-blue)](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE)
-[![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
 [![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypistats.org/packages/arxiv-dl)
+[![](https://img.shields.io/badge/code%20style-black-black)](https://github.com/psf/black)
+[![](https://img.shields.io/badge/license-MIT-black)](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE)
 
-_Disclaimer: This is a highly-opinionated command-line tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an official project._
+_Disclaimer: This is a highly-opinionated command-line tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an ArXiv official project._
 
 ![](imgs/carbon_demo.png)
 
@@ -41,10 +38,10 @@ This is a command-line tool, simply use `pip` to install the package globally, t
 -   Pre-requisite: `Python 3.x`
 
 ```bash
-python3 -m pip install --upgrade arxiv-dl
+python3 -m pip install -U arxiv-dl
 ```
 
-NOTE: After installation, you need to ensure the installation path is included in your PATH variable. If you encounter any difficulty finding / setting the PATH, there is this recommended way of [installing stand alone command line tools](https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/), kindly follow its instruction when installing `arxiv-dl`.
+> NOTE: After installation, you need to ensure the installation path is included in your PATH variable. If you encounter any difficulty finding / setting the PATH, there is this recommended way of [installing stand alone command line tools](https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/), kindly follow its instruction when installing `arxiv-dl`.
 
 Optionally, install [aria2c](https://aria2.github.io/) for download speedup.
 
@@ -53,7 +50,8 @@ Optionally, install [aria2c](https://aria2.github.io/) for download speedup.
 
 ## How to use it?
 
-After installation, you may use the command `paper` in your shell to download papers. (You may also use the `getpaper` or `arxiv-dl` command, they are all equivalent.)
+After installation, you may use the command `paper` in your shell to download papers. 
+(Legacy commands `arxiv-dl` and `getpaper` are equivalent to the command `paper`.)
 
 ```bash
 paper [OPTIONS] TARGET
@@ -65,8 +63,8 @@ paper [OPTIONS] TARGET
 # download a single TARGET
 $ paper 1512.03385
 
-# download multiple TARGETs at once
-$ paper 1512.03385 2103.15538 2304.04415
+# download multiple TARGETs separated by space
+$ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
 ```
 
 ### Supported types of TARGET:
@@ -132,8 +130,13 @@ export ARXIV_DOWNLOAD_FOLDER="YOUR/PATH/TO/ANY/FOLDER"
 ### Set up development environment
 
 ```bash
-python3 -m venv venv && \
-source venv/bin/activate && \
+# create a virtual environment
+python3 -m venv venv && source venv/bin/activate
+
+# install dependencies
+pip install -r requirements.txt
+
+# install the package in editable mode & dev dependencies
 pip install -e ".[dev]"
 ```
 
