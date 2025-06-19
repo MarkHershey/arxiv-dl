@@ -62,9 +62,8 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
         while "," in author_list:
             author_list.remove(",")
         paper_data.authors = author_list
-    except AttributeError:
+    except Exception as err:
         paper_data.authors = []
-        logger.warning("[Warn] Unable to retrieve long author list")
 
     # get ABSTRACT
     result = soup.find("blockquote", class_="abstract mathjax")

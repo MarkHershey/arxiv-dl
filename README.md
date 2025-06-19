@@ -57,7 +57,7 @@ After installation, you may use the command `paper` in your shell to download pa
 paper [OPTIONS] TARGET
 ```
 
-### Usage Examples:
+### Use in your shell:
 
 ```bash
 # download a single TARGET
@@ -95,6 +95,13 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
 -   `-d`, `--download_dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
 -   `-n`, `--n_threads` (optional): Specify the number of parallel connections to be used by `aria2`.
 
+### Use it in your code:
+
+```python
+from arxiv_dl import download_paper
+
+download_paper(target="1512.03385", download_dir=".", verbose=True)
+```
 
 
 ## Configurations

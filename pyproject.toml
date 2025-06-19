@@ -26,8 +26,6 @@ dependencies = [
     "pydantic",
     "pymupdf",
     "beautifulsoup4",
-    "black",
-    "isort",
 ]
 classifiers = [
     "Topic :: Utilities",
@@ -38,7 +36,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["check-manifest", "pytest", "tox", "twine", "wheel"]
+dev = ["check-manifest", "pytest", "tox", "twine", "wheel", "black", "isort"]
 
 [project.scripts]
 paper = "arxiv_dl.__main__:cli"
