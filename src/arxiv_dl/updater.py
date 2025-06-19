@@ -1,6 +1,6 @@
 import json
+import importlib.metadata
 
-import pkg_resources
 import requests
 
 
@@ -26,7 +26,7 @@ def check_latest_version():
 
 def check_current_version():
     """Check the current version of arxiv-dl."""
-    current_version = pkg_resources.get_distribution("arxiv-dl").version
+    current_version = importlib.metadata.version("arxiv-dl")
     return current_version
 
 
