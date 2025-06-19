@@ -1,6 +1,6 @@
 import json
 import logging
-
+import string
 import requests
 from bs4 import BeautifulSoup
 
@@ -55,15 +55,14 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
 
     # get AUTHORS
     result = soup.find("div", class_="authors")
-
-    try:
-        author_list = [i.string.strip() for i in result if i.string]
+    author_list = [
+        i.string.strip()
+        for i in result
+        if i.string and str(i.string)[0] in string.ascii_letters
+    ]
+    if author_list and author_list[0] == "Authors:":
         author_list.pop(0)
-        while "," in author_list:
-            author_list.remove(",")
-        paper_data.authors = author_list
-    except Exception as err:
-        paper_data.authors = []
+    paper_data.authors = author_list
 
     # get ABSTRACT
     result = soup.find("blockquote", class_="abstract mathjax")
