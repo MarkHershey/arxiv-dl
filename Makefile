@@ -1,7 +1,7 @@
 REMOVE = rm -rvf
 
 all:
-	python3 -m build
+	python3 -m pip install -U pip build twine && python3 -m build
 clean:
 	$(REMOVE) build
 	$(REMOVE) logs

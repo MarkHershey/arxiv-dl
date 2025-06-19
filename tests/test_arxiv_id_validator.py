@@ -19,10 +19,22 @@ class TestArxivIdentifier(unittest.TestCase):
         self.assertTrue(valid_arxiv_id(valid_id))
         valid_id = "2103.00001"
         self.assertTrue(valid_arxiv_id(valid_id))
-        valid_id = "0701.15538"
-        self.assertTrue(valid_arxiv_id(valid_id))
         valid_id = "2912.15538"
         self.assertTrue(valid_arxiv_id(valid_id))
+
+    def test_invalid_year_identifier(self):
+        """
+        Right format, but invalid year range.
+        """
+        invalid_id = "0701.15538"
+        self.assertFalse(valid_arxiv_id(invalid_id))
+
+
+    def test_valid_legacy_identifier(self):
+        legacy_id = "math.GT/0211159"
+        self.assertTrue(valid_arxiv_id(legacy_id))
+        legacy_id = "cs/0701188"
+        self.assertTrue(valid_arxiv_id(legacy_id))
 
     def test_invalid_identifier(self):
         valid_id = "213.15538"

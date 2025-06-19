@@ -45,10 +45,10 @@ def parse_target(target: str) -> PaperData:
 def valid_arxiv_id(paper_id: str) -> bool:
     """
     Validate the arXiv ID according to official arXiv ID format.
-    Current implementation validates paper accepted by arXiv during 2007 to 2029.
+    Supports both legacy (pre-2007) and modern (post-2007) arXiv IDs.
 
     Args: str
-        paper_id: arXiv ID to be validated (e.g. '1901.01234')
+        paper_id: arXiv ID to be validated (e.g. '1901.01234', 'math.GT/0309136', 'hep-th/9901001')
 
     Returns: bool
         True if the arXiv ID is valid. False otherwise.
@@ -58,20 +58,46 @@ def valid_arxiv_id(paper_id: str) -> bool:
     if not isinstance(paper_id, str):
         return False
 
-    pattern = r"^([0-2])([0-9])(0|1)([0-9])\.[0-9]{4,5}(v[0-9]{1,2})?$"
+    # Modern (post-2007) arXiv ID: YYMM.number or YYMM.numbervV
+    modern_pattern = r"^(?P<yy>[0-9]{2})(?P<mm>0[1-9]|1[0-2])\.(?P<num>[0-9]{4,5})(v[0-9]+)?$"
+    modern_match = re.fullmatch(modern_pattern, paper_id)
+    if modern_match:
+        yy = int(modern_match.group('yy'))
+        mm = int(modern_match.group('mm'))
+        num = modern_match.group('num')
+        # Valid year/month for modern IDs: 0704 and later
+        if yy < 7:
+            return False
+        if not (1 <= mm <= 12):
+            return False
+        # 4-digit sequence for 0704-1412, 5-digit for 1501+
+        if (yy < 15 or (yy == 14 and mm <= 12)):
+            if len(num) != 4:
+                return False
+        else:
+            if len(num) != 5:
+                return False
+        return True
 
-    if not re.fullmatch(pattern, paper_id):
-        return False
+    # Legacy (pre-2007) arXiv ID: [archive][.subject_class]/YYMMNNN or NNNN
+    # Example: math.GT/0309136, hep-th/9901001, math/0309136, cs/0701188
+    legacy_pattern = r"^(?P<archive>[a-z\-]+)(\.[A-Z]{2})?/(?P<ym>[0-9]{4})(?P<seq>[0-9]{3,4})(v[0-9]+)?$"
+    legacy_match = re.fullmatch(legacy_pattern, paper_id)
+    if legacy_match:
+        ym = legacy_match.group('ym')
+        seq = legacy_match.group('seq')
+        yy = int(ym[:2])
+        mm = int(ym[2:])
+        # Legacy IDs: 9107 (July 1991) through 0703 (March 2007)
+        if not (91 <= yy <= 99 or 0 <= yy <= 7):
+            return False
+        if not (1 <= mm <= 12):
+            return False
+        if len(seq) not in (3, 4):
+            return False
+        return True
 
-    year = int(paper_id[0:2])
-    month = int(paper_id[2:4])
-
-    if not 7 <= year <= 29:
-        return False
-    if not 1 <= month <= 12:
-        return False
-
-    return True
+    return False
 
 
 def get_arxiv_id_from_url(url: str) -> str:
@@ -82,17 +108,26 @@ def get_arxiv_id_from_url(url: str) -> str:
         url: URL of the arXiv paper.
 
     Returns:
-        arXiv ID of the paper.
+        arXiv ID of the paper (without version number to ensure latest version).
 
     Raises:
         Exception: If the URL is not a valid arXiv URL.
     """
-    pattern = r"([0-2])([0-9])(0|1)([0-9])\.[0-9]{4,5}(v[0-9]{1,2})?"
-    match = re.search(pattern, url)
+    # Modern pattern: YYMM.number(vV)
+    modern_pattern = r"[0-9]{2}(0[1-9]|1[0-2])\.[0-9]{4,5}(v[0-9]+)?"
+    match = re.search(modern_pattern, url)
     if match:
-        return match[0]
-    else:
-        raise Exception("Could not find arXiv ID in URL.")
+        # Remove version number if present to get latest version
+        arxiv_id = match[0]
+        return re.sub(r'v[0-9]+$', '', arxiv_id)
+    # Legacy pattern: [archive][.subject_class]/YYMMNNN or NNNN (optionally with vV)
+    legacy_pattern = r"[a-z\-]+(\.[A-Z]{2})?/\d{6,7}(v[0-9]+)?"
+    match = re.search(legacy_pattern, url)
+    if match:
+        # Remove version number if present to get latest version
+        arxiv_id = match[0]
+        return re.sub(r'v[0-9]+$', '', arxiv_id)
+    raise Exception("Could not find arXiv ID in URL.")
 
 
 def process_arxiv_target(target: str) -> PaperData:

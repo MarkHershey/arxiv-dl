@@ -107,8 +107,12 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
     paper_data.bibtex = bibtex.strip()
 
     # construct filename
+    if "/" in paper_data.paper_id:
+        _paper_id = paper_data.paper_id.replace("/", "_")
+    else:
+        _paper_id = paper_data.paper_id 
     paper_data.download_name = (
-        f"{paper_data.paper_id}_{normalize_paper_title(paper_data.title)}.pdf"
+        f"{_paper_id}_{normalize_paper_title(paper_data.title)}.pdf"
     )
 
     return None
