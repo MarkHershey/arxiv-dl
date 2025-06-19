@@ -55,8 +55,9 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
 
     # get AUTHORS
     result = soup.find("div", class_="authors")
+
     try:
-        author_list = [i.string.strip() for i in result]
+        author_list = [i.string.strip() for i in result if i.string]
         author_list.pop(0)
         while "," in author_list:
             author_list.remove(",")
