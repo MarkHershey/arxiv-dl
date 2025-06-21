@@ -6,11 +6,18 @@ from rich.console import Console
 from .models import PaperData
 
 
+def get_terminal_width() -> int:
+    try:
+        return os.get_terminal_size().columns
+    except Exception:
+        return 80
+
+
 class CustomConsole:
     def __init__(self):
         self.console = Console()
+        self.width = get_terminal_width()
         self.verbose_level = 2
-        self.width = os.get_terminal_size().columns
         self.level_map = {
             "silent": 0,  # try not to produce anything in stdout nor stderr
             "minimal": 1,  # only print errors & final result
@@ -51,9 +58,13 @@ class CustomConsole:
         if self.verbose_level >= 2:
             self.console.print("[green dim]> " + text)
 
-    def lookup(self, text: str):
+    def process(self, i: int, total: int, target: str):
         if self.verbose_level >= 2:
-            self.console.print("[green dim]> " + text)
+            # self.console.print(
+            #     f"[white bold][{i+1}/{total}][/white bold] >>> [white dim]{target}"
+            # )
+            # self.console.print(f"[green dim]> Target [{i+1}/{total}] >>> {target}")
+            self.console.print(f"[green dim]> Target [{i+1}/{total}]: {target}")
 
     ###########################################################################
     ### Verbose
@@ -70,11 +81,13 @@ class CustomConsole:
         if self.verbose_level >= 3:
             # self.print(paper_data.model_dump())
             self.print("[cyan dim]" + "+" * self.width)
-            self.print(f"  Paper Title  : [green bold]{paper_data.title}")
-            self.print(f"  Authors      : [green bold]{', '.join(paper_data.authors)}")
-            self.print(f"  Abstract     : [green]{paper_data.abstract}")
-            self.print(f"  Abstract URL : [blue]{paper_data.abs_url}")
-            self.print(f"  PDF URL      : [blue]{paper_data.pdf_url}")
+            self.print(f"  [dim]Paper Title  :[/dim] [green bold]{paper_data.title}")
+            self.print(
+                f"  [dim]Authors      :[/dim] [green bold]{', '.join(paper_data.authors)}"
+            )
+            self.print(f"  [dim]Abstract     :[/dim] [green]{paper_data.abstract}")
+            self.print(f"  [dim]Abstract URL :[/dim] [blue]{paper_data.abs_url}")
+            self.print(f"  [dim]PDF URL      :[/dim] [blue]{paper_data.pdf_url}")
             self.print("[cyan dim]" + "+" * self.width)
 
 

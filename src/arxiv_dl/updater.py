@@ -3,6 +3,8 @@ import json
 
 import requests
 
+from .printer import console
+
 
 def check_latest_version():
     """Check the latest version of arxiv-dl on PyPI."""
@@ -12,7 +14,6 @@ def check_latest_version():
     except requests.exceptions.ConnectionError:
         return ""
     except Exception as e:
-        # print(e)
         return ""
 
     if response.status_code == 200:
@@ -34,11 +35,11 @@ def check_update():
     """Remind user to update arxiv-dl if there is a new version."""
     latest_version = check_latest_version()
     current_version = check_current_version()
-    print(f"[arxiv-dl] (version: {current_version})")
+    console.print(f"[dim]\[arxiv-dl] (version: {current_version})")
 
     if latest_version and latest_version != current_version:
-        print(
-            f"[arxiv-dl] latest version available: {latest_version}. You may update by running: pip install --upgrade arxiv-dl"
+        console.print(
+            f"[yellow]\[arxiv-dl] latest version available: {latest_version}. You may update by running: pip3 install -U arxiv-dl"
         )
 
     print()

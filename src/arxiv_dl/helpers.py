@@ -10,7 +10,7 @@ from typing import Union
 
 import pymupdf
 
-from .dl_utils import download
+from .dl_utils import download, download_with_rich
 from .models import PaperData
 from .printer import console
 
@@ -101,7 +101,7 @@ def download_pdf(
 
     if download_path.is_file():
         console.success(
-            f'Found Paper PDF locally at [green underline]"{download_path}"'
+            f'Found the paper PDF locally at [green underline]"{download_path}"'
         )
         return None
 
@@ -148,7 +148,11 @@ def http_download(
     assert download_path.is_file() is False, "File already exists"
 
     console.info("Downloading paper using HTTP...")
-    download(url=url, out=str(download_path))
+    if console.verbose_level >= 1:
+        transient = console.verbose_level == 1
+        download_with_rich(url=url, out=str(download_path), transient=transient)
+    else:
+        download(url=url, out=str(download_path))
     return download_path
 
 
@@ -195,10 +199,8 @@ def aria2_download(
         stderr=subprocess.STDOUT,
     )
     if completed_proc.returncode != 0:
-        console.error(
-            f"[Error] aria2c failed with return code {completed_proc.returncode}"
-        )
-        console.error(f"[Error] Output: {completed_proc.stdout.decode('utf-8')}")
+        console.error(f"aria2c failed with return code {completed_proc.returncode}")
+        console.error(f"{completed_proc.stdout.decode('utf-8')}")
         return None
 
     return download_path
@@ -310,21 +312,3 @@ Type your reading notes here...
         with note_path.open(mode="w") as f:
             f.write(md_content)
     return
-
-
-if __name__ == "__main__":
-    abs_url = "https://openaccess.thecvf.com/content/CVPR2021/html/Wu_Greedy_Hierarchical_Variational_Autoencoders_for_Large-Scale_Video_Prediction_CVPR_2021_paper.html"
-    pdf_url = "https://openaccess.thecvf.com/content/CVPR2021/papers/Wu_Greedy_Hierarchical_Variational_Autoencoders_for_Large-Scale_Video_Prediction_CVPR_2021_paper.pdf"
-    paper_data = process_cvf_target(abs_url)
-    print(paper_data)
-
-    abs_url2 = "https://openaccess.thecvf.com/content_cvpr_2013/html/Kim_Deformable_Spatial_Pyramid_2013_CVPR_paper.html"
-    pdf_url2 = "https://openaccess.thecvf.com/content_cvpr_2013/papers/Kim_Deformable_Spatial_Pyramid_2013_CVPR_paper.pdf"
-    paper_data2 = process_cvf_target(abs_url2)
-    print(paper_data2)
-
-    assert paper_data.abs_url == abs_url
-    assert paper_data.pdf_url == pdf_url
-
-    assert paper_data2.abs_url == abs_url2
-    assert paper_data2.pdf_url == pdf_url2

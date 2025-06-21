@@ -60,8 +60,10 @@ def download_paper(
         console.error("Invalid input: Please provide a valid paper URL or arXiv ID.")
         return False
 
-    if not target.startswith(("http://", "https://", "www.")) and not valid_arxiv_id(
-        target
+    if (
+        not target.startswith(("http://", "https://", "www."))
+        and not valid_arxiv_id(target)
+        and "arxiv" not in target.lower()
     ):
         console.error(
             f"Invalid input: '{target}' is not a recognized paper URL or arXiv ID.\n"
@@ -113,13 +115,14 @@ def download_paper(
 
 def cli():
     parser = argparse.ArgumentParser(
-        description="Download research papers from ArXiv, CVF, ECVA, and other academic sources.",
+        description="Download research papers from arxiv.org, CVF, ECVA, and other academic sources.",
         epilog="Examples:\n"
-        "  paper 1512.03385                    # Download by arXiv ID\n"
+        "  paper 1512.03385                        # Download by arXiv ID\n"
         "  paper https://arxiv.org/abs/1512.03385  # Download by URL\n"
-        "  paper 1512.03385 2103.15538         # Download multiple papers\n"
-        "  paper 1512.03385 -d ~/Papers        # Specify download directory\n"
-        "  paper 1512.03385 -p                 # Download PDF only (no notes)",
+        "  paper 1512.03385 2103.15538             # Download multiple papers\n"
+        "  paper 1512.03385 -d ~/Papers            # Specify download directory\n"
+        "  paper 1512.03385 -p                     # Download PDF only (no notes)",
+        formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
         "urls",
@@ -161,7 +164,7 @@ def cli():
     check_update()
 
     for i, url in enumerate(urls):
-        print(f"[{i+1}/{len(urls)}] >>> {url}")
+        console.process(i, len(urls), url)
         try:
             download_paper(
                 target=url,

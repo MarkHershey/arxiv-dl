@@ -38,7 +38,7 @@ def scrape_metadata(paper_data: PaperData) -> None:
 
 
 def scrape_metadata_arxiv(paper_data: PaperData) -> None:
-    console.lookup("Retrieving paper metadata...")
+    console.info("Retrieving paper metadata...")
 
     response = requests.get(paper_data.abs_url)
     if response.status_code != 200:
@@ -119,7 +119,7 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
 
 
 def scrape_metadata_cvf(paper_data: PaperData) -> None:
-    console.lookup("Retrieving paper metadata from CVF...")
+    console.info("Retrieving paper metadata from CVF...")
 
     response = requests.get(paper_data.abs_url)
     if response.status_code != 200:
@@ -174,7 +174,7 @@ def scrape_metadata_cvf(paper_data: PaperData) -> None:
 
 
 def scrape_metadata_ecva(paper_data: PaperData) -> None:
-    console.lookup("Retrieving paper metadata from ECVA...")
+    console.info("Retrieving paper metadata from ECVA...")
 
     response = requests.get(paper_data.abs_url)
     if response.status_code != 200:

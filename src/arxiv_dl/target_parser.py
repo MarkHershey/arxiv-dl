@@ -19,7 +19,7 @@ def parse_target(target: str) -> PaperData:
     Returns:
         PaperData object containing the paper metadata.
     """
-    if "arxiv.org" in target or valid_arxiv_id(target):
+    if "arxiv" in target.lower() or valid_arxiv_id(target):
         return process_arxiv_target(target)
     elif "openaccess.thecvf.com" in target:
         return process_cvf_target(target)
@@ -133,12 +133,7 @@ def get_arxiv_id_from_url(url: str) -> str:
 
 
 def process_arxiv_target(target: str) -> PaperData:
-    if target[0].isdigit():
-        paper_id = target
-    else:
-        paper_id = get_arxiv_id_from_url(target)
-    assert valid_arxiv_id(paper_id)
-
+    paper_id = get_arxiv_id_from_url(target)
     abs_url = f"https://arxiv.org/abs/{paper_id}"
     pdf_url = f"https://arxiv.org/pdf/{paper_id}.pdf"
     src_website = "ArXiv"

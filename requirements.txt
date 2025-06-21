@@ -1,6 +1,6 @@
-beautifulsoup4
-pydantic
-pymupdf
-requests
-rich
-setuptools
+beautifulsoup4>=4.13.4
+pydantic>=2.11.7
+pymupdf>=1.26.1
+requests>=2.32.4
+rich>=14.0.0
+setuptools>=80.9.0
