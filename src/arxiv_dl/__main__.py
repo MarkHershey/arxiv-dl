@@ -4,6 +4,7 @@ import argparse
 import json
 import logging
 from pathlib import Path
+from typing import Union
 
 from .helpers import (
     add_to_paper_list,
@@ -14,14 +15,14 @@ from .helpers import (
 from .logger import logger
 from .models import PaperData
 from .scrapers import scrape_metadata
-from .target_parser import parse_target
+from .target_parser import parse_target, valid_arxiv_id
 from .updater import check_update
 
 
 def download_paper(
     target: str,
     verbose: bool = False,
-    download_dir: Path = None,
+    download_dir: Union[Path, str, None] = None,
     n_threads: int = 5,
     pdf_only: bool = False,
     *args,
@@ -44,20 +45,23 @@ def download_paper(
             download_dir.mkdir(parents=True, exist_ok=True)
     except Exception as e:
         logger.exception(e)
-        logger.error("[Abort] Environment Variable Error")
+        logger.error(
+            "❌ Failed to set up download directory. Please check your environment configuration."
+        )
         return False
 
     ### Filter Invalid Target String
     if not target or not isinstance(target, str):
-        logger.error("[Abort] Target is not specified correctly")
+        logger.error("❌ Invalid input: Please provide a valid paper URL or arXiv ID.")
         return False
 
-    if (
-        not target.startswith(("http://", "https://", "www."))
-        and not target[0].isdigit()
+    if not target.startswith(("http://", "https://", "www.")) and not valid_arxiv_id(
+        target
     ):
         logger.error(
-            f"[Abort] Target should be a URL or an ArXiv ID. Unknown target: '{target}'"
+            f"❌ Invalid input: '{target}' is not a recognized paper URL or arXiv ID.\n"
+            "Please provide a valid URL from ArXiv, CVF, ECVA, or other supported sources, "
+            "or a valid arXiv ID (e.g., '1512.03385')."
         )
         return False
 
@@ -79,11 +83,10 @@ def download_paper(
                 paper_data, download_dir=download_dir, parallel_connections=n_threads
             )
         else:
-            # TODO: think how to handle this; maybe improve error message
-            logger.warning("[Warn] No PDF URL found")
+            logger.warning("⚠️  PDF download link not available for this paper.")
     except Exception as err:
         logger.exception(err)
-        logger.error("[Abort] Error while downloading paper")
+        logger.error("❌ Failed to download the paper.")
         return False
 
     # update paper list
@@ -91,7 +94,9 @@ def download_paper(
         add_to_paper_list(paper_data, download_dir=download_dir)
     except Exception as err:
         logger.exception(err)
-        logger.warning("[Warn] Error while updating paper list")
+        logger.warning(
+            "⚠️  Could not update the paper tracking list, but the download completed successfully."
+        )
         return False
 
     # Create paper notes
@@ -100,44 +105,54 @@ def download_paper(
             create_paper_note(paper_data, download_dir=download_dir)
     except Exception as err:
         logger.exception(err)
-        logger.warning("[Warn] Error while creating note")
+        logger.warning(
+            "⚠️  Could not create paper notes, but the PDF was downloaded successfully."
+        )
         return False
 
     return True
 
 
 def cli():
-    parser = argparse.ArgumentParser()
+    parser = argparse.ArgumentParser(
+        description="Download research papers from ArXiv, CVF, ECVA, and other academic sources.",
+        epilog="Examples:\n"
+        "  paper 1512.03385                    # Download by arXiv ID\n"
+        "  paper https://arxiv.org/abs/1512.03385  # Download by URL\n"
+        "  paper 1512.03385 2103.15538         # Download multiple papers\n"
+        "  paper 1512.03385 -d ~/Papers        # Specify download directory\n"
+        "  paper 1512.03385 -p                 # Download PDF only (no notes)",
+    )
     parser.add_argument(
         "urls",
         nargs="+",
         type=str,
-        help="specify paper URL or arXiv ID",
+        help="Paper URL(s) or arXiv ID(s) to download",
     )
     parser.add_argument(
         "-v",
         "--verbose",
         action="store_true",
-        help="verbose mode",
+        help="Show detailed information about the paper and download process",
     )
     parser.add_argument(
         "-p",
         "--pdf_only",
         action="store_true",
-        help="download PDF only without creating Markdown notes",
+        help="Download PDF only, skip creating Markdown notes",
     )
     parser.add_argument(
         "-d",
         "--download_dir",
         type=str,
-        help="specify download directory",
+        help="Directory to save downloaded papers (default: ~/Downloads/ArXiv_Papers)",
         required=False,
     )
     parser.add_argument(
         "-n",
         "--n_threads",
         type=int,
-        help="specify number of threads used for downloading",
+        help="Number of parallel connections for faster downloads (default: 5, max: 16)",
         required=False,
         default=5,
     )
@@ -158,7 +173,7 @@ def cli():
                 pdf_only=args.pdf_only,
             )
         except Exception as e:
-            print(e)
+            print(f"❌ Error processing '{url}': {e}")
 
         print()
 

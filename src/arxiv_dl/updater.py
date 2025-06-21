@@ -1,5 +1,5 @@
-import json
 import importlib.metadata
+import json
 
 import requests
 

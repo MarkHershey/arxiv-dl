@@ -19,7 +19,7 @@ def parse_target(target: str) -> PaperData:
     Returns:
         PaperData object containing the paper metadata.
     """
-    if target[0].isdigit() or "arxiv.org" in target:
+    if "arxiv.org" in target or valid_arxiv_id(target):
         return process_arxiv_target(target)
     elif "openaccess.thecvf.com" in target:
         return process_cvf_target(target)
@@ -59,19 +59,21 @@ def valid_arxiv_id(paper_id: str) -> bool:
         return False
 
     # Modern (post-2007) arXiv ID: YYMM.number or YYMM.numbervV
-    modern_pattern = r"^(?P<yy>[0-9]{2})(?P<mm>0[1-9]|1[0-2])\.(?P<num>[0-9]{4,5})(v[0-9]+)?$"
+    modern_pattern = (
+        r"^(?P<yy>[0-9]{2})(?P<mm>0[1-9]|1[0-2])\.(?P<num>[0-9]{4,5})(v[0-9]+)?$"
+    )
     modern_match = re.fullmatch(modern_pattern, paper_id)
     if modern_match:
-        yy = int(modern_match.group('yy'))
-        mm = int(modern_match.group('mm'))
-        num = modern_match.group('num')
+        yy = int(modern_match.group("yy"))
+        mm = int(modern_match.group("mm"))
+        num = modern_match.group("num")
         # Valid year/month for modern IDs: 0704 and later
         if yy < 7:
             return False
         if not (1 <= mm <= 12):
             return False
         # 4-digit sequence for 0704-1412, 5-digit for 1501+
-        if (yy < 15 or (yy == 14 and mm <= 12)):
+        if yy < 15 or (yy == 14 and mm <= 12):
             if len(num) != 4:
                 return False
         else:
@@ -84,8 +86,8 @@ def valid_arxiv_id(paper_id: str) -> bool:
     legacy_pattern = r"^(?P<archive>[a-z\-]+)(\.[A-Z]{2})?/(?P<ym>[0-9]{4})(?P<seq>[0-9]{3,4})(v[0-9]+)?$"
     legacy_match = re.fullmatch(legacy_pattern, paper_id)
     if legacy_match:
-        ym = legacy_match.group('ym')
-        seq = legacy_match.group('seq')
+        ym = legacy_match.group("ym")
+        seq = legacy_match.group("seq")
         yy = int(ym[:2])
         mm = int(ym[2:])
         # Legacy IDs: 9107 (July 1991) through 0703 (March 2007)
@@ -119,14 +121,14 @@ def get_arxiv_id_from_url(url: str) -> str:
     if match:
         # Remove version number if present to get latest version
         arxiv_id = match[0]
-        return re.sub(r'v[0-9]+$', '', arxiv_id)
+        return re.sub(r"v[0-9]+$", "", arxiv_id)
     # Legacy pattern: [archive][.subject_class]/YYMMNNN or NNNN (optionally with vV)
     legacy_pattern = r"[a-z\-]+(\.[A-Z]{2})?/\d{6,7}(v[0-9]+)?"
     match = re.search(legacy_pattern, url)
     if match:
         # Remove version number if present to get latest version
         arxiv_id = match[0]
-        return re.sub(r'v[0-9]+$', '', arxiv_id)
+        return re.sub(r"v[0-9]+$", "", arxiv_id)
     raise Exception("Could not find arXiv ID in URL.")
 
 

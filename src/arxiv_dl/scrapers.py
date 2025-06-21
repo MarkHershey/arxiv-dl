@@ -1,6 +1,7 @@
 import json
 import logging
 import string
+
 import requests
 from bs4 import BeautifulSoup
 
@@ -23,15 +24,18 @@ def scrape_metadata(paper_data: PaperData) -> None:
             elif paper_data.src_website == "OpenReview":
                 raise NotImplementedError("OpenReview scraper is not implemented yet")
             else:
-                # TODO: check here
-                logger.error(f"Invalid source website: '{paper_data.src_website}'")
+                logger.error(
+                    f"❌ Unsupported source: '{paper_data.src_website}'. Please check the URL."
+                )
                 return False
         else:
             # TODO: think how to handle this; maybe do nothing
             logger.warning("[Warn] No abstract URL")
     except Exception as err:
         logger.exception(err)
-        logger.error("[Abort] Error while getting paper")
+        logger.error(
+            "❌ Failed to retrieve paper information. Please check the URL and try again."
+        )
         return False
 
 
@@ -110,7 +114,7 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
     if "/" in paper_data.paper_id:
         _paper_id = paper_data.paper_id.replace("/", "_")
     else:
-        _paper_id = paper_data.paper_id 
+        _paper_id = paper_data.paper_id
     paper_data.download_name = (
         f"{_paper_id}_{normalize_paper_title(paper_data.title)}.pdf"
     )
