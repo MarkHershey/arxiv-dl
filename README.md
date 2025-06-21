@@ -1,6 +1,6 @@
 # arXiv-dl
 
-Command-line Paper Downloader for [`ArXiv`](https://arxiv.org/), [`ECVA`](https://www.ecva.net/papers.php) & [`CVF Open Access`](https://openaccess.thecvf.com/menu).
+Command-line Research Paper Downloader for [`arXiv.org`](https://arxiv.org/), [`ECVA`](https://www.ecva.net/papers.php) & [`CVF Open Access`](https://openaccess.thecvf.com/menu).
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypistats.org/packages/arxiv-dl)
@@ -13,7 +13,7 @@ _Disclaimer: This is a highly-opinionated command-line tool for downloading pape
 
 ## What does it do?
 
--   Support downloading papers from [ArXiv](https://arxiv.org/), [ECCV](https://www.ecva.net/papers.php), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
+-   Support downloading papers from [arXiv](https://arxiv.org/), [ECCV](https://www.ecva.net/papers.php), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
 -   Support downloading speedup by using [aria2](https://aria2.github.io/).
 -   Retrieve the paper's metadata such as:
     -   Title, Abstract, Year
@@ -54,7 +54,7 @@ After installation, you may use the command `paper` in your shell to download pa
 (Legacy commands `arxiv-dl` and `getpaper` are equivalent to the command `paper`.)
 
 ```bash
-paper [OPTIONS] TARGET
+paper [OPTIONS] TARGET(s)
 ```
 
 ### Use in your shell:
@@ -71,10 +71,15 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
 
 ✅ Supported, 🚧 Not Yet Supported, ❌ Not Supported
 
+<details>
+<summary><strong>Click to expand</strong></summary>
+
 -   **[ArXiv](https://arxiv.org/)** 
-    -   ✅ ArXiv ID: `1512.03385`
+    -   ✅ ArXiv ID: `1512.03385` or `arXiv:1512.03385`
+    -   ✅ Legacy ArXiv ID: `alg-geom/9708001` or `cs/0002001`, etc.
     -   ✅ ArXiv Abstract Page URL: `https://arxiv.org/abs/1512.03385` 
     -   ✅ ArXiv PDF Page URL: `https://arxiv.org/pdf/1512.03385.pdf`
+    -   ✅ ArXiv HTML Page URL: `https://arxiv.org/html/2506.15442`
 -   **[CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV)**
     -   ✅ CVF Abstract Page URL: `https://openaccess.thecvf.com/content/**/html/**/*.html`
     -   ✅ CVF PDF Page URL: `https://openaccess.thecvf.com/content/**/papers/**/*.pdf`
@@ -86,7 +91,7 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
     -   🚧 NeurIPS PDF Page URL
 -   **[OpenReview](https://openreview.net/)**
     -   🚧 TODO
-
+</details>
 
 ### Supported OPTIONS:
 
@@ -100,7 +105,7 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
 ```python
 from arxiv_dl import download_paper
 
-download_paper(target="1512.03385", download_dir=".", verbose=True)
+download_paper(target="1512.03385", download_dir=".", set_verbose_level="silent")
 ```
 
 
@@ -141,7 +146,7 @@ export ARXIV_DOWNLOAD_FOLDER="YOUR/PATH/TO/ANY/FOLDER"
 python3 -m venv venv && source venv/bin/activate
 
 # install dependencies
-pip install -r requirements.txt
+pip install -U -r requirements.txt
 
 # install the package in editable mode & dev dependencies
 pip install -e ".[dev]"
@@ -167,4 +172,4 @@ make clean
 
 ## License
 
-[MIT License](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE) - Copyright (c) 2021-2024 Mark H. Huang
+[MIT License](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE) - Copyright (c) 2021-2026 Mark H. Huang
