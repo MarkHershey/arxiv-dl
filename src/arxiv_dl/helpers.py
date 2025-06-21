@@ -1,5 +1,4 @@
 import json
-import logging
 import os
 import re
 import shlex
@@ -12,8 +11,8 @@ from typing import Union
 import pymupdf
 
 from .dl_utils import download
-from .logger import logger
 from .models import PaperData
+from .printer import console
 
 DEFAULT_DOWNLOAD_PATH = Path.home() / "Downloads/ArXiv_Papers"
 
@@ -84,7 +83,7 @@ def get_download_dest() -> Path:
         dl_path: Path = Path(DEFAULT_DOWNLOAD_PATH).resolve()
 
     if not dl_path.is_dir():
-        logger.debug(f"Creating Directory: '{DEFAULT_DOWNLOAD_PATH}'")
+        console.info(f"Creating Directory: '{DEFAULT_DOWNLOAD_PATH}'")
         dl_path.mkdir(parents=True, exist_ok=True)
 
     return dl_path
@@ -101,7 +100,9 @@ def download_pdf(
     assert N <= 16, "Number of parallel connections must be less than 16."
 
     if download_path.is_file():
-        logger.debug(f'[Done] Paper PDF already exists at: "{download_path}"')
+        console.success(
+            f'Found Paper PDF locally at [green underline]"{download_path}"'
+        )
         return None
 
     if paper_data.src_website == "CVF":
@@ -124,7 +125,7 @@ def download_pdf(
 
     if isinstance(out, Path):
         if out.is_file():
-            logger.debug(f'[Done] Paper saved to "{download_path}"')
+            console.success(f'Paper saved to [green underline]"{download_path}"')
 
     add_pdf_metadata(paper_data, download_path)
 
@@ -146,7 +147,7 @@ def http_download(
     download_path: Path = download_dir / download_name
     assert download_path.is_file() is False, "File already exists"
 
-    logger.debug("[Downloading] Using HTTP")
+    console.info("Downloading paper using HTTP...")
     download(url=url, out=str(download_path))
     return download_path
 
@@ -187,17 +188,17 @@ def aria2_download(
     #     The file name of the downloaded file relative to the directory given in -d option.
 
     # logger.debug(f"Executing: '{aria2_command}'")
-    logger.debug(f"[Downloading] Using aria2 with {N} connections")
+    console.info(f"Downloading paper using aria2 with {N} connections...")
     completed_proc = subprocess.run(
         shlex.split(aria2_command),
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
     )
     if completed_proc.returncode != 0:
-        logger.error(
+        console.error(
             f"[Error] aria2c failed with return code {completed_proc.returncode}"
         )
-        logger.error(f"[Error] Output: {completed_proc.stdout.decode('utf-8')}")
+        console.error(f"[Error] Output: {completed_proc.stdout.decode('utf-8')}")
         return None
 
     return download_path

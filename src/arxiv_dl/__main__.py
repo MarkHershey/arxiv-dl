@@ -2,7 +2,6 @@
 
 import argparse
 import json
-import logging
 from pathlib import Path
 from typing import Union
 
@@ -12,8 +11,8 @@ from .helpers import (
     download_pdf,
     get_download_dest,
 )
-from .logger import logger
 from .models import PaperData
+from .printer import console
 from .scrapers import scrape_metadata
 from .target_parser import parse_target, valid_arxiv_id
 from .updater import check_update
@@ -25,6 +24,7 @@ def download_paper(
     download_dir: Union[Path, str, None] = None,
     n_threads: int = 5,
     pdf_only: bool = False,
+    set_verbose_level: Union[str, int, None] = None,
     *args,
     **kwargs,
 ) -> bool:
@@ -35,6 +35,12 @@ def download_paper(
         2. Scrape Metadata: Extract metadata from the source website
         3. Download Paper: Download the paper PDF file and save it to the target directory
     """
+    if set_verbose_level is not None:
+        console.set_verbose_level(set_verbose_level)
+    elif verbose:
+        console.set_verbose_level("verbose")
+    else:
+        console.set_verbose_level("default")
 
     ### Get Target Download Directory
     try:
@@ -44,22 +50,21 @@ def download_paper(
             download_dir: Path = Path(download_dir).resolve()
             download_dir.mkdir(parents=True, exist_ok=True)
     except Exception as e:
-        logger.exception(e)
-        logger.error(
-            "❌ Failed to set up download directory. Please check your environment configuration."
+        console.error(
+            "Failed to set up download directory. Please check your environment configuration."
         )
         return False
 
     ### Filter Invalid Target String
     if not target or not isinstance(target, str):
-        logger.error("❌ Invalid input: Please provide a valid paper URL or arXiv ID.")
+        console.error("Invalid input: Please provide a valid paper URL or arXiv ID.")
         return False
 
     if not target.startswith(("http://", "https://", "www.")) and not valid_arxiv_id(
         target
     ):
-        logger.error(
-            f"❌ Invalid input: '{target}' is not a recognized paper URL or arXiv ID.\n"
+        console.error(
+            f"Invalid input: '{target}' is not a recognized paper URL or arXiv ID.\n"
             "Please provide a valid URL from ArXiv, CVF, ECVA, or other supported sources, "
             "or a valid arXiv ID (e.g., '1512.03385')."
         )
@@ -70,11 +75,7 @@ def download_paper(
 
     # start scraping from source website
     scrape_metadata(paper_data)
-
-    # adjust logging level
-    logger.setLevel(logging.DEBUG)
-    if verbose:
-        logger.debug(json.dumps(paper_data.dict(), indent=4))
+    console.print_paper_info(paper_data)
 
     # download paper
     try:
@@ -83,19 +84,17 @@ def download_paper(
                 paper_data, download_dir=download_dir, parallel_connections=n_threads
             )
         else:
-            logger.warning("⚠️  PDF download link not available for this paper.")
+            console.warn("PDF download link not available for this paper.")
     except Exception as err:
-        logger.exception(err)
-        logger.error("❌ Failed to download the paper.")
+        console.error("Failed to download the paper.")
         return False
 
     # update paper list
     try:
         add_to_paper_list(paper_data, download_dir=download_dir)
     except Exception as err:
-        logger.exception(err)
-        logger.warning(
-            "⚠️  Could not update the paper tracking list, but the download completed successfully."
+        console.warn(
+            "Could not update the paper tracking list, but the download completed successfully."
         )
         return False
 
@@ -104,9 +103,8 @@ def download_paper(
         if not pdf_only:
             create_paper_note(paper_data, download_dir=download_dir)
     except Exception as err:
-        logger.exception(err)
-        logger.warning(
-            "⚠️  Could not create paper notes, but the PDF was downloaded successfully."
+        console.warn(
+            "Could not create paper notes, but the PDF was downloaded successfully."
         )
         return False
 
@@ -173,7 +171,7 @@ def cli():
                 pdf_only=args.pdf_only,
             )
         except Exception as e:
-            print(f"❌ Error processing '{url}': {e}")
+            console.error(f"Error processing '{url}': {e}")
 
         print()
 

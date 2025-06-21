@@ -1,13 +1,12 @@
 import json
-import logging
 import string
 
 import requests
 from bs4 import BeautifulSoup
 
 from .helpers import normalize_paper_title
-from .logger import logger
 from .models import PaperData
+from .printer import console
 
 
 def scrape_metadata(paper_data: PaperData) -> None:
@@ -24,29 +23,26 @@ def scrape_metadata(paper_data: PaperData) -> None:
             elif paper_data.src_website == "OpenReview":
                 raise NotImplementedError("OpenReview scraper is not implemented yet")
             else:
-                logger.error(
-                    f"❌ Unsupported source: '{paper_data.src_website}'. Please check the URL."
+                console.error(
+                    f"Unsupported source: '{paper_data.src_website}'. Please check the URL."
                 )
                 return False
         else:
             # TODO: think how to handle this; maybe do nothing
-            logger.warning("[Warn] No abstract URL")
+            console.warn("[Warn] No abstract URL")
     except Exception as err:
-        logger.exception(err)
-        logger.error(
-            "❌ Failed to retrieve paper information. Please check the URL and try again."
+        console.error(
+            "Failed to retrieve paper information. Please check the URL and try again."
         )
         return False
 
 
 def scrape_metadata_arxiv(paper_data: PaperData) -> None:
-    logger.setLevel(logging.DEBUG)
-    logger.debug("[Processing] Retrieving paper metadata...")
-    logger.setLevel(logging.WARNING)
+    console.lookup("Retrieving paper metadata...")
 
     response = requests.get(paper_data.abs_url)
     if response.status_code != 200:
-        logger.error(f"Cannot connect to {paper_data.abs_url}")
+        console.error(f"Cannot connect to {paper_data.abs_url}")
         raise Exception(f"Cannot connect to {paper_data.abs_url}")
     # make soup
     soup = BeautifulSoup(response.text, "html.parser")
@@ -123,13 +119,11 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
 
 
 def scrape_metadata_cvf(paper_data: PaperData) -> None:
-    logger.setLevel(logging.DEBUG)
-    logger.debug("[Processing] Retrieving paper metadata from CVF...")
-    logger.setLevel(logging.WARNING)
+    console.lookup("Retrieving paper metadata from CVF...")
 
     response = requests.get(paper_data.abs_url)
     if response.status_code != 200:
-        logger.error(f"Cannot connect to {paper_data.abs_url}")
+        console.error(f"Cannot connect to {paper_data.abs_url}")
         raise Exception(f"Cannot connect to {paper_data.abs_url}")
     # make soup
     soup = BeautifulSoup(response.text, "html.parser")
@@ -180,14 +174,11 @@ def scrape_metadata_cvf(paper_data: PaperData) -> None:
 
 
 def scrape_metadata_ecva(paper_data: PaperData) -> None:
-    # TODO
-    logger.setLevel(logging.DEBUG)
-    logger.debug("[Processing] Retrieving paper metadata...")
-    logger.setLevel(logging.WARNING)
+    console.lookup("Retrieving paper metadata from ECVA...")
 
     response = requests.get(paper_data.abs_url)
     if response.status_code != 200:
-        logger.error(f"Cannot connect to {paper_data.abs_url}")
+        console.error(f"Cannot connect to {paper_data.abs_url}")
         raise Exception(f"Cannot connect to {paper_data.abs_url}")
     # make soup
     soup = BeautifulSoup(response.text, "html.parser")

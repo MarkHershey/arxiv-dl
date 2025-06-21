@@ -2,8 +2,8 @@ import re
 from pathlib import Path
 from typing import Union
 
-from .logger import logger
 from .models import PaperData
+from .printer import console
 
 ###############################################################################
 ### General
@@ -34,7 +34,7 @@ def parse_target(target: str) -> PaperData:
         ...
         # return process_pdf_target(target)
     else:
-        logger.error(f"[Abort] Unknown target: {target}")
+        console.error(f"Unknown target: {target}")
         return False
 
 

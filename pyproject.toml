@@ -20,13 +20,7 @@ keywords = [
 ]
 readme = "README.md"
 requires-python = ">=3.6"
-dependencies = [
-    "colorlog>=4.1.0",
-    "requests",
-    "pydantic",
-    "pymupdf",
-    "beautifulsoup4",
-]
+dependencies = ["requests", "pydantic", "pymupdf", "beautifulsoup4", "rich"]
 classifiers = [
     "Topic :: Utilities",
     "Programming Language :: Python :: 3",
