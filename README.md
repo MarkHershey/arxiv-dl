@@ -9,7 +9,7 @@ Command-line Research Paper Downloader for [`arXiv.org`](https://arxiv.org/), [`
 
 _Disclaimer: This is a highly-opinionated command-line tool for downloading papers. It priorities ease of use for researchers. Obviously, this is not an ArXiv official project._
 
-![](imgs/carbon_demo.png)
+![](imgs/demo_v1.2.0.png)
 
 ## What does it do?
 
