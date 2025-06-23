@@ -195,16 +195,13 @@ def _create_progress_bar(transient: bool = False) -> Progress:
     return Progress(
         SpinnerColumn(),
         TextColumn("[progress.description]{task.description}"),
-        BarColumn(),
         "[progress.percentage]{task.percentage:>3.0f}%",
-        "•",
+        BarColumn(),
         DownloadColumn(),
         "•",
         TransferSpeedColumn(),
         "•",
         TimeElapsedColumn(),
-        "•",
-        TimeRemainingColumn(),
         console=console.console,
         transient=transient,
     )

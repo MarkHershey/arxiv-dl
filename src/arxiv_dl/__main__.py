@@ -156,14 +156,14 @@ def cli():
     # Output options
     output_group.add_argument(
         "-d",
-        "--download-dir",
+        "--download_dir",
         metavar="DIR",
         type=str,
         help="Directory to save downloaded papers (default: ~/Downloads/ArXiv_Papers)",
     )
     output_group.add_argument(
         "-p",
-        "--pdf-only",
+        "--pdf_only",
         action="store_true",
         help="Download PDF only, skip creating Markdown notes and metadata files",
     )
@@ -178,7 +178,7 @@ def cli():
     )
     verbose_group.add_argument(
         "-vl",
-        "--verbose-level",
+        "--verbose_level",
         metavar="LEVEL",
         type=str,
         choices=["silent", "minimal", "default", "verbose"],
