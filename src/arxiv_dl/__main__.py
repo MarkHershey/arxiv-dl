@@ -3,7 +3,7 @@
 import argparse
 import json
 from pathlib import Path
-from typing import Union
+from typing import Optional, Union
 
 from .helpers import (
     add_to_paper_list,
@@ -16,6 +16,21 @@ from .printer import console
 from .scrapers import scrape_metadata
 from .target_parser import parse_target, valid_arxiv_id
 from .updater import check_update
+
+
+def set_verbosity(
+    verbose: Optional[bool] = None,
+    verbose_level: Optional[Union[str, int]] = None,
+):
+    """
+    Note that console.set_verbose_level() will never throw an error by design, it will fallback to the default level if any error occurs.
+    """
+    if verbose_level is not None:
+        console.set_verbose_level(verbose_level)
+    elif verbose is True:
+        console.set_verbose_level("verbose")
+    else:
+        console.set_verbose_level("default")
 
 
 def download_paper(
@@ -35,12 +50,7 @@ def download_paper(
         2. Scrape Metadata: Extract metadata from the source website
         3. Download Paper: Download the paper PDF file and save it to the target directory
     """
-    if set_verbose_level is not None:
-        console.set_verbose_level(set_verbose_level)
-    elif verbose:
-        console.set_verbose_level("verbose")
-    else:
-        console.set_verbose_level("default")
+    set_verbosity(verbose=verbose, verbose_level=set_verbose_level)
 
     ### Get Target Download Directory
     try:
@@ -125,58 +135,121 @@ def cli():
         formatter_class=argparse.RawTextHelpFormatter,
     )
     parser.add_argument(
-        "urls",
+        "targets",
         nargs="+",
         type=str,
+        metavar="TARGET",
         help="Paper URL(s) or arXiv ID(s) to download",
     )
-    parser.add_argument(
+
+    # Create argument groups for better organization
+    output_group = parser.add_argument_group(
+        title="Output Options", description="Control where and how files are saved"
+    )
+    behavior_group = parser.add_argument_group(
+        title="Behavior Options", description="Control download behavior and verbosity"
+    )
+    performance_group = parser.add_argument_group(
+        title="Performance Options", description="Tune download performance settings"
+    )
+
+    # Output options
+    output_group.add_argument(
+        "-d",
+        "--download-dir",
+        metavar="DIR",
+        type=str,
+        help="Directory to save downloaded papers (default: ~/Downloads/ArXiv_Papers)",
+    )
+    output_group.add_argument(
+        "-p",
+        "--pdf-only",
+        action="store_true",
+        help="Download PDF only, skip creating Markdown notes and metadata files",
+    )
+
+    # Behavior options with mutually exclusive verbose arguments
+    verbose_group = behavior_group.add_mutually_exclusive_group()
+    verbose_group.add_argument(
         "-v",
         "--verbose",
         action="store_true",
-        help="Show detailed information about the paper and download process",
+        help="Enable verbose output with detailed information about papers and download process",
     )
-    parser.add_argument(
-        "-p",
-        "--pdf_only",
-        action="store_true",
-        help="Download PDF only, skip creating Markdown notes",
-    )
-    parser.add_argument(
-        "-d",
-        "--download_dir",
+    verbose_group.add_argument(
+        "-vl",
+        "--verbose-level",
+        metavar="LEVEL",
         type=str,
-        help="Directory to save downloaded papers (default: ~/Downloads/ArXiv_Papers)",
-        required=False,
+        choices=["silent", "minimal", "default", "verbose"],
+        help="Set verbosity level: silent (no output), minimal (errors only), default (standard info), verbose (all details)",
     )
-    parser.add_argument(
+    behavior_group.add_argument(
+        "--no-update-check",
+        action="store_true",
+        help="Skip checking for package updates",
+    )
+
+    # Performance options
+    performance_group.add_argument(
         "-n",
         "--n_threads",
+        metavar="N",
         type=int,
-        help="Number of parallel connections for faster downloads (default: 5, max: 16)",
-        required=False,
         default=5,
+        help="Number of parallel connections for faster downloads (default: 5, max: 16)",
     )
+
     args = parser.parse_args()
 
-    urls = args.urls
+    # Set verbose level
+    # NOTE: setting verbose level here is necessary because it controls the check_update() & console.process() below
+    set_verbosity(verbose=args.verbose, verbose_level=args.verbose_level)
 
-    check_update()
+    # Check for updates (unless disabled)
+    if not args.no_update_check and console.verbose_level >= 2:
+        check_update()
 
-    for i, url in enumerate(urls):
-        console.process(i, len(urls), url)
+    # Initialize variables
+    targets = args.targets
+    success_list = []
+    exit_code = 0
+
+    for i, target in enumerate(targets):
+        # Log the current target
+        console.process(i, len(targets), target)
+        # Process current target
         try:
-            download_paper(
-                target=url,
+            success = download_paper(
+                target=target,
                 verbose=args.verbose,
                 download_dir=args.download_dir,
                 n_threads=args.n_threads,
                 pdf_only=args.pdf_only,
+                set_verbose_level=args.verbose_level,
             )
+            print(success)
+            success_list.append(success)
+        except KeyboardInterrupt:
+            # catch keyboard interrupt and exit with code 1
+            console.error("arxiv-dl was interrupted by user")
+            exit_code = 1
+            break
         except Exception as e:
-            console.error(f"Error processing '{url}': {e}")
+            # catch any unexpected errors and continue with the next target
+            console.error(f"Error processing '{target}': {e}")
+            exit_code = 1
+        finally:
+            # Add spacing between downloads
+            if i < len(targets) - 1:
+                print()
 
-        print()
+    # if any download failed, exit with code 1
+    if False in success_list:
+        exit_code = 1
+
+    # exit with the appropriate code
+    exit(exit_code)
 
 
 if __name__ == "__main__":

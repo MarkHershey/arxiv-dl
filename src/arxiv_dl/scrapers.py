@@ -9,6 +9,17 @@ from .models import PaperData
 from .printer import console
 
 
+def check_internet_connection() -> bool:
+    """
+    Check if the internet connection is available.
+    """
+    try:
+        response = requests.get("https://www.google.com", timeout=3)
+        return response.status_code == 200
+    except Exception:
+        return False
+
+
 def scrape_metadata(paper_data: PaperData) -> None:
     try:
         if paper_data.abs_url:
@@ -30,10 +41,14 @@ def scrape_metadata(paper_data: PaperData) -> None:
         else:
             # TODO: think how to handle this; maybe do nothing
             console.warn("[Warn] No abstract URL")
-    except Exception as err:
-        console.error(
-            "Failed to retrieve paper information. Please check the URL and try again."
-        )
+    except Exception:
+        connected = check_internet_connection()
+        if not connected:
+            console.error("No Internet Connection.")
+        else:
+            console.error(
+                "Failed to retrieve paper information. Please check the URL and try again."
+            )
         return False
 
 

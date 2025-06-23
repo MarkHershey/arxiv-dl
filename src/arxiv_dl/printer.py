@@ -8,7 +8,10 @@ from .models import PaperData
 
 def get_terminal_width() -> int:
     try:
-        return os.get_terminal_size().columns
+        width = os.get_terminal_size().columns
+        if not width or not isinstance(width, int):
+            width = 80
+        return width
     except Exception:
         return 80
 
@@ -26,6 +29,23 @@ class CustomConsole:
         }
 
     def set_verbose_level(self, level: Union[str, int] = "default"):
+        """
+        Setting verbose level for the custom console.
+
+        Args:
+            level (Union[str, int]): The verbose level to set.
+                - "silent": 0
+                - "minimal": 1
+                - "default": 2
+                - "verbose": 3
+                - int: 0-3
+
+        Returns:
+            None
+
+        Raises:
+            Never throws an error by design, it will fallback to the default level if any invalid input is provided.
+        """
         if isinstance(level, int):
             if 0 <= level <= 3:
                 self.verbose_level = level
