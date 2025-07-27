@@ -228,7 +228,6 @@ def cli():
                 pdf_only=args.pdf_only,
                 set_verbose_level=args.verbose_level,
             )
-            print(success)
             success_list.append(success)
         except KeyboardInterrupt:
             # catch keyboard interrupt and exit with code 1

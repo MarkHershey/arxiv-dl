@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "arxiv-dl"
-version = "1.2.0"
+version = "1.2.1"
 authors = [{ name = "Mark He Huang", email = "dev@markhh.com" }]
 license = { file = "LICENSE" }
 description = "Command-line Papers Downloader. Citation extraction and PDF naming automation."

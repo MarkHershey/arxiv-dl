@@ -41,7 +41,7 @@ def scrape_metadata(paper_data: PaperData) -> None:
         else:
             # TODO: think how to handle this; maybe do nothing
             console.warn("[Warn] No abstract URL")
-    except Exception:
+    except Exception as e:
         connected = check_internet_connection()
         if not connected:
             console.error("No Internet Connection.")
@@ -49,6 +49,7 @@ def scrape_metadata(paper_data: PaperData) -> None:
             console.error(
                 "Failed to retrieve paper information. Please check the URL and try again."
             )
+            console.error(e)
         return False
 
 
@@ -98,19 +99,19 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
 
     # get PWC (paper with code)
     # API: https://arxiv.paperswithcode.com/api/v0/papers/{paper_id}
-    pwc_url = f"https://arxiv.paperswithcode.com/api/v0/papers/{paper_data.paper_id}"
-    pwc_response = requests.get(pwc_url)
-    if pwc_response.status_code == 200:
-        pwc = pwc_response.text
-        pwc = json.loads(pwc)
-        official_code_urls: list = pwc.get("all_official", [])
-        official_code_urls: list = [i.get("url") for i in official_code_urls]
-        pwc_page_url: str = pwc.get("paper_url", "")
-    else:
-        official_code_urls = []
-        pwc_page_url = ""
-    paper_data.official_code_urls = official_code_urls
-    paper_data.pwc_page_url = pwc_page_url.strip()
+    # pwc_url = f"https://arxiv.paperswithcode.com/api/v0/papers/{paper_data.paper_id}"
+    # pwc_response = requests.get(pwc_url)
+    # if pwc_response.status_code == 200:
+    #     pwc = pwc_response.text
+    #     pwc = json.loads(pwc)
+    #     official_code_urls: list = pwc.get("all_official", [])
+    #     official_code_urls: list = [i.get("url") for i in official_code_urls]
+    #     pwc_page_url: str = pwc.get("paper_url", "")
+    # else:
+    #     official_code_urls = []
+    #     pwc_page_url = ""
+    # paper_data.official_code_urls = official_code_urls
+    # paper_data.pwc_page_url = pwc_page_url.strip()
 
     # get BIBTEX
     bibtex_url = f"https://arxiv.org/bibtex/{paper_data.paper_id}"
