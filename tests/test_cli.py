@@ -36,7 +36,7 @@ class TestCLI(unittest.TestCase):
 
     def test_with_flags(self):
         subprocess.run(
-            f"paper {self.test_target} --verbose --download_dir {self.test_dir}",
+            f"paper -v -d {self.test_dir} {self.test_target} ",
             shell=True,
             check=True,
         )

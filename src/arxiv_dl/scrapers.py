@@ -97,6 +97,7 @@ def scrape_metadata_arxiv(paper_data: PaperData) -> None:
         comments = ""
     paper_data.comments = comments.strip()
 
+    ### PWC is sunsetted on 2025-07-26, its API is no longer available
     # get PWC (paper with code)
     # API: https://arxiv.paperswithcode.com/api/v0/papers/{paper_id}
     # pwc_url = f"https://arxiv.paperswithcode.com/api/v0/papers/{paper_data.paper_id}"

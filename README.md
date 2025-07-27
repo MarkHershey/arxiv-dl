@@ -41,9 +41,10 @@ This is a command-line tool, simply use `pip` to install the package globally, t
 python3 -m pip install -U arxiv-dl
 ```
 
-> NOTE: After installation, you need to ensure the installation path is included in your PATH variable. If you encounter any difficulty finding / setting the PATH, there is this recommended way of [installing stand alone command line tools](https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/), kindly follow its instruction when installing `arxiv-dl`.
+> [!NOTE]
+> After installation, you need to ensure the installation path is included in your PATH environment variable (tips: [here](https://github.com/MarkHershey/arxiv-dl/issues/16#issue-3266539938)). If you encounter any difficulty finding / setting the PATH, there is this recommended way of [installing stand alone command line tools](https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/), kindly follow its instruction when installing `arxiv-dl`.
 
-Optionally, install [aria2c](https://aria2.github.io/) for download speedup.
+Optionally, install [aria2c](https://aria2.github.io/) for multi-connection download speedup.
 
 -   MacOS: `brew install aria2`
 -   Linux: `sudo snap install aria2c`
@@ -67,12 +68,12 @@ $ paper 1512.03385
 $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
 ```
 
-### Supported types of TARGET:
-
-✅ Supported, 🚧 Not Yet Supported, ❌ Not Supported
+### Supported types of download TARGETs:
 
 <details>
 <summary><strong>Click to expand</strong></summary>
+
+✅ Supported, 🚧 Not Yet Supported, ❌ Not Supported
 
 -   **[ArXiv](https://arxiv.org/)** 
     -   ✅ ArXiv ID: `1512.03385` or `arXiv:1512.03385`
@@ -93,12 +94,14 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
     -   🚧 TODO
 </details>
 
-### Supported OPTIONS:
+### Frequently used OPTIONS:
 
--   `-v`, `--verbose` (optional): Print paper metadata.
--   `-p`, `--pdf_only` (optional): Download PDF only without creating Markdown notes
--   `-d`, `--download_dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
--   `-n`, `--n_threads` (optional): Specify the number of parallel connections to be used by `aria2`.
+-   `-v`, `--verbose` (optional): set to verbose, print full details.
+-   `-d`, `--download-dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
+-   `-n`, `--n-threads` (optional): Specify the number of parallel connections to be used by `aria2`. 
+
+> [!TIP]
+> more options are available, run `paper -h` to see all options.
 
 ### Use it in your code:
 
@@ -113,7 +116,7 @@ download_paper(target="1512.03385", download_dir=".", set_verbose_level="silent"
 
 ### Default Download Destination
 
--   Without any configurations, all paper will be downloaded to `$HOME/Downloads/ArXiv_Papers`.
+-   Without any configurations, all paper will be downloaded to `$HOME/Downloads/ArXiv_Papers`, where `$HOME` is current user's home directory.
 
 ### Set Your Custom Download Destination _(Optional)_
 
@@ -124,9 +127,9 @@ export ARXIV_DOWNLOAD_FOLDER="YOUR/PATH/TO/ANY/FOLDER"
 ```
 
 -   Every time you use the `paper` command, the download destination will be set to the following order of priority:
-    1.  Command-line option `-d`
+    1.  Command-line option `-d` (highest priority)
     2.  Environment variable `ARXIV_DOWNLOAD_FOLDER`
-    3.  Default download destination
+    3.  Default download destination (lowest priority)
 
 ### Set Custom Command Alias _(Optional)_
 
@@ -172,4 +175,5 @@ make clean
 
 ## License
 
-[MIT License](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE) - Copyright (c) 2021-2026 Mark H. Huang
+This project is licensed under the [MIT License](https://github.com/MarkHershey/arxiv-dl/blob/master/LICENSE).  
+&copy; Mark H. Huang. All rights reserved.

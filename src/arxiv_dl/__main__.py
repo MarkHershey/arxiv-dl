@@ -40,6 +40,7 @@ def download_paper(
     n_threads: int = 5,
     pdf_only: bool = False,
     set_verbose_level: Union[str, int, None] = None,
+    notes_format: str = "txt",
     *args,
     **kwargs,
 ) -> bool:
@@ -113,7 +114,9 @@ def download_paper(
     # Create paper notes
     try:
         if not pdf_only:
-            create_paper_note(paper_data, download_dir=download_dir)
+            create_paper_note(
+                paper_data, download_dir=download_dir, notes_format=notes_format
+            )
     except Exception as err:
         console.warn(
             "Could not create paper notes, but the PDF was downloaded successfully."
@@ -143,61 +146,62 @@ def cli():
     )
 
     # Create argument groups for better organization
-    output_group = parser.add_argument_group(
-        title="Output Options", description="Control where and how files are saved"
-    )
-    behavior_group = parser.add_argument_group(
-        title="Behavior Options", description="Control download behavior and verbosity"
-    )
-    performance_group = parser.add_argument_group(
-        title="Performance Options", description="Tune download performance settings"
-    )
+    output_group = parser.add_argument_group(title="output configuration")
+    behavior_group = parser.add_argument_group(title="behavior configuration")
+    performance_group = parser.add_argument_group(title="Performance Options")
 
     # Output options
     output_group.add_argument(
         "-d",
-        "--download_dir",
+        "--download-dir",
         metavar="DIR",
         type=str,
-        help="Directory to save downloaded papers (default: ~/Downloads/ArXiv_Papers)",
+        help="set the directory to save papers (default: ~/Downloads/ArXiv_Papers)",
     )
     output_group.add_argument(
         "-p",
-        "--pdf_only",
+        "--pdf-only",
         action="store_true",
-        help="Download PDF only, skip creating Markdown notes and metadata files",
+        help="set to download the paper PDF only, skip creating additional notes file for each paper",
+    )
+    output_group.add_argument(
+        "-nf",
+        "--notes-format",
+        metavar="FORMAT",
+        type=str,
+        choices=["md", "txt"],
+        help="set the file format (either 'md' or 'txt') of the accompanying notes file for each paper (default: txt)",
     )
 
-    # Behavior options with mutually exclusive verbose arguments
-    verbose_group = behavior_group.add_mutually_exclusive_group()
-    verbose_group.add_argument(
+    # Behavior options
+    behavior_group.add_argument(
+        "-n",
+        "--n-threads",
+        metavar="N",
+        type=int,
+        default=1,
+        help="set the number of parallel connections for download (default: 1, max: 16)",
+    )
+    behavior_group.add_argument(
+        "-s",
+        "--skip-check",
+        action="store_true",
+        help="skip checking for latest package updates",
+    )
+    verbose_subgroup = behavior_group.add_mutually_exclusive_group()
+    verbose_subgroup.add_argument(
         "-v",
         "--verbose",
         action="store_true",
-        help="Enable verbose output with detailed information about papers and download process",
+        help="enable verbose output with full details",
     )
-    verbose_group.add_argument(
+    verbose_subgroup.add_argument(
         "-vl",
-        "--verbose_level",
+        "--verbose-level",
         metavar="LEVEL",
         type=str,
         choices=["silent", "minimal", "default", "verbose"],
-        help="Set verbosity level: silent (no output), minimal (errors only), default (standard info), verbose (all details)",
-    )
-    behavior_group.add_argument(
-        "--no-update-check",
-        action="store_true",
-        help="Skip checking for package updates",
-    )
-
-    # Performance options
-    performance_group.add_argument(
-        "-n",
-        "--n_threads",
-        metavar="N",
-        type=int,
-        default=5,
-        help="Number of parallel connections for faster downloads (default: 5, max: 16)",
+        help="set verbosity level: silent (no output), minimal (errors only), default (standard info), verbose (full details)",
     )
 
     args = parser.parse_args()
@@ -207,7 +211,7 @@ def cli():
     set_verbosity(verbose=args.verbose, verbose_level=args.verbose_level)
 
     # Check for updates (unless disabled)
-    if not args.no_update_check and console.verbose_level >= 2:
+    if not args.skip_check and console.verbose_level >= 2:
         check_update()
 
     # Initialize variables
@@ -227,6 +231,7 @@ def cli():
                 n_threads=args.n_threads,
                 pdf_only=args.pdf_only,
                 set_verbose_level=args.verbose_level,
+                notes_format=args.notes_format,
             )
             success_list.append(success)
         except KeyboardInterrupt:

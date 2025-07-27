@@ -252,9 +252,15 @@ def add_to_paper_list(paper_data: PaperData, download_dir: Union[str, Path]) -> 
     return None
 
 
-def create_paper_note(paper_data: PaperData, download_dir: Union[str, Path]) -> None:
+def create_paper_note(
+    paper_data: PaperData,
+    download_dir: Union[str, Path],
+    notes_format: str = "txt",
+) -> None:
     download_path: Path = Path(download_dir) / paper_data.download_name
-    note_path = download_path.with_suffix(".txt")
+    if notes_format not in ["md", "txt"]:
+        notes_format = "txt"
+    note_path = download_path.with_suffix(f".{notes_format}")
     authors: list = paper_data.authors
     authors: list = [f"- {name}" for name in authors]
     authors: str = "\n".join(authors)
