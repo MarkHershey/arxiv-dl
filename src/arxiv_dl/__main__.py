@@ -1,7 +1,4 @@
-# https://arxiv.org/help/api/user-manual
-
 import argparse
-import json
 from pathlib import Path
 from typing import Optional, Union
 
@@ -16,6 +13,7 @@ from .printer import console
 from .scrapers import scrape_metadata
 from .target_parser import parse_target, valid_arxiv_id
 from .updater import check_update
+from .constants import CONSTANTS
 
 
 def set_verbosity(
@@ -165,7 +163,6 @@ def cli():
         help="set to download the paper PDF only, skip creating additional notes file for each paper",
     )
     output_group.add_argument(
-        "-nf",
         "--notes-format",
         metavar="FORMAT",
         type=str,
@@ -182,12 +179,6 @@ def cli():
         default=1,
         help="set the number of parallel connections for download (default: 1, max: 16)",
     )
-    behavior_group.add_argument(
-        "-s",
-        "--skip-check",
-        action="store_true",
-        help="skip checking for latest package updates",
-    )
     verbose_subgroup = behavior_group.add_mutually_exclusive_group()
     verbose_subgroup.add_argument(
         "-v",
@@ -196,12 +187,16 @@ def cli():
         help="enable verbose output with full details",
     )
     verbose_subgroup.add_argument(
-        "-vl",
         "--verbose-level",
         metavar="LEVEL",
         type=str,
         choices=["silent", "minimal", "default", "verbose"],
         help="set verbosity level: silent (no output), minimal (errors only), default (standard info), verbose (full details)",
+    )
+    behavior_group.add_argument(
+        "--skip-update-check",
+        action="store_true",
+        help="skip checking for package updates",
     )
 
     args = parser.parse_args()
@@ -211,7 +206,7 @@ def cli():
     set_verbosity(verbose=args.verbose, verbose_level=args.verbose_level)
 
     # Check for updates (unless disabled)
-    if not args.skip_check and console.verbose_level >= 2:
+    if not args.skip_update_check and console.verbose_level >= 2:
         check_update()
 
     # Initialize variables
@@ -242,6 +237,7 @@ def cli():
         except Exception as e:
             # catch any unexpected errors and continue with the next target
             console.error(f"Error processing '{target}': {e}")
+            console.error(CONSTANTS.BUG_REPORT_MSG)
             exit_code = 1
         finally:
             # Add spacing between downloads
