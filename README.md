@@ -92,8 +92,10 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
     - ✅ NeurIPS PDF Page URL: `https://proceedings.neurips.cc/paper_files/paper/**/file/**/*.pdf`
     - ✅ NIPS mirror Abstract Page URL: `https://papers.nips.cc/paper_files/paper/**/hash/**/*.html`
     - ✅ NIPS mirror PDF Page URL: `https://papers.nips.cc/paper_files/paper/**/file/**/*.pdf`
-- **[OpenReview](https://openreview.net/)** - 🚧 TODO
-      </details>
+- **[OpenReview](https://openreview.net/)**
+    - 🚧 TODO
+
+</details>
 
 ### Frequently used OPTIONS:
 
