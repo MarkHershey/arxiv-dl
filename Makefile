@@ -1,7 +1,16 @@
 REMOVE = rm -rvf
+UV ?= uv
 
-all:
-	python3 -m pip install -U pip build twine && python3 -m build
+.PHONY: all build test publish testpublish publish-dry-run clean
+
+all: build
+
+build:
+	$(UV) build --no-sources
+
+test:
+	$(UV) run --extra dev pytest
+
 clean:
 	$(REMOVE) build
 	$(REMOVE) logs
@@ -12,7 +21,12 @@ clean:
 	$(REMOVE) tmp/*
 	$(REMOVE) .pytest_cache
 	$(REMOVE) .DS_Store
+
+publish-dry-run: build
+	$(UV) publish --dry-run --trusted-publishing never
+
 publish:
-	python3 -m twine upload dist/*
+	$(UV) publish
+
 testpublish:
-	python3 -m twine upload --repository testpypi dist/*
+	$(UV) publish --index testpypi

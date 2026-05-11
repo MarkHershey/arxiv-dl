@@ -147,26 +147,48 @@ export ARXIV_DOWNLOAD_FOLDER="YOUR/PATH/TO/ANY/FOLDER"
 ### Set up development environment
 
 ```bash
-# create a virtual environment
-python3 -m venv venv && source venv/bin/activate
+# install uv if needed
+curl -LsSf https://astral.sh/uv/install.sh | sh
 
-# install dependencies
-pip install -U -r requirements.txt
-
-# install the package in editable mode & dev dependencies
-pip install -e ".[dev]"
+# create/sync the project environment, including dev tools
+uv sync --extra dev
 ```
 
 ### Run Tests
 
 ```bash
-pytest
+uv run --extra dev pytest
 ```
 
 ### Build the package
 
 ```bash
+uv build --no-sources
+# or
 make
+```
+
+### Publish the package
+
+For normal releases, prefer the GitHub Actions Trusted Publishing workflow:
+
+```bash
+git tag -a v1.2.3 -m v1.2.3
+git push origin v1.2.3
+```
+
+For a local manual upload, set a project-scoped PyPI token and publish the already-built files:
+
+```bash
+export UV_PUBLISH_TOKEN="pypi-..."
+uv publish
+```
+
+To test against TestPyPI:
+
+```bash
+export UV_PUBLISH_TOKEN="pypi-..."
+uv publish --index testpypi
 ```
 
 ### Clean cache & build artifacts
