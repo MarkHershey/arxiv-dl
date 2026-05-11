@@ -35,11 +35,12 @@ def check_update():
     """Remind user to update arxiv-dl if there is a new version."""
     latest_version = check_latest_version()
     current_version = check_current_version()
-    console.print(f"[dim]\[arxiv-dl] (version: {current_version})")
+    console.print(f"[dim]\\[arxiv-dl] (version: {current_version})")
 
     if latest_version and latest_version != current_version:
         console.print(
-            f"[yellow]\[arxiv-dl] latest version available: {latest_version}. You may update by running: pip3 install -U arxiv-dl"
+            f"[yellow]\\[arxiv-dl] latest version available: {latest_version}. "
+            "You may update by running: pip3 install -U arxiv-dl"
         )
 
     print()

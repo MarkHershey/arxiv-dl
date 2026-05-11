@@ -336,7 +336,7 @@ def scrape_metadata_nips(paper_data: PaperData) -> None:
         paper_data.supp_url = urljoin(paper_data.abs_url, result.get("href"))
 
     if paper_data.title:
-        paper_data.download_name = f"{paper_data.year}_{paper_data.paper_venue}_{paper_data.paper_id}_{normalize_paper_title(paper_data.title)}.pdf"
+        paper_data.download_name = f"{paper_data.year}_{paper_data.paper_venue}_{normalize_paper_title(paper_data.title)}.pdf"
 
     return None
 

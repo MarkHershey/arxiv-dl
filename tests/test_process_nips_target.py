@@ -1,6 +1,8 @@
 import unittest
+from unittest.mock import patch
 
 from arxiv_dl.models import PaperData
+from arxiv_dl.scrapers import scrape_metadata_nips
 from arxiv_dl.target_parser import parse_target, process_nips_target
 
 
@@ -257,6 +259,50 @@ class TestProcessNIPSTarget(unittest.TestCase):
             with self.subTest(host=host):
                 paper_data = parse_target(pdf_url)
                 self._assert_paper_data(paper_data, year, paper_id)
+
+    def test_scrape_metadata_nips_download_name_omits_paper_id(self):
+        year = 2025
+        paper_id = "44bac5b848f95099a89b1d142a8f53b5"
+        abs_url, pdf_url = _expected_urls(year, paper_id)
+        html = f"""
+        <html>
+            <head>
+                <meta name="citation_pdf_url" content="{pdf_url}">
+            </head>
+            <body>
+                <h1 class="paper-title">
+                    OnlineSplatter: Pose-Free Online 3D Reconstruction for Free-Moving Objects
+                </h1>
+                <p class="paper-authors">First Author, Second Author</p>
+                <a href="/paper_files/paper/12345-/bibtex">Bibtex</a>
+                <section class="paper-section">
+                    <h2>Abstract</h2>
+                    <p class="paper-abstract">A short abstract.</p>
+                </section>
+            </body>
+        </html>
+        """
+
+        class Response:
+            def __init__(self, text):
+                self.status_code = 200
+                self.text = text
+
+        def fake_get(url):
+            if url == abs_url:
+                return Response(html)
+            return Response("@inproceedings{test}")
+
+        paper_data = process_nips_target(abs_url)
+
+        with patch("arxiv_dl.scrapers.requests.get", side_effect=fake_get):
+            scrape_metadata_nips(paper_data)
+
+        self.assertEqual(
+            paper_data.download_name,
+            "2025_NeurIPS_OnlineSplatter_Pose-Free_Online_3D_Reconstruction_for_Free-Moving_Objects.pdf",
+        )
+        self.assertNotIn(paper_id, paper_data.download_name)
 
 
 if __name__ == "__main__":
