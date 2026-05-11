@@ -13,7 +13,7 @@ _Disclaimer: This is a highly-opinionated command-line tool for downloading pape
 
 ## What does it do?
 
-- Support downloading papers from [arXiv](https://arxiv.org/), [ECCV](https://www.ecva.net/papers.php), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
+- Support downloading papers from [arXiv](https://arxiv.org/), [NeurIPS](https://proceedings.neurips.cc/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu), [ECCV](https://www.ecva.net/papers.php) via simple CLI.
 - Support downloading speedup by using [aria2](https://aria2.github.io/).
 - Retrieve the paper's metadata such as:
     - Title, Abstract, Year

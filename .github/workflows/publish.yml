@@ -17,7 +17,7 @@ jobs:
                   persist-credentials: false
 
             - name: Install uv and Python
-              uses: astral-sh/setup-uv@v8
+              uses: astral-sh/setup-uv@v8.1.0
               with:
                   enable-cache: true
                   python-version: "3.13"
