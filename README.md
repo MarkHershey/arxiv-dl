@@ -33,16 +33,42 @@ _Disclaimer: This is an opinionated command-line tool for downloading papers. It
 
 ## Installation
 
-Install with `pip`:
+For regular command-line use, install with `pipx`:
 
 - Prerequisite: Python 3.9 or later
 
 ```bash
-python3 -m pip install -U arxiv-dl
+pipx install arxiv-dl
+```
+
+If `pipx` is not installed:
+
+```bash
+# Debian/Ubuntu
+sudo apt install pipx
+pipx ensurepath
+
+# macOS
+brew install pipx
+pipx ensurepath
 ```
 
 > [!NOTE]
-> After installation, make sure the Python script installation directory is on your `PATH`. If the `paper` command is not found, see this [PATH setup note](https://github.com/MarkHershey/arxiv-dl/issues/16#issue-3266539938) or the Python Packaging guide for [installing stand-alone command-line tools](https://packaging.python.org/en/latest/guides/installing-stand-alone-command-line-tools/).
+> `pipx` installs command-line tools in isolated environments and exposes their commands on your `PATH`. This avoids conflicts with operating-system-managed Python installations, including Debian/Ubuntu environments that block global `pip install` through PEP 668.
+
+To upgrade:
+
+```bash
+pipx upgrade arxiv-dl
+```
+
+If you prefer `pip`, install inside a virtual environment:
+
+```bash
+python3 -m venv .venv
+source .venv/bin/activate
+python3 -m pip install -U arxiv-dl
+```
 
 Optionally, install [aria2c](https://aria2.github.io/) for multi-connection downloads.
 

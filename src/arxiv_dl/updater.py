@@ -40,7 +40,7 @@ def check_update():
     if latest_version and latest_version != current_version:
         console.print(
             f"[yellow]\\[arxiv-dl] latest version available: {latest_version}. "
-            "You may update by running: pip3 install -U arxiv-dl"
+            "Update with: pipx upgrade arxiv-dl"
         )
 
     print()
