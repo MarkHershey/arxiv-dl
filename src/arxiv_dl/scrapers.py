@@ -1,5 +1,6 @@
 import json
 import string
+from urllib.parse import urljoin
 
 import requests
 from bs4 import BeautifulSoup
@@ -30,7 +31,7 @@ def scrape_metadata(paper_data: PaperData) -> None:
             elif paper_data.src_website == "ECVA":
                 scrape_metadata_ecva(paper_data)
             elif paper_data.src_website == "NeurIPS":
-                raise NotImplementedError("NeurIPS scraper is not implemented yet")
+                scrape_metadata_nips(paper_data)
             elif paper_data.src_website == "OpenReview":
                 raise NotImplementedError("OpenReview scraper is not implemented yet")
             else:
@@ -264,8 +265,80 @@ def scrape_metadata_ecva(paper_data: PaperData) -> None:
 
 
 def scrape_metadata_nips(paper_data: PaperData) -> None:
-    # TODO
-    ...
+    console.info("Retrieving paper metadata from NeurIPS...")
+
+    response = requests.get(paper_data.abs_url)
+    if response.status_code != 200:
+        console.error(f"Cannot connect to {paper_data.abs_url}")
+        raise Exception(f"Cannot connect to {paper_data.abs_url}")
+
+    soup = BeautifulSoup(response.text, "html.parser")
+
+    result = soup.find("h1", class_="paper-title")
+    if result:
+        paper_data.title = result.get_text(" ", strip=True)
+    else:
+        result = soup.find("meta", attrs={"name": "citation_title"})
+        if result and result.get("content"):
+            paper_data.title = result.get("content").strip()
+
+    author_meta = soup.find_all("meta", attrs={"name": "citation_author"})
+    if author_meta:
+        paper_data.authors = [
+            item.get("content").strip()
+            for item in author_meta
+            if item.get("content") and item.get("content").strip()
+        ]
+    else:
+        result = soup.find("p", class_="paper-authors")
+        if result:
+            authors_str = result.get_text(" ", strip=True)
+            paper_data.authors = [x.strip() for x in authors_str.split(",") if x]
+
+    result = soup.find("meta", attrs={"name": "citation_pdf_url"})
+    if result and result.get("content"):
+        paper_data.pdf_url = result.get("content").strip()
+    else:
+        result = soup.find("a", string=lambda text: text and text.strip() == "Paper")
+        if result and result.get("href"):
+            paper_data.pdf_url = urljoin(paper_data.abs_url, result.get("href"))
+
+    abstract_heading = soup.find(
+        "h2", string=lambda text: text and text.strip().lower() == "abstract"
+    )
+    if abstract_heading:
+        section = abstract_heading.find_parent("section")
+        if section:
+            abstract_parts = []
+            seen = set()
+            for item in section.find_all("p"):
+                text = item.get_text(" ", strip=True)
+                if text and text not in seen:
+                    abstract_parts.append(text)
+                    seen.add(text)
+            paper_data.abstract = " ".join(abstract_parts).strip()
+
+    result = soup.find(
+        "a", string=lambda text: text and text.strip().lower() == "bibtex"
+    )
+    if result and result.get("href"):
+        bibtex_url = urljoin(paper_data.abs_url, result.get("href"))
+        bibtex_response = requests.get(bibtex_url)
+        if bibtex_response.status_code == 200:
+            paper_data.bibtex = bibtex_response.text.strip()
+
+    result = soup.find(
+        "a",
+        string=lambda text: text
+        and text.strip().lower() in ("supplementary material", "supplemental"),
+    )
+    if result and result.get("href"):
+        paper_data.supp_url = urljoin(paper_data.abs_url, result.get("href"))
+
+    if paper_data.title:
+        paper_data.download_name = f"{paper_data.year}_{paper_data.paper_venue}_{paper_data.paper_id}_{normalize_paper_title(paper_data.title)}.pdf"
+
+    return None
 
 
 def scrape_metadata_openreview(paper_data: PaperData) -> None:

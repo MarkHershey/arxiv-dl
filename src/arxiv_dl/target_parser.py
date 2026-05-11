@@ -27,7 +27,7 @@ def parse_target(target: str) -> PaperData:
         return process_ecva_target(target)
     elif "openreview.net" in target:
         return process_openreview_target(target)
-    elif "nips.cc" in target:
+    elif "proceedings.neurips.cc" in target or "papers.nips.cc" in target:
         return process_nips_target(target)
     elif target.endswith(".pdf"):
         # TODO
@@ -376,8 +376,43 @@ def process_ecva_target(target: str) -> PaperData:
 
 
 def process_nips_target(target: str) -> PaperData:
-    # TODO
-    ...
+    pattern = (
+        r"https?://[^/]*(?:proceedings\.neurips\.cc|papers\.nips\.cc)"
+        r"/(?:paper_files/)?paper/(?P<year>[0-9]{4})/"
+        r"(?P<kind>hash|file)/(?P<paper_id>[0-9a-fA-F]{32})-"
+        r"(?P<doc_type>Abstract|Paper)(?P<suffix>[^/?#.]*)"
+        r"\.(?P<ext>html|pdf)(?:[?#].*)?$"
+    )
+    match = re.match(pattern, target)
+    if not match:
+        raise Exception(f"Unexpected NeurIPS URL: {target}")
+
+    year = int(match.group("year"))
+    paper_id = match.group("paper_id").lower()
+    doc_type = match.group("doc_type")
+    suffix = match.group("suffix")
+    ext = match.group("ext")
+
+    if doc_type == "Abstract" and ext != "html":
+        raise Exception(f"Unexpected NeurIPS URL: {target}")
+    if doc_type == "Paper" and ext != "pdf":
+        raise Exception(f"Unexpected NeurIPS URL: {target}")
+
+    base_url = f"https://proceedings.neurips.cc/paper_files/paper/{year}"
+    abs_url = f"{base_url}/hash/{paper_id}-Abstract{suffix}.html"
+    pdf_url = f"{base_url}/file/{paper_id}-Paper{suffix}.pdf"
+    paper_venue = "NeurIPS" if year >= 2018 else "NIPS"
+    download_name = f"{year}_{paper_venue}_{paper_id}.pdf"
+
+    return PaperData(
+        paper_id=paper_id,
+        abs_url=abs_url,
+        pdf_url=pdf_url,
+        year=year,
+        src_website="NeurIPS",
+        paper_venue=paper_venue,
+        download_name=download_name,
+    )
 
 
 ###############################################################################
