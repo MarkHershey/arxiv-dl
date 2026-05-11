@@ -5,7 +5,13 @@ from arxiv_dl.target_parser import parse_target, process_nips_target
 
 
 # First two paper links from each annual proceedings page at
-# https://proceedings.neurips.cc/.
+# https://proceedings.neurips.cc/. The same paths are also served from
+# https://papers.nips.cc/.
+_NIPS_HOSTS = (
+    "https://proceedings.neurips.cc",
+    "https://papers.nips.cc",
+)
+
 _PAPER_IDS_BY_YEAR = {
     2025: (
         "0010031a1b4910aa67edbda26a705518",
@@ -168,7 +174,15 @@ _PAPER_IDS_BY_YEAR = {
 
 def _expected_urls(year, paper_id):
     base_url = f"https://proceedings.neurips.cc/paper_files/paper/{year}"
+    return _urls_for_host(base_url, year, paper_id)
 
+
+def _target_urls(host, year, paper_id):
+    base_url = f"{host}/paper_files/paper/{year}"
+    return _urls_for_host(base_url, year, paper_id)
+
+
+def _urls_for_host(base_url, year, paper_id):
     if year >= 2022:
         abs_suffix = "Abstract-Conference.html"
         pdf_suffix = "Paper-Conference.pdf"
@@ -199,40 +213,50 @@ class TestProcessNIPSTarget(unittest.TestCase):
         self.assertEqual(paper_data.paper_venue, _expected_venue(year))
 
     def test_process_nips_abstract_urls_two_papers_per_year(self):
-        for year, paper_ids in _PAPER_IDS_BY_YEAR.items():
-            for paper_id in paper_ids:
-                abs_url, _ = _expected_urls(year, paper_id)
+        for host in _NIPS_HOSTS:
+            for year, paper_ids in _PAPER_IDS_BY_YEAR.items():
+                for paper_id in paper_ids:
+                    abs_url, _ = _target_urls(host, year, paper_id)
 
-                with self.subTest(year=year, paper_id=paper_id, target="abstract"):
-                    paper_data = process_nips_target(abs_url)
-                    self._assert_paper_data(paper_data, year, paper_id)
+                    with self.subTest(
+                        host=host, year=year, paper_id=paper_id, target="abstract"
+                    ):
+                        paper_data = process_nips_target(abs_url)
+                        self._assert_paper_data(paper_data, year, paper_id)
 
     def test_process_nips_pdf_urls_two_papers_per_year(self):
-        for year, paper_ids in _PAPER_IDS_BY_YEAR.items():
-            for paper_id in paper_ids:
-                _, pdf_url = _expected_urls(year, paper_id)
+        for host in _NIPS_HOSTS:
+            for year, paper_ids in _PAPER_IDS_BY_YEAR.items():
+                for paper_id in paper_ids:
+                    _, pdf_url = _target_urls(host, year, paper_id)
 
-                with self.subTest(year=year, paper_id=paper_id, target="pdf"):
-                    paper_data = process_nips_target(pdf_url)
-                    self._assert_paper_data(paper_data, year, paper_id)
+                    with self.subTest(
+                        host=host, year=year, paper_id=paper_id, target="pdf"
+                    ):
+                        paper_data = process_nips_target(pdf_url)
+                        self._assert_paper_data(paper_data, year, paper_id)
 
-    def test_parse_target_dispatches_neurips_abstract_url(self):
+    def test_parse_target_dispatches_neurips_abstract_urls(self):
         year = 2025
         paper_id = _PAPER_IDS_BY_YEAR[year][0]
-        abs_url, _ = _expected_urls(year, paper_id)
 
-        paper_data = parse_target(abs_url)
+        for host in _NIPS_HOSTS:
+            abs_url, _ = _target_urls(host, year, paper_id)
 
-        self._assert_paper_data(paper_data, year, paper_id)
+            with self.subTest(host=host):
+                paper_data = parse_target(abs_url)
+                self._assert_paper_data(paper_data, year, paper_id)
 
-    def test_parse_target_dispatches_neurips_pdf_url(self):
+    def test_parse_target_dispatches_neurips_pdf_urls(self):
         year = 1987
         paper_id = _PAPER_IDS_BY_YEAR[year][0]
-        _, pdf_url = _expected_urls(year, paper_id)
 
-        paper_data = parse_target(pdf_url)
+        for host in _NIPS_HOSTS:
+            _, pdf_url = _target_urls(host, year, paper_id)
 
-        self._assert_paper_data(paper_data, year, paper_id)
+            with self.subTest(host=host):
+                paper_data = parse_target(pdf_url)
+                self._assert_paper_data(paper_data, year, paper_id)
 
 
 if __name__ == "__main__":

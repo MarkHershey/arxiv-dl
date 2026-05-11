@@ -1,6 +1,6 @@
 # arXiv-dl
 
-Command-line Research Paper Downloader for [`arXiv.org`](https://arxiv.org/), [`ECVA`](https://www.ecva.net/papers.php) & [`CVF Open Access`](https://openaccess.thecvf.com/menu).
+Command-line Research Paper Downloader for all paper hosted on [`arXiv.org`](https://arxiv.org/), **ECCV** conference papers hosted by [`ECVA`](https://www.ecva.net/papers.php) , **CVPR**, **ICCV**, **WACV** proceedings hosted by [`CVF Open Access`](https://openaccess.thecvf.com/menu), and **NeurIPS** proceedings hosted by [`NeurIPS`](https://proceedings.neurips.cc/).
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypistats.org/packages/arxiv-dl)
@@ -13,29 +13,29 @@ _Disclaimer: This is a highly-opinionated command-line tool for downloading pape
 
 ## What does it do?
 
--   Support downloading papers from [arXiv](https://arxiv.org/), [ECCV](https://www.ecva.net/papers.php), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
--   Support downloading speedup by using [aria2](https://aria2.github.io/).
--   Retrieve the paper's metadata such as:
-    -   Title, Abstract, Year
-    -   Authors
-    -   Comments (Conference acceptance info)
-    -   Repository URLs
-    -   `BibTeX` Citation
--   Automatically maintain a list of local papers and their metadata in a JSON file.
--   Configure the desired download destination via an environment variable or a command-line argument.
--   All downloaded papers will have standardized filename for easy browsing.
+- Support downloading papers from [arXiv](https://arxiv.org/), [ECCV](https://www.ecva.net/papers.php), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu) via simple CLI.
+- Support downloading speedup by using [aria2](https://aria2.github.io/).
+- Retrieve the paper's metadata such as:
+    - Title, Abstract, Year
+    - Authors
+    - Comments (Conference acceptance info)
+    - Repository URLs
+    - `BibTeX` Citation
+- Automatically maintain a list of local papers and their metadata in a JSON file.
+- Configure the desired download destination via an environment variable or a command-line argument.
+- All downloaded papers will have standardized filename for easy browsing.
 
 ## Why?
 
--   Save time and effort to download and organize papers on your machine.
--   Speedup downloading process by using multiple parallel connections.
--   Local paper list would be handy for quick local lookup, making notes, and doing citations.
+- Save time and effort to download and organize papers on your machine.
+- Speedup downloading process by using multiple parallel connections.
+- Local paper list would be handy for quick local lookup, making notes, and doing citations.
 
 ## How to install it?
 
 This is a command-line tool, simply use `pip` to install the package globally, then you are good to go!
 
--   Pre-requisite: `Python 3.x`
+- Pre-requisite: `Python 3.x`
 
 ```bash
 python3 -m pip install -U arxiv-dl
@@ -46,12 +46,12 @@ python3 -m pip install -U arxiv-dl
 
 Optionally, install [aria2c](https://aria2.github.io/) for multi-connection download speedup.
 
--   MacOS: `brew install aria2`
--   Linux: `sudo snap install aria2c`
+- MacOS: `brew install aria2`
+- Linux: `sudo snap install aria2c`
 
 ## How to use it?
 
-After installation, you may use the command `paper` in your shell to download papers. 
+After installation, you may use the command `paper` in your shell to download papers.
 (Legacy commands `arxiv-dl` and `getpaper` are equivalent to the command `paper`.)
 
 ```bash
@@ -75,30 +75,31 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
 
 ✅ Supported, 🚧 Not Yet Supported, ❌ Not Supported
 
--   **[ArXiv](https://arxiv.org/)** 
-    -   ✅ ArXiv ID: `1512.03385` or `arXiv:1512.03385`
-    -   ✅ Legacy ArXiv ID: `alg-geom/9708001` or `cs/0002001`, etc.
-    -   ✅ ArXiv Abstract Page URL: `https://arxiv.org/abs/1512.03385` 
-    -   ✅ ArXiv PDF Page URL: `https://arxiv.org/pdf/1512.03385.pdf`
-    -   ✅ ArXiv HTML Page URL: `https://arxiv.org/html/2506.15442`
--   **[CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV)**
-    -   ✅ CVF Abstract Page URL: `https://openaccess.thecvf.com/content/**/html/**/*.html`
-    -   ✅ CVF PDF Page URL: `https://openaccess.thecvf.com/content/**/papers/**/*.pdf`
--   **[ECVA](https://www.ecva.net/papers.php) (ECCV)** 
-    -   ✅ ECVA Abstract Page URL: `https://www.ecva.net/html/**/*.php`
-    -   ❌ ECVA PDF Page URL: `https://www.ecva.net/papers/**/*.pdf`
--   **[NeurIPS](https://papers.nips.cc/)**
-    -   🚧 NeurIPS Abstract Page URL
-    -   🚧 NeurIPS PDF Page URL
--   **[OpenReview](https://openreview.net/)**
-    -   🚧 TODO
-</details>
+- **[ArXiv](https://arxiv.org/)**
+    - ✅ ArXiv ID: `1512.03385` or `arXiv:1512.03385`
+    - ✅ Legacy ArXiv ID: `alg-geom/9708001` or `cs/0002001`, etc.
+    - ✅ ArXiv Abstract Page URL: `https://arxiv.org/abs/1512.03385`
+    - ✅ ArXiv PDF Page URL: `https://arxiv.org/pdf/1512.03385.pdf`
+    - ✅ ArXiv HTML Page URL: `https://arxiv.org/html/2506.15442`
+- **[CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV)**
+    - ✅ CVF Abstract Page URL: `https://openaccess.thecvf.com/content/**/html/**/*.html`
+    - ✅ CVF PDF Page URL: `https://openaccess.thecvf.com/content/**/papers/**/*.pdf`
+- **[ECVA](https://www.ecva.net/papers.php) (ECCV)**
+    - ✅ ECVA Abstract Page URL: `https://www.ecva.net/html/**/*.php`
+    - ❌ ECVA PDF Page URL: `https://www.ecva.net/papers/**/*.pdf`
+- **[NeurIPS](https://proceedings.neurips.cc/) / [NIPS](https://papers.nips.cc/)**
+    - ✅ NeurIPS Abstract Page URL: `https://proceedings.neurips.cc/paper_files/paper/**/hash/**/*.html`
+    - ✅ NeurIPS PDF Page URL: `https://proceedings.neurips.cc/paper_files/paper/**/file/**/*.pdf`
+    - ✅ NIPS mirror Abstract Page URL: `https://papers.nips.cc/paper_files/paper/**/hash/**/*.html`
+    - ✅ NIPS mirror PDF Page URL: `https://papers.nips.cc/paper_files/paper/**/file/**/*.pdf`
+- **[OpenReview](https://openreview.net/)** - 🚧 TODO
+      </details>
 
 ### Frequently used OPTIONS:
 
--   `-v`, `--verbose` (optional): set to verbose, print full details.
--   `-d`, `--download-dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
--   `-n`, `--n-threads` (optional): Specify the number of parallel connections to be used by `aria2`. 
+- `-v`, `--verbose` (optional): set to verbose, print full details.
+- `-d`, `--download-dir` (optional): Specify one-time download directory. This option will override the default download directory or the one specified in the environment variable `ARXIV_DOWNLOAD_FOLDER`.
+- `-n`, `--n-threads` (optional): Specify the number of parallel connections to be used by `aria2`.
 
 > [!TIP]
 > more options are available, run `paper -h` to see all options.
@@ -111,12 +112,11 @@ from arxiv_dl import download_paper
 download_paper(target="1512.03385", download_dir=".", set_verbose_level="silent")
 ```
 
-
 ## Configurations
 
 ### Default Download Destination
 
--   Without any configurations, all paper will be downloaded to `$HOME/Downloads/ArXiv_Papers`, where `$HOME` is current user's home directory.
+- Without any configurations, all paper will be downloaded to `$HOME/Downloads/ArXiv_Papers`, where `$HOME` is current user's home directory.
 
 ### Set Your Custom Download Destination _(Optional)_
 
@@ -126,15 +126,15 @@ You may configure your preferred download destination once and for all via an en
 export ARXIV_DOWNLOAD_FOLDER="YOUR/PATH/TO/ANY/FOLDER"
 ```
 
--   Every time you use the `paper` command, the download destination will be set to the following order of priority:
+- Every time you use the `paper` command, the download destination will be set to the following order of priority:
     1.  Command-line option `-d` (highest priority)
     2.  Environment variable `ARXIV_DOWNLOAD_FOLDER`
     3.  Default download destination (lowest priority)
 
 ### Set Custom Command Alias _(Optional)_
 
--   You can always set your own preferred alias to rename the command or add more options.
--   Include the following line(s) in your `.bashrc` or `.zshrc` file to set your preferred alias:
+- You can always set your own preferred alias to rename the command or add more options.
+- Include the following line(s) in your `.bashrc` or `.zshrc` file to set your preferred alias:
     ```bash
     alias dp="paper"
     alias dpv="paper -v -d '~/Documents/Papers'"
