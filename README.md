@@ -1,6 +1,6 @@
 # arXiv-dl
 
-Command-line research paper downloader for papers hosted on [arXiv](https://arxiv.org/), [NeurIPS](https://proceedings.neurips.cc/), [CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV), and [ECVA](https://www.ecva.net/papers.php) (ECCV).
+Command-line research paper downloader for papers hosted on [arXiv](https://arxiv.org/), [Hugging Face Papers](https://huggingface.co/papers), [NeurIPS](https://proceedings.neurips.cc/), [CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV), and [ECVA](https://www.ecva.net/papers.php) (ECCV).
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypistats.org/packages/arxiv-dl)
@@ -13,7 +13,7 @@ _Disclaimer: This is an opinionated command-line tool for downloading papers. It
 
 ## What does it do?
 
-- Downloads papers from [arXiv](https://arxiv.org/), [NeurIPS](https://proceedings.neurips.cc/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu), and [ECCV](https://www.ecva.net/papers.php) with a simple CLI.
+- Downloads papers from [arXiv](https://arxiv.org/), [Hugging Face Papers](https://huggingface.co/papers), [NeurIPS](https://proceedings.neurips.cc/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu), and [ECCV](https://www.ecva.net/papers.php) with a simple CLI.
 - Speeds up downloads with [aria2](https://aria2.github.io/) when available.
 - Retrieves paper metadata:
     - Title, abstract, and year
@@ -107,6 +107,15 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
     - ✅ ArXiv Abstract Page URL: `https://arxiv.org/abs/1512.03385`
     - ✅ ArXiv PDF Page URL: `https://arxiv.org/pdf/1512.03385.pdf`
     - ✅ ArXiv HTML Page URL: `https://arxiv.org/html/2506.15442`
+- **[Hugging Face Papers](https://huggingface.co/papers)**
+    - ✅ Single Paper Page URL: `https://huggingface.co/papers/2605.12357`
+    - ✅ Current Daily Papers Page URL: `https://huggingface.co/papers`
+    - ✅ Daily Papers Page URL: `https://huggingface.co/papers/date/2026-05-22`
+    - ✅ Weekly Papers Page URL: `https://huggingface.co/papers/week/2026-W21`
+    - ✅ Monthly Papers Page URL: `https://huggingface.co/papers/month/2026-05`
+    - ✅ Trending Papers Page URL: `https://huggingface.co/papers/trending`
+    - ✅ User/Organization Papers Page URL: `https://huggingface.co/huggingface/papers`
+    - ✅ Collection Page URL: `https://huggingface.co/collections/Testerpce/memory`
 - **[CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV)**
     - ✅ CVF Abstract Page URL: `https://openaccess.thecvf.com/content/**/html/**/*.html`
     - ✅ CVF PDF Page URL: `https://openaccess.thecvf.com/content/**/papers/**/*.pdf`

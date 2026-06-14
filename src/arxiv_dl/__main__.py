@@ -11,7 +11,7 @@ from .helpers import (
 from .models import PaperData
 from .printer import console
 from .scrapers import scrape_metadata
-from .target_parser import parse_target, valid_arxiv_id
+from .target_parser import expand_target, parse_target, valid_arxiv_id
 from .updater import check_update
 from .constants import CONSTANTS
 
@@ -51,7 +51,7 @@ def download_paper(
     """
     set_verbosity(verbose=verbose, verbose_level=set_verbose_level)
 
-    ### Get Target Download Directory
+    # Get target download directory.
     try:
         if download_dir is None:
             download_dir: Path = get_download_dest()
@@ -64,31 +64,73 @@ def download_paper(
         )
         return False
 
-    ### Filter Invalid Target String
+    if not target or not isinstance(target, str):
+        console.error("Invalid input: Please provide a valid paper URL or arXiv ID.")
+        return False
+
+    try:
+        expanded_targets = expand_target(target)
+    except Exception as err:
+        console.error(f"Failed to expand target '{target}': {err}")
+        return False
+
+    if not expanded_targets:
+        console.error(f"No papers found for target: {target}")
+        return False
+
+    if len(expanded_targets) > 1:
+        console.info(f"Found {len(expanded_targets)} papers on the target page.")
+
+    success_list = []
+    for i, expanded_target in enumerate(expanded_targets):
+        if len(expanded_targets) > 1:
+            console.process(i, len(expanded_targets), expanded_target)
+        success = _download_single_paper(
+            target=expanded_target,
+            download_dir=download_dir,
+            n_threads=n_threads,
+            pdf_only=pdf_only,
+            notes_format=notes_format,
+        )
+        success_list.append(success)
+
+    return all(success_list)
+
+
+def _download_single_paper(
+    target: str,
+    download_dir: Path,
+    n_threads: int,
+    pdf_only: bool,
+    notes_format: str,
+) -> bool:
+    # Filter invalid target string.
     if not target or not isinstance(target, str):
         console.error("Invalid input: Please provide a valid paper URL or arXiv ID.")
         return False
 
     if (
-        not target.startswith(("http://", "https://", "www."))
+        not target.startswith(("http://", "https://", "www.", "huggingface.co/"))
         and not valid_arxiv_id(target)
         and "arxiv" not in target.lower()
     ):
         console.error(
             f"Invalid input: '{target}' is not a recognized paper URL or arXiv ID.\n"
-            "Please provide a valid URL from ArXiv, CVF, ECVA, or other supported sources, "
+            "Please provide a valid URL from ArXiv, Hugging Face Papers, CVF, ECVA, or other supported sources, "
             "or a valid arXiv ID (e.g., '1512.03385')."
         )
         return False
 
-    ### Identify Paper Source/Venues
+    # Identify paper source/venue.
     paper_data: PaperData = parse_target(target)
+    if not paper_data:
+        return False
 
-    # start scraping from source website
+    # Start scraping from source website.
     scrape_metadata(paper_data)
     console.print_paper_info(paper_data)
 
-    # download paper
+    # Download paper.
     try:
         if paper_data.pdf_url:
             download_pdf(
@@ -100,7 +142,7 @@ def download_paper(
         console.error("Failed to download the paper.")
         return False
 
-    # update paper list
+    # Update paper list.
     try:
         add_to_paper_list(paper_data, download_dir=download_dir)
     except Exception as err:
