@@ -7,6 +7,57 @@ from arxiv_dl.target_parser import process_cvf_target
 
 
 class TestProcessCVFTarget(unittest.TestCase):
+    def _assert_cvf_target_pair(
+        self, abs_url: str, pdf_url: str, paper_venue: str, year: int
+    ):
+        for target in (abs_url, pdf_url):
+            with self.subTest(target=target):
+                paper_data = process_cvf_target(target)
+                self.assertTrue(isinstance(paper_data, PaperData))
+                self.assertEqual(paper_data.abs_url, abs_url)
+                self.assertEqual(paper_data.pdf_url, pdf_url)
+                self.assertEqual(paper_data.paper_venue, paper_venue)
+                self.assertEqual(paper_data.year, year)
+
+    ################################################################
+    # 2026 / 2025 newly published CVF proceedings
+    # content/venue and content/venue/workshop_name
+
+    def test_CVPR2026(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2026/html/Xiao_Generalizable_Structure-Aware_Keypoint_Correspondence_for_Category-Unified_3D_Single_Object_Tracking_CVPR_2026_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2026/papers/Xiao_Generalizable_Structure-Aware_Keypoint_Correspondence_for_Category-Unified_3D_Single_Object_Tracking_CVPR_2026_paper.pdf"
+        self._assert_cvf_target_pair(abs_url, pdf_url, "CVPR", 2026)
+
+    def test_CVPR2026_findings(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2026F/html/Huang_Revisiting_Real-Time_Detection_Transformer_with_Efficient_Encoder_Design_CVPRF_2026_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2026F/papers/Huang_Revisiting_Real-Time_Detection_Transformer_with_Efficient_Encoder_Design_CVPRF_2026_paper.pdf"
+        self._assert_cvf_target_pair(abs_url, pdf_url, "CVPR_Findings", 2026)
+
+    def test_CVPR2026W(self):
+        abs_url = "https://openaccess.thecvf.com/content/CVPR2026W/NTIRE/html/Qin_NTIRE_2026_The_3rd_Restore_Any_Image_Model_RAIM_Challenge_CVPRW_2026_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/CVPR2026W/NTIRE/papers/Qin_NTIRE_2026_The_3rd_Restore_Any_Image_Model_RAIM_Challenge_CVPRW_2026_paper.pdf"
+        self._assert_cvf_target_pair(abs_url, pdf_url, "CVPR_Workshops", 2026)
+
+    def test_WACV2026(self):
+        abs_url = "https://openaccess.thecvf.com/content/WACV2026/html/Han_ATM_Enhanced_Alignment_for_Text-to-Motion_Generation_WACV_2026_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/WACV2026/papers/Han_ATM_Enhanced_Alignment_for_Text-to-Motion_Generation_WACV_2026_paper.pdf"
+        self._assert_cvf_target_pair(abs_url, pdf_url, "WACV", 2026)
+
+    def test_WACV2026W(self):
+        abs_url = "https://openaccess.thecvf.com/content/WACV2026W/LFMBio/html/Wang_When_AI_Watches_the_Dose_Can_Vision-Language_Models_Perform_TB_WACVW_2026_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/WACV2026W/LFMBio/papers/Wang_When_AI_Watches_the_Dose_Can_Vision-Language_Models_Perform_TB_WACVW_2026_paper.pdf"
+        self._assert_cvf_target_pair(abs_url, pdf_url, "WACV_Workshops", 2026)
+
+    def test_ICCV2025(self):
+        abs_url = "https://openaccess.thecvf.com/content/ICCV2025/html/Wang_kh_Symmetry_Understanding_of_3D_Shapes_via_Chirality_Disentanglement_ICCV_2025_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/ICCV2025/papers/Wang_kh_Symmetry_Understanding_of_3D_Shapes_via_Chirality_Disentanglement_ICCV_2025_paper.pdf"
+        self._assert_cvf_target_pair(abs_url, pdf_url, "ICCV", 2025)
+
+    def test_ICCV2025W_findings_workshop(self):
+        abs_url = "https://openaccess.thecvf.com/content/ICCV2025W/Findings/html/Shen_AdCorDA_Classifier_Refinement_via_Adversarial_Correction_and_Domain_Adaptation_ICCVW_2025_paper.html"
+        pdf_url = "https://openaccess.thecvf.com/content/ICCV2025W/Findings/papers/Shen_AdCorDA_Classifier_Refinement_via_Adversarial_Correction_and_Domain_Adaptation_ICCVW_2025_paper.pdf"
+        self._assert_cvf_target_pair(abs_url, pdf_url, "ICCV_Workshops", 2025)
+
     ################################################################
     # 2024
     # content/venue

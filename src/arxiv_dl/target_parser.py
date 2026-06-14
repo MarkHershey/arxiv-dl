@@ -453,8 +453,11 @@ def process_cvf_target(target: str) -> PaperData:
     else:
         raise Exception("Unexpected CVF URL.")
 
+    is_findings_track = re.fullmatch(r"(ICCV|CVPR|WACV|ACCV)20[0-9][0-9]F", _venue)
     if workshop_name:
         paper_venue += "_Workshops"
+    elif is_findings_track:
+        paper_venue += "_Findings"
 
     paper_id = "_".join(target_name.split("_")[1:-3])
 
