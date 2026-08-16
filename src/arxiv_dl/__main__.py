@@ -122,7 +122,7 @@ def _download_single_paper(
     ):
         console.error(
             f"Invalid input: '{target}' is not a recognized paper URL or arXiv ID.\n"
-            "Please provide a valid URL from ArXiv, alphaXiv, Hugging Face Papers, CVF, ECVA, or other supported sources, "
+            "Please provide a valid URL from ArXiv, alphaXiv, ICLR Proceedings, Hugging Face Papers, CVF, ECVA, or other supported sources, "
             "or a valid arXiv ID (e.g., '1512.03385')."
         )
         return False
@@ -174,11 +174,12 @@ def _download_single_paper(
 
 def cli():
     parser = argparse.ArgumentParser(
-        description="Download research papers from arXiv, alphaXiv, CVF, ECVA, and other academic sources.",
+        description="Download research papers from arXiv, alphaXiv, ICLR Proceedings, CVF, ECVA, and other academic sources.",
         epilog="Examples:\n"
         "  paper 1512.03385                        # Download by arXiv ID\n"
         "  paper https://arxiv.org/abs/1512.03385  # Download by URL\n"
         "  paper https://alphaxiv.org/abs/1512.03385  # Download from alphaXiv\n"
+        "  paper https://proceedings.iclr.cc/paper_files/paper/2026/hash/0021c2cb1b9b6a71ac478ea52a93b25a-Abstract-Conference.html  # Download from ICLR\n"
         "  paper 1512.03385 2103.15538             # Download multiple papers\n"
         "  paper 1512.03385 -d ~/Papers            # Specify download directory\n"
         "  paper 1512.03385 -p                     # Download PDF only (no notes)",

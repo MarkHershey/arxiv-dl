@@ -50,7 +50,9 @@ def parse_target(target: str) -> PaperData:
     Returns:
         PaperData object containing the paper metadata.
     """
-    if "arxiv" in target.lower() or valid_arxiv_id(target):
+    if is_iclr_proceedings_paper_url(target):
+        return process_iclr_target(target)
+    elif "arxiv" in target.lower() or valid_arxiv_id(target):
         return process_arxiv_target(target)
     elif is_alphaxiv_paper_url(target):
         return process_alphaxiv_target(target)
@@ -601,36 +603,63 @@ def process_ecva_target(target: str) -> PaperData:
 
 
 ###############################################################################
-### NeurIPS
+### NeurIPS and ICLR Proceedings
 
 
-def process_nips_target(target: str) -> PaperData:
+def _process_proceedings_target(target: str, src_website: str) -> PaperData:
+    if src_website == "NeurIPS":
+        valid_hosts = {"proceedings.neurips.cc", "papers.nips.cc"}
+        canonical_host = "proceedings.neurips.cc"
+    elif src_website == "ICLR":
+        valid_hosts = {"proceedings.iclr.cc"}
+        canonical_host = "proceedings.iclr.cc"
+    else:
+        raise Exception(f"Unsupported proceedings source: {src_website}")
+
+    parsed = urlparse(target.strip())
+    if (
+        parsed.scheme.lower() not in {"http", "https"}
+        or parsed.hostname not in valid_hosts
+    ):
+        raise Exception(f"Unexpected {src_website} URL: {target}")
+
     pattern = (
-        r"https?://[^/]*(?:proceedings\.neurips\.cc|papers\.nips\.cc)"
         r"/(?:paper_files/)?paper/(?P<year>[0-9]{4})/"
         r"(?P<kind>hash|file)/(?P<paper_id>[0-9a-fA-F]{32})-"
-        r"(?P<doc_type>Abstract|Paper)(?P<suffix>[^/?#.]*)"
-        r"\.(?P<ext>html|pdf)(?:[?#].*)?$"
+        r"(?P<doc_type>Abstract|Paper)(?P<suffix>[^./]*)"
+        r"\.(?P<ext>html|pdf)$"
     )
-    match = re.match(pattern, target)
+    match = re.fullmatch(pattern, parsed.path)
     if not match:
-        raise Exception(f"Unexpected NeurIPS URL: {target}")
+        raise Exception(f"Unexpected {src_website} URL: {target}")
 
     year = int(match.group("year"))
     paper_id = match.group("paper_id").lower()
+    kind = match.group("kind")
     doc_type = match.group("doc_type")
     suffix = match.group("suffix")
     ext = match.group("ext")
 
-    if doc_type == "Abstract" and ext != "html":
-        raise Exception(f"Unexpected NeurIPS URL: {target}")
-    if doc_type == "Paper" and ext != "pdf":
-        raise Exception(f"Unexpected NeurIPS URL: {target}")
+    valid_document = (kind, doc_type, ext) in {
+        ("hash", "Abstract", "html"),
+        ("file", "Paper", "pdf"),
+    }
+    if not valid_document:
+        raise Exception(f"Unexpected {src_website} URL: {target}")
 
-    base_url = f"https://proceedings.neurips.cc/paper_files/paper/{year}"
+    if src_website == "ICLR":
+        valid_suffix = suffix in {"", "-Conference"}
+        if not valid_suffix or (doc_type == "Paper" and suffix != "-Conference"):
+            raise Exception(f"Unexpected ICLR URL: {target}")
+        suffix = "-Conference"
+
+    base_url = f"https://{canonical_host}/paper_files/paper/{year}"
     abs_url = f"{base_url}/hash/{paper_id}-Abstract{suffix}.html"
     pdf_url = f"{base_url}/file/{paper_id}-Paper{suffix}.pdf"
-    paper_venue = "NeurIPS" if year >= 2018 else "NIPS"
+    if src_website == "NeurIPS":
+        paper_venue = "NeurIPS" if year >= 2018 else "NIPS"
+    else:
+        paper_venue = "ICLR"
     download_name = f"{year}_{paper_venue}_{paper_id}.pdf"
 
     return PaperData(
@@ -638,10 +667,26 @@ def process_nips_target(target: str) -> PaperData:
         abs_url=abs_url,
         pdf_url=pdf_url,
         year=year,
-        src_website="NeurIPS",
+        src_website=src_website,
         paper_venue=paper_venue,
         download_name=download_name,
     )
+
+
+def process_nips_target(target: str) -> PaperData:
+    return _process_proceedings_target(target, src_website="NeurIPS")
+
+
+def process_iclr_target(target: str) -> PaperData:
+    return _process_proceedings_target(target, src_website="ICLR")
+
+
+def is_iclr_proceedings_paper_url(target: str) -> bool:
+    try:
+        process_iclr_target(target)
+        return True
+    except Exception:
+        return False
 
 
 ###############################################################################

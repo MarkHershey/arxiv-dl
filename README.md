@@ -1,6 +1,6 @@
 # arXiv-dl
 
-Command-line research paper downloader for papers hosted on [arXiv](https://arxiv.org/), linked from [alphaXiv](https://alphaxiv.org/), [Hugging Face Papers](https://huggingface.co/papers), [NeurIPS](https://proceedings.neurips.cc/), [CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV), and [ECVA](https://www.ecva.net/papers.php) (ECCV).
+Command-line research paper downloader for papers hosted on [arXiv](https://arxiv.org/), [alphaXiv](https://alphaxiv.org/), [Hugging Face](https://huggingface.co/papers), [ICLR](https://proceedings.iclr.cc/), [NeurIPS](https://proceedings.neurips.cc/), [CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV), and [ECVA](https://www.ecva.net/papers.php) (ECCV).
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypistats.org/packages/arxiv-dl)
@@ -13,7 +13,7 @@ _Disclaimer: This is an opinionated command-line tool for downloading papers. It
 
 ## What does it do?
 
-- Downloads papers from [arXiv](https://arxiv.org/), [alphaXiv](https://alphaxiv.org/), [Hugging Face Papers](https://huggingface.co/papers), [NeurIPS](https://proceedings.neurips.cc/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu), and [ECCV](https://www.ecva.net/papers.php) with a simple CLI.
+- Downloads papers from [arXiv](https://arxiv.org/), [alphaXiv](https://alphaxiv.org/), [Hugging Face](https://huggingface.co/papers), [ICLR](https://proceedings.iclr.cc/), [NeurIPS](https://proceedings.neurips.cc/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu), and [ECCV](https://www.ecva.net/papers.php) with a simple CLI.
 - Speeds up downloads with [aria2](https://aria2.github.io/) when available.
 - Retrieves paper metadata:
     - Title, abstract, and year
@@ -92,6 +92,9 @@ $ paper 1512.03385
 
 # Download multiple targets
 $ paper 2103.15538 https://arxiv.org/abs/1512.03385 https://alphaxiv.org/abs/2312.16682v2
+
+# Download from ICLR Proceedings
+$ paper https://proceedings.iclr.cc/paper_files/paper/2026/hash/0021c2cb1b9b6a71ac478ea52a93b25a-Abstract-Conference.html
 ```
 
 ### Supported Targets
@@ -127,11 +130,15 @@ $ paper 2103.15538 https://arxiv.org/abs/1512.03385 https://alphaxiv.org/abs/231
 - **[ECVA](https://www.ecva.net/papers.php) (ECCV)**
     - ✅ ECVA Abstract Page URL: `https://www.ecva.net/html/**/*.php`
     - ❌ ECVA PDF Page URL: `https://www.ecva.net/papers/**/*.pdf`
-- **[NeurIPS](https://proceedings.neurips.cc/) / [NIPS](https://papers.nips.cc/)**
+- **[NeurIPS Proceedings](https://proceedings.neurips.cc/) / [NIPS Legacy Site](https://papers.nips.cc/)**
     - ✅ NeurIPS Abstract Page URL: `https://proceedings.neurips.cc/paper_files/paper/**/hash/**/*.html`
     - ✅ NeurIPS PDF Page URL: `https://proceedings.neurips.cc/paper_files/paper/**/file/**/*.pdf`
     - ✅ NIPS mirror Abstract Page URL: `https://papers.nips.cc/paper_files/paper/**/hash/**/*.html`
     - ✅ NIPS mirror PDF Page URL: `https://papers.nips.cc/paper_files/paper/**/file/**/*.pdf`
+- **[ICLR Proceedings](https://proceedings.iclr.cc/)**
+    - ✅ ICLR Abstract Page URL: `https://proceedings.iclr.cc/paper_files/paper/**/hash/**/*-Abstract-Conference.html`
+    - ✅ ICLR PDF URL: `https://proceedings.iclr.cc/paper_files/paper/**/file/**/*-Paper-Conference.pdf`
+    - ✅ Short `/paper/**` route and `-Abstract.html` aliases; both are normalized to canonical HTTPS `-Conference` URLs
 - **[OpenReview](https://openreview.net/)**
     - 🚧 TODO
 

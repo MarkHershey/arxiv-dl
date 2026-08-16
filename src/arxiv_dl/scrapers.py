@@ -32,6 +32,8 @@ def scrape_metadata(paper_data: PaperData) -> None:
                 scrape_metadata_ecva(paper_data)
             elif paper_data.src_website == "NeurIPS":
                 scrape_metadata_nips(paper_data)
+            elif paper_data.src_website == "ICLR":
+                scrape_metadata_iclr(paper_data)
             elif paper_data.src_website == "OpenReview":
                 raise NotImplementedError("OpenReview scraper is not implemented yet")
             else:
@@ -264,8 +266,8 @@ def scrape_metadata_ecva(paper_data: PaperData) -> None:
     return None
 
 
-def scrape_metadata_nips(paper_data: PaperData) -> None:
-    console.info("Retrieving paper metadata from NeurIPS...")
+def scrape_metadata_proceedings(paper_data: PaperData) -> None:
+    console.info(f"Retrieving paper metadata from {paper_data.paper_venue}...")
 
     response = requests.get(paper_data.abs_url)
     if response.status_code != 200:
@@ -339,6 +341,16 @@ def scrape_metadata_nips(paper_data: PaperData) -> None:
         paper_data.download_name = f"{paper_data.year}_{paper_data.paper_venue}_{normalize_paper_title(paper_data.title)}.pdf"
 
     return None
+
+
+def scrape_metadata_nips(paper_data: PaperData) -> None:
+    """Scrape a NeurIPS/NIPS paper using the shared proceedings template."""
+    return scrape_metadata_proceedings(paper_data)
+
+
+def scrape_metadata_iclr(paper_data: PaperData) -> None:
+    """Scrape an ICLR paper using the shared proceedings template."""
+    return scrape_metadata_proceedings(paper_data)
 
 
 def scrape_metadata_openreview(paper_data: PaperData) -> None:
