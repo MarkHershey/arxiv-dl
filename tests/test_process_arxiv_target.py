@@ -20,7 +20,7 @@ class TestProcessArxivTarget(unittest.TestCase):
 
     def test_process_arxiv_target_with_direct_id_modern_with_version(self):
         """Test processing modern arXiv ID with version number."""
-        paper_id = "2103.15538"
+        paper_id = "2103.15538v2"
         result = process_arxiv_target(paper_id)
         
         self.assertIsInstance(result, PaperData)

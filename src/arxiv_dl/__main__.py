@@ -2,6 +2,7 @@ import argparse
 from pathlib import Path
 from typing import Optional, Union
 
+from .constants import CONSTANTS
 from .helpers import (
     add_to_paper_list,
     create_paper_note,
@@ -11,9 +12,13 @@ from .helpers import (
 from .models import PaperData
 from .printer import console
 from .scrapers import scrape_metadata
-from .target_parser import expand_target, parse_target, valid_arxiv_id
+from .target_parser import (
+    expand_target,
+    is_alphaxiv_paper_url,
+    parse_target,
+    valid_arxiv_id,
+)
 from .updater import check_update
-from .constants import CONSTANTS
 
 
 def set_verbosity(
@@ -112,11 +117,12 @@ def _download_single_paper(
     if (
         not target.startswith(("http://", "https://", "www.", "huggingface.co/"))
         and not valid_arxiv_id(target)
+        and not is_alphaxiv_paper_url(target)
         and "arxiv" not in target.lower()
     ):
         console.error(
             f"Invalid input: '{target}' is not a recognized paper URL or arXiv ID.\n"
-            "Please provide a valid URL from ArXiv, Hugging Face Papers, CVF, ECVA, or other supported sources, "
+            "Please provide a valid URL from ArXiv, alphaXiv, Hugging Face Papers, CVF, ECVA, or other supported sources, "
             "or a valid arXiv ID (e.g., '1512.03385')."
         )
         return False
@@ -168,10 +174,11 @@ def _download_single_paper(
 
 def cli():
     parser = argparse.ArgumentParser(
-        description="Download research papers from arxiv.org, CVF, ECVA, and other academic sources.",
+        description="Download research papers from arXiv, alphaXiv, CVF, ECVA, and other academic sources.",
         epilog="Examples:\n"
         "  paper 1512.03385                        # Download by arXiv ID\n"
         "  paper https://arxiv.org/abs/1512.03385  # Download by URL\n"
+        "  paper https://alphaxiv.org/abs/1512.03385  # Download from alphaXiv\n"
         "  paper 1512.03385 2103.15538             # Download multiple papers\n"
         "  paper 1512.03385 -d ~/Papers            # Specify download directory\n"
         "  paper 1512.03385 -p                     # Download PDF only (no notes)",

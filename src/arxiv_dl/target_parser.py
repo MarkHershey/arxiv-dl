@@ -52,6 +52,8 @@ def parse_target(target: str) -> PaperData:
     """
     if "arxiv" in target.lower() or valid_arxiv_id(target):
         return process_arxiv_target(target)
+    elif is_alphaxiv_paper_url(target):
+        return process_alphaxiv_target(target)
     elif "openaccess.thecvf.com" in target:
         return process_cvf_target(target)
     elif "ecva.net" in target:
@@ -195,16 +197,70 @@ def process_arxiv_target(target: str) -> PaperData:
 
 
 ###############################################################################
-### Hugging Face Papers
+### Shared URL parsing
 
 
 def normalize_url_for_parsing(target: str) -> str:
     target = target.strip()
     if target.startswith("//"):
         return f"https:{target}"
-    if target.startswith(("www.", "huggingface.co/")):
+    if target.startswith(("www.", "huggingface.co/")) or re.match(
+        r"^(?:[a-z0-9-]+\.)*alphaxiv\.org(?::[0-9]+)?(?:[/?#]|$)",
+        target,
+        re.IGNORECASE,
+    ):
         return f"https://{target}"
     return target
+
+
+###############################################################################
+### alphaXiv
+
+
+def is_alphaxiv_host(target: str) -> bool:
+    parsed = urlparse(normalize_url_for_parsing(target))
+    hostname = (parsed.hostname or "").lower()
+    return hostname == "alphaxiv.org" or hostname.endswith(".alphaxiv.org")
+
+
+def get_alphaxiv_arxiv_id_from_url(url: str) -> str:
+    """Extract an arXiv ID from an alphaXiv paper URL."""
+    if not is_alphaxiv_host(url):
+        raise Exception("Unexpected alphaXiv URL.")
+
+    parsed = urlparse(normalize_url_for_parsing(url))
+    try:
+        paper_id = get_arxiv_id_from_url(parsed.path)
+    except Exception as err:
+        raise Exception("Could not find arXiv ID in alphaXiv paper URL.") from err
+
+    if not valid_arxiv_id(paper_id):
+        raise Exception("Could not find a valid arXiv ID in alphaXiv paper URL.")
+
+    bounded_id_pattern = (
+        rf"(?:^|/){re.escape(paper_id)}(?:v[0-9]+)?(?=$|/|\.(?:md|pdf)$)"
+    )
+    if not re.search(bounded_id_pattern, parsed.path):
+        raise Exception("Could not find a valid arXiv ID in alphaXiv paper URL.")
+    return paper_id
+
+
+def is_alphaxiv_paper_url(target: str) -> bool:
+    try:
+        get_alphaxiv_arxiv_id_from_url(target)
+        return True
+    except Exception:
+        return False
+
+
+def process_alphaxiv_target(target: str) -> PaperData:
+    """Process alphaXiv as an alias for its canonical arXiv paper."""
+    paper_id = get_alphaxiv_arxiv_id_from_url(target)
+    return process_arxiv_target(paper_id)
+
+
+###############################################################################
+### Hugging Face Papers
 
 
 def is_huggingface_host(target: str) -> bool:

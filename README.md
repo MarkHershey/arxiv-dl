@@ -1,6 +1,6 @@
 # arXiv-dl
 
-Command-line research paper downloader for papers hosted on [arXiv](https://arxiv.org/), [Hugging Face Papers](https://huggingface.co/papers), [NeurIPS](https://proceedings.neurips.cc/), [CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV), and [ECVA](https://www.ecva.net/papers.php) (ECCV).
+Command-line research paper downloader for papers hosted on [arXiv](https://arxiv.org/), linked from [alphaXiv](https://alphaxiv.org/), [Hugging Face Papers](https://huggingface.co/papers), [NeurIPS](https://proceedings.neurips.cc/), [CVF Open Access](https://openaccess.thecvf.com/menu) (CVPR, ICCV, WACV), and [ECVA](https://www.ecva.net/papers.php) (ECCV).
 
 [![](https://img.shields.io/pypi/v/arxiv-dl)](https://pypi.org/project/arxiv-dl/)
 [![](https://img.shields.io/pypi/dm/Arxiv-dl)](https://pypistats.org/packages/arxiv-dl)
@@ -13,7 +13,7 @@ _Disclaimer: This is an opinionated command-line tool for downloading papers. It
 
 ## What does it do?
 
-- Downloads papers from [arXiv](https://arxiv.org/), [Hugging Face Papers](https://huggingface.co/papers), [NeurIPS](https://proceedings.neurips.cc/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu), and [ECCV](https://www.ecva.net/papers.php) with a simple CLI.
+- Downloads papers from [arXiv](https://arxiv.org/), [alphaXiv](https://alphaxiv.org/), [Hugging Face Papers](https://huggingface.co/papers), [NeurIPS](https://proceedings.neurips.cc/), [CVPR, ICCV, WACV](https://openaccess.thecvf.com/menu), and [ECCV](https://www.ecva.net/papers.php) with a simple CLI.
 - Speeds up downloads with [aria2](https://aria2.github.io/) when available.
 - Retrieves paper metadata:
     - Title, abstract, and year
@@ -91,7 +91,7 @@ paper [OPTIONS] TARGET(s)
 $ paper 1512.03385
 
 # Download multiple targets
-$ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
+$ paper 2103.15538 https://arxiv.org/abs/1512.03385 https://alphaxiv.org/abs/2312.16682v2
 ```
 
 ### Supported Targets
@@ -107,6 +107,11 @@ $ paper 2103.15538 2304.04415 https://arxiv.org/abs/1512.03385
     - ✅ ArXiv Abstract Page URL: `https://arxiv.org/abs/1512.03385`
     - ✅ ArXiv PDF Page URL: `https://arxiv.org/pdf/1512.03385.pdf`
     - ✅ ArXiv HTML Page URL: `https://arxiv.org/html/2506.15442`
+- **[alphaXiv](https://alphaxiv.org/)**
+    - ✅ alphaXiv Abstract Page URL: `https://www.alphaxiv.org/abs/2312.16682v2`
+    - ✅ alphaXiv PDF Page URL: `https://www.alphaxiv.org/pdf/2312.16682v2`
+    - ✅ Other alphaXiv paper routes containing an arXiv ID, including overview, HTML, localized, Markdown, and direct PDF asset URLs
+    - alphaXiv targets are resolved through the corresponding canonical arXiv abstract and PDF URLs.
 - **[Hugging Face Papers](https://huggingface.co/papers)**
     - ✅ Single Paper Page URL: `https://huggingface.co/papers/2605.12357`
     - ✅ Current Daily Papers Page URL: `https://huggingface.co/papers`
