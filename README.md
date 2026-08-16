@@ -90,11 +90,24 @@ paper [OPTIONS] TARGET(s)
 # Download a single target
 $ paper 1512.03385
 
-# Download multiple targets
-$ paper 2103.15538 https://arxiv.org/abs/1512.03385 https://alphaxiv.org/abs/2312.16682v2
+# Download multiple targets separated by spaces
+$ paper 2103.15538 https://arxiv.org/abs/1512.03385
+
+# Bulk download Daily Papers from Hugging Face
+$ paper https://huggingface.co/papers
 
 # Download from ICLR Proceedings
 $ paper https://proceedings.iclr.cc/paper_files/paper/2026/hash/0021c2cb1b9b6a71ac478ea52a93b25a-Abstract-Conference.html
+
+# Download from NeurIPS Proceedings
+$ paper https://papers.nips.cc/paper_files/paper/2025/hash/0122ad3e4a752438562297553bbf9049-Abstract-Conference.html
+
+# Download from CVF Open Access
+$ paper https://openaccess.thecvf.com/content/CVPR2026/html/Lyu_Choreographing_a_World_of_Dynamic_Objects_CVPR_2026_paper.html
+
+# Download from ECVA
+$ paper https://www.ecva.net/papers/eccv_2024/papers_ECCV/html/4_ECCV_2024_paper.php
+
 ```
 
 ### Supported Targets
