@@ -251,6 +251,9 @@ def cli():
 
     args = parser.parse_args()
 
+    if not 1 <= args.n_threads <= 16:
+        parser.error("--n-threads must be an integer between 1 and 16")
+
     # Set verbose level
     # NOTE: setting verbose level here is necessary because it controls the check_update() & console.process() below
     set_verbosity(verbose=args.verbose, verbose_level=args.verbose_level)
