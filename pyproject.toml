@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "arxiv-dl"
-version = "1.3.4"
+version = "1.3.5"
 authors = [{ name = "Mark He Huang", email = "dev@markhh.com" }]
 license = "MIT"
 license-files = ["LICENSE"]
@@ -24,10 +24,16 @@ readme = "README.md"
 requires-python = ">=3.9"
 dependencies = [
     "beautifulsoup4>=4.13.4",
+    "certifi>=2026.10.19",
+    "idna>=3.15",
     "pydantic>=2.11.7",
     "pymupdf>=1.26.1",
     "requests>=2.32.4",
     "rich>=14.0.0",
+    # Security fixes available for each supported Python version.
+    "soupsieve>=2.8.4; python_full_version < '3.11.5'",
+    "soupsieve>=4.0.0; python_full_version >= '3.11.5'",
+    "urllib3>=2.8.0; python_version >= '3.10'",
 ]
 classifiers = [
     "Topic :: Utilities",
@@ -45,7 +51,7 @@ classifiers = [
 ]
 
 [project.optional-dependencies]
-dev = ["check-manifest", "pytest", "tox", "black", "isort"]
+dev = ["check-manifest", "pytest", "tox", "black", "isort", "virtualenv>=21.14.9"]
 
 [project.scripts]
 paper = "arxiv_dl.__main__:cli"
